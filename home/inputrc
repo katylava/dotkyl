@@ -1,0 +1,31 @@
+# For when I'm in bash
+# For zsh use lib/*-keybindings.zsh
+#
+#"\e[1~": beginning-of-line
+#"\e[4~": end-of-line
+# "\e[5~": beginning-of-history
+# "\e[6~": end-of-history
+
+#"\e[5~": history-search-backward # page up
+#"\e[6~": history-search-forward # page down
+"\e[B": history-search-forward # down arrow
+"\e[A": history-search-backward # up arrow
+
+#"\e[3~": delete-char
+#"\e[2~": quoted-insert
+#"\e[5C": forward-word
+#"\e[5D": backward-word
+#"\e\e[C": forward-word
+#"\e\e[D": backward-word
+
+# not sure how, but this makes shift+tab work as expected
+#"\e[Z": "\e-1\C-i"
+#"\t": menu-complete
+
+\C-p:menu-complete
+\C-o:"\e--\C-p"
+
+set completion-ignore-case On
+#set editing-mode vi
+set mark-directories On
+set complete TAB

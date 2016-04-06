@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+cd
+for f in .dotkyl/home/*; do ln -s "${f}" '.'`basename $f`; done
+
+cd .config
+ln -s ../.dotkyl/nvim

@@ -1,0 +1,3 @@
+*.png diff=mdls
+*.jpg diff=mdls
+*.gif diff=mdls

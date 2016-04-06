@@ -1,0 +1,70 @@
+[user]
+	name = katy lavallee
+	email = katylava@gmail.com
+[github]
+	user = katylava
+[alias]
+	stat = status
+	st = status --short --branch
+	ci = commit
+	cm = commit -m
+	ca = commit -a
+	co = checkout
+	br = branch
+	ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %cn %Creset%s' -20
+	lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %cn %Creset%n%C(yellow)%cd%n%s' --stat
+	df = diff --cached
+	di = diff
+	dl = log -p --relative
+	dw = diff --color-words="[[:alnum:]_-]+|[[:punct:]]+"
+	d = diff -b -w --color-words
+	track = push -u origin
+	merge-as-one = merge --squash --no-commit
+[core]
+	excludesfile = ~/.gitignore
+	attributesfile = ~/.gitattributes
+	whitespace = cr-at-eol
+	autocrlf = false
+[diff "mdls"]
+	textconv = mdls
+[push]
+	default = current
+[rerere]
+	enabled = true
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[merge]
+	tool = vimdiff
+[mergetool]
+	keepBackups = true
+
+
+
+# C O L O R S
+# The value for these configuration variables is a list of colors (at most two)
+# and attributes (at most one), separated by spaces. The colors accepted are
+# normal, black, red, green, yellow, blue, magenta, cyan and white; the
+# attributes are bold, dim, ul, blink and reverse. The first color given is the
+# foreground; the second is the background. The position of the attribute, if
+# any, doesn't matter.
+
+[color]
+	ui = auto
+[color "branch"]
+	current = white green bold 
+	local = normal
+	remote = red
+[color "diff"]
+	meta = cyan
+	frag = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = white cyan
+	commit = white yellow bold
+[color "status"]
+	added = green bold 
+	changed = red 
+	untracked = normal reverse
+[ghi]
+	token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w

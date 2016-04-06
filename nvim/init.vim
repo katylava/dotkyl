@@ -1,0 +1,355 @@
+call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
+Plug 'tweekmonster/braceless' " https://github.com/tweekmonster/braceless.vim
+Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
+Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
+Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
+Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
+" Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
+Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
+Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
+Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
+Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
+Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
+Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
+Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
+Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
+Plug 'tpope/vim-eunuch' " https://github.com/tpope/vim-eunuch
+Plug 'tpope/vim-fugitive' " https://github.com/tpope/vim-fugitive
+Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
+Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
+Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
+Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
+Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
+Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
+Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
+Plug 'tpope/vim-repeat' " https://github.com/tpope/vim-repeat
+Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
+Plug 'tpope/vim-surround' " https://github.com/tpope/vim-surround
+Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
+call plug#end()
+
+filetype on
+filetype plugin on
+
+set completeopt=menu,longest,preview
+set cursorline
+set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
+set exrc secure " enable per-directory .vimrc files
+set grepprg=ag
+set ignorecase smartcase
+set iskeyword+=-
+set nobackup dir=~/.tmp/nvim
+set noerrorbells visualbell t_vb=
+set nohlsearch incsearch
+set nowrap linebreak
+set number
+set pastetoggle=<F8>
+set ruler laststatus=2 " one of these ensures each window contains a status line
+set scrolloff=3
+set t_Co=256
+set title
+set ts=4 sw=4 ai expandtab
+set ttyfast
+set tw=80 colorcolumn=80
+set wildignore=.svn,.git,.env,*.bak,*.pyc,*.DS_Store,*.db,venv
+set wildmenu wildmode=list:longest
+
+" had these before, but don't know if they are still needed
+"
+" set formatoptions=
+" set backspace=2 " make backspace work like most other apps
+" set statusline=%M\%f\ %y%(\ %R%W%q%)\ %=\ col\ %c\ %P
+" set showmode
+" set formatoptions=cq
+" set fillchars="vert: "
+" set showmatch
+" set viminfo='20,\"1000
+" set autowrite autoread
+" set showcmd
+
+autocmd BufRead .bash*      set filetype=sh
+autocmd BufRead *.cls       set filetype=apex
+autocmd BufRead *.ejs       set filetype=ejs
+autocmd BufRead *.htm*      set filetype=htmldjango omnifunc=htmlcomplete#CompleteTags
+autocmd BufRead *.md        set filetype=markdown
+autocmd BufRead *.page      set filetype=visualforce
+autocmd BufRead *.py        set filetype=python commentstring=#\ %s
+autocmd BufRead *.scss      set filetype=sass
+autocmd BufRead *.sql       set filetype=sql commentstring=--\ %s
+autocmd BufRead *.txt       set filetype=markdown
+autocmd BufRead .zsh*      set filetype=sh
+
+autocmd FileType apex       set foldmethod=indent commentstring=//\ %s
+autocmd FileType ejs        set foldmethod=indent
+autocmd FileType htmldjango set foldmethod=indent
+autocmd FileType javascript set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType json       set foldmethod=syntax
+autocmd FileType mkd        set ts=2 sw=2
+autocmd FileType python     set foldmethod=indent omnifunc=pythoncomplete#Complete
+autocmd FileType sass       set foldmethod=indent sw=4
+
+" To avoid error 'crontab: temp file must be edited in place'
+autocmd filetype crontab setlocal nobackup nowritebackup
+
+" tabs in python are bad!
+autocmd FileType python	highlight Tabs ctermbg=red guibg=red
+autocmd FileType python match Tabs /^\t+/
+
+" Automatically chmod +x Shell scripts
+autocmd BufWritePost *.sh silent !chmod +x %
+
+" Open file at last edited location
+au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
+
+" Title string
+autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir()
+
+" ------------------
+" Theme
+" ------------------
+
+set background=dark
+colorscheme my-monokai
+
+" disable the annoying HTML link underlining
+hi link htmlLink NONE
+hi link htmlItalic NONE
+
+
+" -------------
+" Mappings
+" -------------
+
+:let mapleader='\'
+
+nnoremap ,n :source ~/.config/nvim/init.vim<CR>
+
+inoremap jk <Esc>
+inoremap <TAB><TAB> <C-p>
+
+tnoremap jk <C-\><C-n>
+
+" i'm not sure why i have these, can't remember when i needed them
+nnoremap [[ [{
+nnoremap ]] ]}
+
+nnoremap <C-j> :wincmd j<CR>
+nnoremap <C-k> :wincmd k<CR>
+nnoremap <C-h> :wincmd h<CR>
+nnoremap <C-l> :wincmd l<CR>
+tnoremap <C-j> <C-\><C-n><C-w>h
+tnoremap <C-k> <C-\><C-n><C-w>j
+tnoremap <C-h> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+
+ " <opt> = - . ,
+nnoremap ≠ 5<C-W>+
+nnoremap – 5<C-W>-
+nnoremap ≥ 5<C-W>>
+nnoremap ≤ 5<C-W><
+
+" <opt> b f k j
+nnoremap ∫ <C-W>H
+nnoremap ƒ <C-W>L
+nnoremap ˚ <C-W>K
+nnoremap ∆ <C-W>J
+
+" <opt> 0 9 p o
+nnoremap º :tabnext<CR>
+nnoremap ª :tabprevious<CR>
+nnoremap π :tabnext<CR>
+nnoremap ø :tabprevious<CR>
+
+" _ does the same as ^, as far as i can tell, so may as well remap it
+nnoremap _ g_
+vnoremap _ g_
+
+" select just-pasted lines
+nnoremap gp `[v`]
+
+nnoremap <silent> gj o<Esc>
+nnoremap <silent> gk O<Esc>
+nnoremap <silent> gh i<Space><Esc>
+nnoremap <silent> gl a<Space><Esc>
+nnoremap <silent> gn i<CR><Esc>
+
+nnoremap N Nzz
+nnoremap n nzz
+
+noremap ,y "+y
+noremap ,p "+p
+
+" Common Command Typos
+command! Q  quit    " converts ... :Q  => :q
+command! W  write   " converts ... :W  => :w
+command! Wq wq      " converts ... :Wq => :wq
+command! Wn wn      " converts ... :Wn => :wn
+command! WN wN      " converts ... :WN => :wN
+
+" don't show help when F1 is pressed
+map <F1> <ESC>
+
+" Remove trailing space without overwriting current search
+nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+
+" ---------------------
+" Plugin configuration
+" ---------------------
+
+"  vim-jsx
+let g:jsx_ext_required = 0
+
+" vim-airline
+let g:airline_theme = 'dark'
+let g:airline_powerline_fonts = 1
+
+" python
+let python_highlight_all = 1
+let g:pyflakes_use_quickfix = 0
+
+" CtrlP
+map ,f :CtrlP<CR>
+map ,m :CtrlPMRU<CR>
+map ,g :CtrlPBuffer<CR>
+map ,r :CtrlPClearCache<CR>
+let g:ctrlp_match_window_bottom = 0
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_map = '<C-q>'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|env'
+
+" indent-guides
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+let g:indent_guides_auto_colors = 1
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+
+" NERDtree
+map ,d :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
+let NERDTreeWinSize = 45
+
+" pymode
+let g:pymode_lint_write = 1
+let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,W0401,C0110,W0702,W0614,C0321,W0511,C1001,E1002,R0201"
+let g:pymode_lint_checker = "pyflakes,pep8"
+
+" syntastic
+let g:syntastic_javascript_checkers = ['eslint']
+
+" vim-json
+let g:vim_json_syntax_conceal = 0
+
+" promptline
+" let g:promptline_preset = {
+"         \'a' : [ promptline#slices#cwd() ],
+"         \'b' : [ '%*' ],
+"         \'c' : [ '⛵️' ],
+"         \'y' : [ promptline#slices#vcs_branch() ],
+"         \'z' : [ promptline#slices#git_status() ],
+"         \'warn' : [ promptline#slices#last_exit_code() ]}
+
+
+
+" -----------
+" Functions
+" -----------
+
+function! FileDir()
+    let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
+    " Don't show common parent directories
+    let filedir = substitute(l:filedir, 'Code/', '', 'g')
+    let filedir = substitute(l:filedir, 'Mediocre/', '', 'g')
+    let filedir = substitute(l:filedir, 'apps/', '', 'g')
+    let filedir = substitute(l:filedir, '/Webrole', '', 'g')
+    " Shorten these a lot
+    let filedir = substitute(l:filedir, '.dotkyl/', '…', 'g')
+    let filedir = substitute(l:filedir, '-service', '-svc', 'g')
+    let filedir = substitute(l:filedir, 'mediocre-sdk', 'sdk', 'g')
+    let filedir = substitute(l:filedir, 'mediocre-framework', 'fmwrk', 'g')
+    " Shorten everything else a little by removing vowels
+    let filedir = substitute(l:filedir, '[aeiou]', '', 'g')
+    " Then remove double letters
+    let filedir = substitute(l:filedir, '([a-zA-Z])\1', '\1', 'g')
+    " Except these are better with vowels
+    let filedir = substitute(l:filedir, 'mh.cm', 'meh', 'g')
+    let filedir = substitute(l:filedir, '\.rg/', '.org/', 'g')
+    return filedir
+endfunction
+
+
+" ------------------------------
+" Highlight trailing whitespace
+" ------------------------------
+
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+
+" ----------------------------------------------
+" Preserve missing trailing EOL when saving file
+" ----------------------------------------------
+
+" Preserve noeol (missing trailing eol) when saving file. In order
+" to do this we need to temporarily 'set binary' for the duration of
+" file writing, and for DOS line endings, add the CRs manually.
+" For Mac line endings, also must join everything to one line since it doesn't
+" use a LF character anywhere and 'binary' writes everything as if it were Unix.
+
+" This works because 'eol' is set properly no matter what file format is used,
+" even if it is only used when 'binary' is set.
+
+augroup automatic_noeol
+  au!
+  au BufWritePre  * call <SID>TempSetBinaryForNoeol()
+  au BufWritePost * call <SID>TempRestoreBinaryForNoeol()
+augroup END
+
+function! s:TempSetBinaryForNoeol()
+  let s:save_binary = &binary
+  if ! &eol && ! &binary
+    let s:save_view = winsaveview()
+    setlocal binary
+    if &ff == "dos" || &ff == "mac"
+      if line('$') > 1
+        undojoin | exec "silent 1,$-1normal! A\<C-V>\<C-M>"
+      endif
+    endif
+    if &ff == "mac"
+      undojoin | %join!
+      " mac format does not use a \n anywhere, so we don't add one when writing
+      " in binary (which uses unix format always). However, inside the outer
+      " if statement, we already know that 'noeol' is set, so no special logic
+      " is needed.
+    endif
+  endif
+endfunction
+
+function! s:TempRestoreBinaryForNoeol()
+  if ! &eol && ! s:save_binary
+    if &ff == "dos"
+      if line('$') > 1
+        " Sometimes undojoin gives errors here, even when it shouldn't.
+        " Suppress them for now...if you can figure out and fix them instead,
+        " please update http://vim.wikia.com/wiki/VimTip1369
+        silent! undojoin | silent 1,$-1s/\r$//e
+      endif
+    elseif &ff == "mac"
+      " Sometimes undojoin gives errors here, even when it shouldn't.
+      " Suppress them for now...if you can figure out and fix them instead,
+      " please update http://vim.wikia.com/wiki/VimTip1369
+      silent! undojoin | silent %s/\r/\r/ge
+    endif
+    setlocal nobinary
+    call winrestview(s:save_view)
+  endif
+endfunction

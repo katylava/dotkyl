@@ -1,0 +1,5 @@
+# 45 17 * * 1-5 say -v Cello "Well I got five forty-five and its five forty-five"
+30 */4 * * * LC_ALL='C' && /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
+30 17 * * * /usr/local/bin/brew update
+
+# vim: ft=crontab

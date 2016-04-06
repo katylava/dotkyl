@@ -1,0 +1,15 @@
+*~
+.DS_Store
+.svn
+*.pyc
+*.pyo
+*#
+*.swp
+.env
+.venv
+.ropeproject
+node_modules
+.vimrc
+!~/.vimrc
+.tern-project
+tags

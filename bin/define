@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+var request = require('/usr/local/lib/node_modules/request')
+
+var define = exports.define = function(word) {
+    var options = {
+        json: true,
+        qs: {
+            format: 'json',
+            action: 'query',
+            titles: word,
+            prop: 'extracts',
+            explaintext: '1'
+        },
+        url: 'https://en.wiktionary.org/w/api.php'
+    }
+
+    request.get(options, function(err, res, body) {
+        if (err) {
+            return console.error('ERR', err)
+        }
+
+        var pages = Object.keys(body.query.pages)
+
+        if (!pages.length) {
+            return console.log('No results')
+        }
+
+        pages.forEach(function(key) {
+            console.log(body.query.pages[key].extract)
+        })
+    })
+}
+
+if (require.main === module) {
+    define(process.argv[2]);
+}
+
