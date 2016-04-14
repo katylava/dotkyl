@@ -205,6 +205,10 @@ map <F1> <ESC>
 " Remove trailing space without overwriting current search
 nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
+" getting into terminal mode
+nnoremap ,tv :vsp term://bash<CR>i
+nnoremap ,tx :sp term://bash<CR>i
+
 
 " ---------------------
 " Plugin configuration
@@ -266,6 +270,7 @@ autocmd! QuitPre * let g:neomake_verbose = 0
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
+
 
 " promptline
 " let g:promptline_preset = {
