@@ -1,11 +1,15 @@
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
-Plug 'tweekmonster/braceless' " https://github.com/tweekmonster/braceless.vim
+Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
+Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
 Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 " Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
-Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
+" Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
 Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
@@ -162,6 +166,10 @@ nnoremap ª :tabprevious<CR>
 nnoremap π :tabnext<CR>
 nnoremap ø :tabprevious<CR>
 
+" popup window - use Ctrl+j/k instead of Ctrl+n/p
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+
 " _ does the same as ^, as far as i can tell, so may as well remap it
 nnoremap _ g_
 vnoremap _ g_
@@ -169,15 +177,18 @@ vnoremap _ g_
 " select just-pasted lines
 nnoremap gp `[v`]
 
+" insert space or newline and get back to normal mode
 nnoremap <silent> gj o<Esc>
 nnoremap <silent> gk O<Esc>
 nnoremap <silent> gh i<Space><Esc>
 nnoremap <silent> gl a<Space><Esc>
 nnoremap <silent> gn i<CR><Esc>
 
+" center search result
 nnoremap N Nzz
 nnoremap n nzz
 
+" easier system clipboard access
 noremap ,y "+y
 noremap ,p "+p
 
@@ -222,6 +233,13 @@ let g:ctrlp_map = '<C-q>'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|env'
 
+" FZF
+let g:fzf_layout = { 'down': '~40%' }
+let g:fzf_command_prefix = 'Fzf'
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+
 " indent-guides
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
@@ -240,7 +258,11 @@ let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,W0401,C0110,W0702,W0614,C03
 let g:pymode_lint_checker = "pyflakes,pep8"
 
 " syntastic
-let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_javascript_checkers = ['eslint']
+
+" neomake
+autocmd! BufWritePost,BufEnter * Neomake
+autocmd! QuitPre * let g:neomake_verbose = 0
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
