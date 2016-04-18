@@ -16,6 +16,7 @@
 	df = diff --cached
 	di = diff
 	dl = log -p --relative
+    dsf = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
 	dw = diff --color-words="[[:alnum:]_-]+|[[:punct:]]+"
 	d = diff -b -w --color-words
 	track = push -u origin
