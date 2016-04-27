@@ -1,0 +1,8 @@
+/**/*.log
+/**/*.min.js
+/**/log/*
+/public/scripts/forum/shared/editor.js
+/public/scripts/lib/jquery.textcomplete.js
+/public/scripts/forum/shared/emoji-picker.js
+/public/scripts/lib/react.js
+
