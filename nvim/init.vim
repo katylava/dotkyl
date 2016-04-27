@@ -89,6 +89,7 @@ autocmd FileType apex       set foldmethod=indent commentstring=//\ %s
 autocmd FileType ejs        set foldmethod=indent
 autocmd FileType htmldjango set foldmethod=indent
 autocmd FileType javascript set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript.jsx set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set ts=2 sw=2
 autocmd FileType python     set foldmethod=indent omnifunc=pythoncomplete#Complete
@@ -265,7 +266,7 @@ let g:pymode_lint_checker = "pyflakes,pep8"
 " let g:syntastic_javascript_checkers = ['eslint']
 
 " neomake
-autocmd! BufWritePost,BufEnter * Neomake
+autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
 
 " vim-json
