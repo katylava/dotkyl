@@ -86,7 +86,7 @@ autocmd BufRead *.txt       set filetype=markdown
 autocmd BufRead .zsh*      set filetype=sh
 
 autocmd FileType apex       set foldmethod=indent commentstring=//\ %s
-autocmd FileType ejs        set foldmethod=indent
+autocmd FileType ejs        set tw=0 foldmethod=indent
 autocmd FileType htmldjango set foldmethod=indent
 autocmd FileType javascript set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType javascript.jsx set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
@@ -150,10 +150,10 @@ tnoremap <C-h> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
  " <opt> = - . ,
-nnoremap ≠ 5<C-W>+
-nnoremap – 5<C-W>-
-nnoremap ≥ 5<C-W>>
-nnoremap ≤ 5<C-W><
+nnoremap ≠ 15<C-W>+
+nnoremap – 15<C-W>-
+nnoremap ≥ 15<C-W>>
+nnoremap ≤ 15<C-W><
 
 " <opt> b f k j
 nnoremap ∫ <C-W>H
