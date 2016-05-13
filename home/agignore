@@ -2,7 +2,9 @@
 *.svg
 /**/*.log
 /**/log/*
+d3.js
 editor.js
 emoji-picker.js
 jquery.*
 react.js
+us.json
