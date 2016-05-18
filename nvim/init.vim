@@ -38,7 +38,7 @@ filetype on
 filetype plugin on
 
 set completeopt=menu,longest,preview
-set cursorline
+" set cursorline " didn't realize this makes vim slower
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
 set exrc secure " enable per-directory .vimrc files
 set grepprg=ag
@@ -52,6 +52,7 @@ set number
 set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
+set synmaxcol=200
 set t_Co=256
 set title
 set ts=4 sw=4 ai expandtab
