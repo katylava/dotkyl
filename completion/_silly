@@ -1,0 +1,6 @@
+#compdef sillycli
+
+declare command_list
+command_list=(`sillycli help 2>/dev/null`)
+
+_describe -t commands "sillycli commands" command_list

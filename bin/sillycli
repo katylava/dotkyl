@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import random
+import sys
+
+import silly
+
+dimensions = [50, 75, 100, 150, 200, 300, 400, 500, 600, 800]
+
+def random_color():
+    digits = list('1234567890abcdef')
+    return ''.join(map(lambda x: random.choice(digits), range(0, 6)))
+
+
+if len(sys.argv) == 1 or sys.argv[1] == 'help':
+    print("""
+    a_noun a_thing address adjective city city_suffix company container country
+    datetime direction domain email firstname gender image lastname letter
+    markdown name noun number numberwang paragraph phone_number plural
+    postal_code sentence street thing things title tld verb
+    """)
+else:
+    for cmd in sys.argv[1:]:
+        if cmd == 'image':
+            width = random.choice(dimensions)
+            height = random.choice(dimensions[:dimensions.index(width) + 1])
+
+            url = silly.image(width=width, height=height).replace(' ', '+')
+            url = url.replace('292929', random_color())
+            url = url.replace('e3e3e3', random_color())
+
+            print(url)
+        else:
+            method = getattr(silly, cmd)
+            print(method())
+
