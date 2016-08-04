@@ -3,6 +3,8 @@ Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " htt
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
+Plug 'dracula/vim' " https://github.com/dracula/vim
+Plug 'goatslacker/mango.vim'
 Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -11,7 +13,9 @@ Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 " Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
 " Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
+Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
+Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
@@ -31,11 +35,15 @@ Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/
 Plug 'tpope/vim-repeat' " https://github.com/tpope/vim-repeat
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
 Plug 'tpope/vim-surround' " https://github.com/tpope/vim-surround
+Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
+Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 call plug#end()
 
 filetype on
 filetype plugin on
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set completeopt=menu,longest,preview
 " set cursorline " didn't realize this makes vim slower
@@ -117,7 +125,7 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " ------------------
 
 set background=dark
-colorscheme my-monokai
+colorscheme dracula
 
 " disable the annoying HTML link underlining
 hi link htmlLink NONE
