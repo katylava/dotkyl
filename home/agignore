@@ -1,10 +1,12 @@
-*.min.js
 *.svg
-/**/*.log
+*.min.js
+*.*.min.js
+*.log
 /**/log/*
 d3.js
 editor.js
 emoji-picker.js
 jquery.*
 react.js
+socket.io.js
 us.json
