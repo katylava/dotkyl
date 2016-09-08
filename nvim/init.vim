@@ -3,8 +3,6 @@ Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " htt
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
-Plug 'dracula/vim' " https://github.com/dracula/vim
-Plug 'goatslacker/mango.vim'
 Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -38,6 +36,11 @@ Plug 'tpope/vim-surround' " https://github.com/tpope/vim-surround
 Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
 Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
+
+" colorschemes
+Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
+Plug 'dracula/vim' " https://github.com/dracula/vim
+Plug 'goatslacker/mango.vim'
 call plug#end()
 
 filetype on
@@ -125,7 +128,7 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " ------------------
 
 set background=dark
-colorscheme dracula
+colorscheme monokai
 
 " disable the annoying HTML link underlining
 hi link htmlLink NONE
