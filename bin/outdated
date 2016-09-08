@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+echo "brew"
+echo "-----------------------------------"
+brew outdated
+echo "-----------------------------------"
+echo "brew upgrade <package>"
+echo -e "\n"
+
+echo "pip"
+echo "-----------------------------------"
+pip list --outdated
+echo "-----------------------------------"
+echo "pip install -U <package>"
+
+echo -e "\n"
+echo "pip3"
+echo "-----------------------------------"
+pip3 list --outdated
+echo "-----------------------------------"
+echo "pip3 install -U <package>"
+
+echo -e "\n"
+echo "gem"
+echo "-----------------------------------"
+gem outdated
+echo "-----------------------------------"
+echo "gem install <package>"
+
+echo -e "\n"
+echo "npm"
+echo "-----------------------------------"
+npm -g outdated --depth=0
+echo "-----------------------------------"
+echo "npm upgrade -g (doesn't always work)"
+
+echo -e "\n"
+echo "go"
+echo "-----------------------------------"
+gostatus all
+echo "-----------------------------------"
+echo "go get -u <package>"

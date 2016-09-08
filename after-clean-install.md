@@ -30,3 +30,7 @@ silly
 ## npm
 
 request
+
+## go
+
+go get -u github.com/shurcooL/gostatus
