@@ -9,6 +9,7 @@ alias ls='gls --color=auto -NFh'
 
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
+alias edit.mediocre='nvim ~/Code/Mediocre/notes/Mediocre.md'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'

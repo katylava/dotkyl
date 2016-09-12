@@ -7,7 +7,7 @@
 	stat = status
 	st = status --short --branch
 	ci = commit
-	cm = commit -m
+	cm = commit -am
 	ca = commit -a
 	co = checkout
 	br = branch

@@ -134,6 +134,17 @@ colorscheme monokai
 hi link htmlLink NONE
 hi link htmlItalic NONE
 
+hi mkdCode ctermfg=109
+hi mkdListItemLine ctermfg=139
+hi mkdLink ctermfg=105
+hi mkdURL ctermfg=60
+hi htmlH1 ctermfg=225
+hi htmlH2 ctermfg=218
+hi htmlH3 ctermfg=182
+hi htmlH4 ctermfg=139
+hi htmlH5 ctermfg=96
+hi htmlH6 ctermfg=239
+
 
 " -------------
 " Mappings
