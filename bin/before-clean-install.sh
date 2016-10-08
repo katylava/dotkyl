@@ -12,12 +12,12 @@ npm ls -g --depth 0 > npm.txt
 pip freeze > pip.txt
 pip3 freeze > pip3.txt
 
-tar -czvf ~/Dropbox/CleanInstall/Desktop.tgz ~/Desktop/
-tar -czvf ~/Dropbox/CleanInstall/Code-Vendor.tgz ~/Code/Vendor/
-tar -czvf ~/Dropbox/CleanInstall/Code-Playground.tgz ~/Code/Playground/
-tar -czvf ~/Dropbox/CleanInstall/Code-Incubator.tgz ~/Code/Incubator/
-tar -czvf ~/Dropbox/CleanInstall/Code-Web.tgz ~/Code/Web/
-tar -czvf ~/Dropbox/CleanInstall/Code-Mediocre-Experiments.tgz ~/Code/Mediocre/experiments/
+tar -czvf ~/Dropbox/CleanInstall/Desktop.tgz --exclude={node_modules,.venv} ~/Desktop/
+tar -czvf ~/Dropbox/CleanInstall/Code-Vendor.tgz --exclude={node_modules,.venv} ~/Code/Vendor/
+tar -czvf ~/Dropbox/CleanInstall/Code-Playground.tgz --exclude={node_modules,.venv} ~/Code/Playground/
+tar -czvf ~/Dropbox/CleanInstall/Code-Incubator.tgz --exclude={node_modules,.venv} ~/Code/Incubator/
+tar -czvf ~/Dropbox/CleanInstall/Code-Web.tgz --exclude={node_modules,.venv} ~/Code/Web/
+tar -czvf ~/Dropbox/CleanInstall/Code-Mediocre-Experiments.tgz --exclude={node_modules,.venv} ~/Code/Mediocre/experiments/
 
 cp -r ~/Library/Fonts ~/Dropbox/CleanInstall/Library-Fonts
 cp -r ~/Library/Preferences ~/Dropbox/CleanInstall/Library-Preferences
