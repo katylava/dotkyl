@@ -1,36 +1,41 @@
+# System Prefs
+
 - Reverse map ctrl/caps-lock
 - Configure screensaver to only disable with password
 - Disable Time Machine
-- Enable access for assistive devices
+- Tweak energy saver settings
 - Set up trackpad gestures
+- Sharing > name computer
+- Mission Control > turn off dashboard, set up screensaver hot corners
+- Accessibility > check zoom settings
 
+# Applications
 
-# ~/.dotkyl/bin Dependencies
+Install Chrome, then install Dropbox. Then look in ~/Dropbox/CleanInstall for a
+list of applications and evaluate which ones to install again.
 
-## ~/Code/Vendor
+In System Preferences > Keyboard > Shortcuts, add app shortcuts for Airmail
+next/previous account (`Shift+Cmd+]` and `Shift-Cmd-[`)
 
-...
+In System Preferences > Security & Privacy > Privacy > Accessibility, select
+apps that can control computer (aka "Enable access for assistive devices"). May
+have to open each app at least once before they show up there.
 
-## brew
+# Packages
 
-figlet
-neovim
-pngcrush
-wget
+Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
+(maybe) install with brew and other package managers.
 
-## pip
+# Migrated Folders
 
-neovim
-silly
+Non-version controlled folders should have been backed up to
+~/Dropbox/CleanInstall/*.tgz.
 
-## gem
+# Work
 
-...
+Follow dev runbook.
 
-## npm
+# Set up dotfiles
 
-request
+Clone this repo to ~/.dotkyl and run `~/.dotkyl/bin/setup-dotfiles`.
 
-## go
-
-go get -u github.com/shurcooL/gostatus
