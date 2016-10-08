@@ -21,6 +21,12 @@ In System Preferences > Security & Privacy > Privacy > Accessibility, select
 apps that can control computer (aka "Enable access for assistive devices"). May
 have to open each app at least once before they show up there.
 
+## Notes
+
+- Transmit favorites are synced via Dropbox.
+- iTerm2 configuration can be synced by reading from Dropbox/SyncedSettings
+- All app licenses are in Gmail and/or 1Password
+
 # Packages
 
 Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
@@ -28,8 +34,7 @@ Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
 
 # Terminal
 
-- After install iTerm2, set it to read preferences from ~/Dropbox/SyncedSettings.
-- After installing zsh via brew, do `chsh -s /bin/zsh`.
+After installing zsh via brew, do `chsh -s /bin/zsh`.
 
 # Set up dotfiles
 
