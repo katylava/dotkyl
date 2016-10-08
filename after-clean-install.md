@@ -1,13 +1,13 @@
 # System Prefs
 
 - Reverse map ctrl/caps-lock
-- Configure screensaver to only disable with password
-- Disable Time Machine
+- Configure screensaver to only disable with password (security settings)
+- Disable Time Machine (if it's not disabled by default)
 - Tweak energy saver settings
-- Set up trackpad gestures
+- Set up trackpad gestures (three finger drag is in Accessibility > Mouse and Trackpad > Trackpad Options button)
 - Sharing > name computer
 - Mission Control > turn off dashboard, set up screensaver hot corners
-- Accessibility > check zoom settings
+- Accessibility > enable ctrl+scroll to zoom
 
 # Applications
 
