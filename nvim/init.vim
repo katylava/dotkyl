@@ -1,41 +1,42 @@
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
-Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
-Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
-Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
-Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
-Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
-Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 " Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
 " Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
-Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
-Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
-Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
-Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
+Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
+Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
 Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
+Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
+Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
+Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
+Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
+Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
+Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
+Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
+Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
+Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
+Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
+Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
+Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
+Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
+Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
+Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
+Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
+Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
 Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
-Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'tpope/vim-eunuch' " https://github.com/tpope/vim-eunuch
 Plug 'tpope/vim-fugitive' " https://github.com/tpope/vim-fugitive
-Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
-Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
-Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
-Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
-Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
-Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
-Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
 Plug 'tpope/vim-repeat' " https://github.com/tpope/vim-repeat
-Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
 Plug 'tpope/vim-surround' " https://github.com/tpope/vim-surround
-Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
-Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
+Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
+Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
+Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
 
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
@@ -291,6 +292,7 @@ let g:pymode_lint_checker = "pyflakes,pep8"
 " neomake
 autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
+let g:neomake_javascript_enabled_makers = ['eslint']
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
