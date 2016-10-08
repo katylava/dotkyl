@@ -18,3 +18,13 @@ tar -czvf ~/Dropbox/CleanInstall/Code-Playground.tgz ~/Code/Playground/
 tar -czvf ~/Dropbox/CleanInstall/Code-Incubator.tgz ~/Code/Incubator/
 tar -czvf ~/Dropbox/CleanInstall/Code-Web.tgz ~/Code/Web/
 tar -czvf ~/Dropbox/CleanInstall/Code-Mediocre-Experiments.tgz ~/Code/Mediocre/experiments/
+
+cp -r ~/Library/Fonts ~/Dropbox/CleanInstall/Library-Fonts
+cp -r ~/Library/Preferences ~/Dropbox/CleanInstall/Library-Preferences
+
+cp -r ~/.config/pgcli ~/Dropbox/CleanInstall/dot-config-pgcli
+cp -r ~/.ngrok2 ~/Dropbox/CleanInstall/dot-ngrok2
+cp -r ~/.ssh ~/Dropbox/CleanInstall/dot-ssh
+
+cp ~/.histfile ~/Dropbox/CleanInstall/dot-histfile
+cp ~/.pyfreecell.db ~/Dropbox/CleanInstall/dot-pyfreecell.db

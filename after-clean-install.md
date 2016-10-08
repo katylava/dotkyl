@@ -26,16 +26,26 @@ have to open each app at least once before they show up there.
 Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
 (maybe) install with brew and other package managers.
 
-# Migrated Folders
+# Terminal
 
-Non-version controlled folders should have been backed up to
-~/Dropbox/CleanInstall/*.tgz.
-
-# Work
-
-Follow dev runbook.
+- After install iTerm2, set it to read preferences from ~/Dropbox/SyncedSettings.
+- After installing zsh via brew, do `chsh -s /bin/zsh`.
 
 # Set up dotfiles
 
-Clone this repo to ~/.dotkyl and run `~/.dotkyl/bin/setup-dotfiles`.
+Clone this repo to ~/.dotkyl and run `~/.dotkyl/bin/setup-dotfiles`. Also do
+`mkdir -p ~/.tmp/nvim`.
 
+# Migrated Folders and Files
+
+Review ~/Dropbox/CleanInstall files and folders and decide what to copy over.
+
+# Work
+
+- Follow dev runbook.
+- Install [Pentaho Data Integration](http://community.pentaho.com/projects/data-integration/).
+- Set up Resilio Sync folders.
+
+# Clean Up
+
+Delete the ~/Dropbox/CleanInstall directory.
