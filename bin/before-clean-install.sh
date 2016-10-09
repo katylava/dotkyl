@@ -28,3 +28,4 @@ cp -r ~/.ssh ~/Dropbox/CleanInstall/dot-ssh
 
 cp ~/.histfile ~/Dropbox/CleanInstall/dot-histfile
 cp ~/.pyfreecell.db ~/Dropbox/CleanInstall/dot-pyfreecell.db
+cp ~/.dotkyl/lib/000-private.zsh

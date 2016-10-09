@@ -3,5 +3,6 @@
 cd
 for f in .dotkyl/home/*; do ln -s "${f}" '.'`basename $f`; done
 
+test -d ~/.config || mkdir ~/.config
 cd .config
 ln -s ../.dotkyl/nvim
