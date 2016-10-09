@@ -34,7 +34,7 @@ Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
 
 # Terminal
 
-After installing zsh via brew, do `chsh -s /bin/zsh`.
+After installing zsh via brew, add `/usr/local/bin/zsh` to `/etc/shells` and do `chsh -s /usr/local/bin/zsh`.
 
 # Set up dotfiles
 
