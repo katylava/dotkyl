@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+
 test -d ~/Dropbox/CleanInstall || mkdir ~/Dropbox/CleanInstall
 
 cd ~/Dropbox/CleanInstall
+
+echo "Creating lists of installed apps, libs, packages, etc."
 
 ls /Applications > applications.txt
 brew list > brew.txt
@@ -11,6 +14,9 @@ go list ... > go.txt
 npm ls -g --depth 0 > npm.txt
 pip freeze > pip.txt
 pip3 freeze > pip3.txt
+
+echo "Backing up certain files to Dropbox."
+echo "BUT it's really better to just back up entire home directory to an external drive."
 
 tar -czvf ~/Dropbox/CleanInstall/Desktop.tgz --exclude={node_modules,.venv} ~/Desktop/
 tar -czvf ~/Dropbox/CleanInstall/Code-Vendor.tgz --exclude={node_modules,.venv} ~/Code/Vendor/

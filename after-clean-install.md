@@ -36,6 +36,13 @@ Install homebrew, then look in ~/Dropbox/CleanInstall for a list of what to
 
 After installing zsh via brew, add `/usr/local/bin/zsh` to `/etc/shells` and do `chsh -s /usr/local/bin/zsh`.
 
+Fix `Ctrl+h` in neovim:
+
+```
+infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
+tic $TERM.ti
+```
+
 # Set up dotfiles
 
 Clone this repo to ~/.dotkyl and run `~/.dotkyl/bin/setup-dotfiles`. Also do
