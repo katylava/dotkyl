@@ -18,6 +18,7 @@ alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
 alias deact='deactivate && source ~/.profile'
 alias diff2html='pygmentize -f html -O style=colorful,full -l diff -O encoding=utf-8'
 alias eject='hdiutil detach'
+alias encoding="vim -c 'execute \"silent !echo \" . &fileencoding | q'"
 alias ezrsync='rsync -avhC --progress --no-o'
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder && say "flushed DNS"'
 alias history='fc -il 1'
@@ -26,12 +27,12 @@ alias locip='ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d " " -f 2 | hea
 alias noderl='env NODE_NO_READLINE=1 rlwrap node'
 alias rpass='</dev/urandom tr -dc A-Za-z0-9 | head -c 10'
 alias updatedb='export LC_ALL='C' && sudo gupdatedb'
-alias encoding="vim -c 'execute \"silent !echo \" . &fileencoding | q'"
 
 # things i just hate typing
 alias dice='rolldice -s'
+alias freecell='~/Code/Incubator/pyfreecell/freecell.py -w 8 -o 2'
 alias ql='qlmanage -p'
 alias sopr='source ~/.zshrc'
+alias tabview='tabview --width max'
 alias tree='tree -I "*.pyc" -I node_modules'
-alias freecell='~/Code/Incubator/pyfreecell/freecell.py -w 8 -o 2'
 alias year='gcal $(date +%Y)'
