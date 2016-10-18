@@ -303,6 +303,7 @@ let g:vim_json_syntax_conceal = 0
 "         \'a' : [ promptline#slices#cwd() ],
 "         \'b' : [ '%*' ],
 "         \'c' : [ '⛵️' ],
+"         \'x' : [ promptline#slices#virtualenv() ],
 "         \'y' : [ promptline#slices#vcs_branch() ],
 "         \'z' : [ promptline#slices#git_status() ],
 "         \'warn' : [ promptline#slices#last_exit_code() ]}

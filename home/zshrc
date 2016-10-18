@@ -33,6 +33,7 @@ setopt autocd
 
 autoload -U colors && colors
 
+fpath=(/usr/local/share/zsh-completions $fpath)
 fpath=(~/.dotkyl/completion $fpath)
 
 for f in ~/.dotkyl/lib/*.zsh; do . $f; done
