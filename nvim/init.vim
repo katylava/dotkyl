@@ -302,9 +302,9 @@ let g:vim_json_syntax_conceal = 0
 " promptline
 " let g:promptline_preset = {
 "         \'a' : [ promptline#slices#cwd() ],
-"         \'b' : [ '%*' ],
+"         \'b' : [ promptline#slices#python_virtualenv() ],
 "         \'c' : [ '⛵️' ],
-"         \'x' : [ promptline#slices#virtualenv() ],
+"         \'x' : [ '%*' ],
 "         \'y' : [ promptline#slices#vcs_branch() ],
 "         \'z' : [ promptline#slices#git_status() ],
 "         \'warn' : [ promptline#slices#last_exit_code() ]}
