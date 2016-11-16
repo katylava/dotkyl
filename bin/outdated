@@ -7,11 +7,11 @@ echo "-----------------------------------"
 echo "brew upgrade <package>"
 echo -e "\n"
 
-echo "pip"
+echo "pip2"
 echo "-----------------------------------"
-pip list --outdated
+pip2 list --outdated
 echo "-----------------------------------"
-echo "pip install -U <package>"
+echo "pip2 install -U <package>"
 
 echo -e "\n"
 echo "pip3"
