@@ -4,6 +4,6 @@ PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:/Users/kyl
 30 */4 * * * LC_ALL='C' && /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
 30 15 * * * /usr/local/bin/brew update
 55 15 * * * outdated
-15 */1 * * * urlwatch
+15 * * * * urlwatch
 
 # vim: ft=crontab
