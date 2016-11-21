@@ -9,14 +9,14 @@ echo -e "\n"
 
 echo "pip2"
 echo "-----------------------------------"
-pip2 list --outdated
+pip2 list --outdated --format=columns
 echo "-----------------------------------"
 echo "pip2 install -U <package>"
 
 echo -e "\n"
 echo "pip3"
 echo "-----------------------------------"
-pip3 list --outdated
+pip3 list --outdated --format=columns
 echo "-----------------------------------"
 echo "pip3 install -U <package>"
 
