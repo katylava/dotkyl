@@ -4,7 +4,8 @@ call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
 Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
-Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
+" Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
+Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
