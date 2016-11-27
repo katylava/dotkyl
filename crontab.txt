@@ -1,7 +1,7 @@
 PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:/Users/kyl/Code/gocode/bin:/Users/kyl/.dotkyl/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/kyl/.fzf/bin
 
 # 45 17 * * 1-5 say -v Cello "Well I got five forty-five and its five forty-five"
-30 */4 * * * LC_ALL='C' && /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
+30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
 30 15 * * * /usr/local/bin/brew update
 55 15 * * * outdated
 15,45 * * * * env LC_ALL=en_US.UTF-8 urlwatch
