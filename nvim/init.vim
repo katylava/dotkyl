@@ -3,7 +3,7 @@ call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
 " Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
-Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
+" Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
 " Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
 Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
@@ -41,8 +41,8 @@ Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-paramet
 
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
-Plug 'dracula/vim' " https://github.com/dracula/vim
-Plug 'goatslacker/mango.vim'
+" Plug 'dracula/vim' " https://github.com/dracula/vim
+" Plug 'goatslacker/mango.vim'
 call plug#end()
 
 filetype on
