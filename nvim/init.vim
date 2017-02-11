@@ -11,6 +11,7 @@ Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
+Plug 'itchyny/lightline.vim' " https://github.com/itchyny/lightline.vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -247,6 +248,27 @@ let g:jsx_ext_required = 0
 " vim-airline
 let g:airline_theme = 'dark'
 let g:airline_powerline_fonts = 1
+
+" lightline
+let g:lightline = {
+      \ 'colorscheme': 'powerline',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"\ue0a2":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
+      \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
+      \ }
 
 " python
 let python_highlight_all = 1
