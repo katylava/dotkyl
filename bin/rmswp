@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+ls ~/.tmp/nvim
+rm -f ~/.tmp/nvim/*.swp
+ls ~/.tmp/nvim
