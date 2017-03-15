@@ -27,6 +27,8 @@ Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
+Plug 'python-mode/python-mode', { 'for': ['python'] } " https://github.com/python-mode/python-mode
+Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
@@ -39,7 +41,6 @@ Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
-
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
 " Plug 'dracula/vim' " https://github.com/dracula/vim
@@ -48,6 +49,7 @@ call plug#end()
 
 filetype on
 filetype plugin on
+filetype indent on
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
@@ -75,19 +77,6 @@ set ttyfast
 set tw=80 colorcolumn=80
 set wildignore=.svn,.git,.env,*.bak,*.pyc,*.DS_Store,*.db,venv
 set wildmenu wildmode=list:longest
-
-" had these before, but don't know if they are still needed
-"
-" set formatoptions=
-" set backspace=2 " make backspace work like most other apps
-" set statusline=%M\%f\ %y%(\ %R%W%q%)\ %=\ col\ %c\ %P
-" set showmode
-" set formatoptions=cq
-" set fillchars="vert: "
-" set showmatch
-" set viminfo='20,\"1000
-" set autowrite autoread
-" set showcmd
 
 autocmd BufRead .bash*      set filetype=sh
 autocmd BufRead *.cls       set filetype=apex
@@ -307,7 +296,7 @@ let NERDTreeWinSize = 45
 
 " pymode
 let g:pymode_lint_write = 1
-let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,W0401,C0110,W0702,W0614,C0321,W0511,C1001,E1002,R0201"
+let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,E501,W0401,C0110,W0702,W0614,C0321,W0511,C1001,E1002,R0201"
 let g:pymode_lint_checker = "pyflakes,pep8"
 
 " syntastic
@@ -317,6 +306,7 @@ let g:pymode_lint_checker = "pyflakes,pep8"
 autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
 let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_python_enabled_makers = ['pep8', 'pyflakes', 'flake8']
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
@@ -340,22 +330,17 @@ let g:vim_json_syntax_conceal = 0
 
 function! FileDir()
     let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
+    let filedir = substitute(expand("%:p:h"), '/Users/kathleenlavalle/', '', 'g')
     " Don't show common parent directories
     let filedir = substitute(l:filedir, 'Code/', '', 'g')
-    let filedir = substitute(l:filedir, 'Mediocre/', '', 'g')
-    let filedir = substitute(l:filedir, 'apps/', '', 'g')
-    let filedir = substitute(l:filedir, '/Webrole', '', 'g')
+    let filedir = substitute(l:filedir, 'Work/', '', 'g')
     " Shorten these a lot
     let filedir = substitute(l:filedir, '.dotkyl/', '…', 'g')
-    let filedir = substitute(l:filedir, '-service', '-svc', 'g')
-    let filedir = substitute(l:filedir, 'mediocre-sdk', 'sdk', 'g')
-    let filedir = substitute(l:filedir, 'mediocre-framework', 'fmwrk', 'g')
     " Shorten everything else a little by removing vowels
     let filedir = substitute(l:filedir, '[aeiou]', '', 'g')
     " Then remove double letters
     let filedir = substitute(l:filedir, '([a-zA-Z])\1', '\1', 'g')
     " Except these are better with vowels
-    let filedir = substitute(l:filedir, 'mh.cm', 'meh', 'g')
     let filedir = substitute(l:filedir, '\.rg/', '.org/', 'g')
     return filedir
 endfunction
