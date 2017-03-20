@@ -226,6 +226,10 @@ nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 nnoremap ,tv :vsp term://bash<CR>i
 nnoremap ,tx :sp term://bash<CR>i
 
+" folding
+nnoremap fs :SignifyFold<CR>
+nnoremap fi :set foldmethod=indent<CR>
+
 
 " ---------------------
 " Plugin configuration
@@ -237,6 +241,9 @@ let g:jsx_ext_required = 0
 " vim-airline
 let g:airline_theme = 'dark'
 let g:airline_powerline_fonts = 1
+
+" vim-signify
+let g:signify_vcs_list = [ 'git' ]
 
 " lightline
 let g:lightline = {
@@ -306,7 +313,8 @@ let g:pymode_lint_checker = "pyflakes,pep8"
 autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
 let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_python_enabled_makers = ['pep8', 'pyflakes', 'flake8']
+let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501'] }
+let g:neomake_python_enabled_makers = ['flake8']
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
