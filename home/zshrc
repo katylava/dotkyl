@@ -12,8 +12,8 @@ export EDITOR=nvim
 export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
 
-export PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:/Users/kyl/Code/gocode/bin:~/.dotkyl/bin:$PATH
-export GOPATH=/Users/kyl/Code/gocode
+export PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:$PATH
+export GOPATH=~/Code/gocode
 
 export DEFAULT_CHEAT_DIR=~/Dropbox/CheatSheets
 export CHEATCOLORS=true

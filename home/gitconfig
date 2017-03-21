@@ -20,7 +20,7 @@
 	track = push -u origin
 	merge-as-one = merge --squash --no-commit
 [core]
-	excludesfile = /Users/kyl/.gitignore
+	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
 	whitespace = cr-at-eol
 	autocrlf = false

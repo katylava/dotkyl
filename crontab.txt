@@ -1,4 +1,4 @@
-PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:/Users/kyl/Code/gocode/bin:/Users/kyl/.dotkyl/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/kyl/.fzf/bin
+PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.fzf/bin
 
 # 45 17 * * 1-5 say -v Cello "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
