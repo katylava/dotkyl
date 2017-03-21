@@ -25,6 +25,7 @@ Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
 Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
 Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
+Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'python-mode/python-mode', { 'for': ['python'] } " https://github.com/python-mode/python-mode
@@ -120,8 +121,8 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " Theme
 " ------------------
 
-set background=dark
-colorscheme monokai
+set background=light
+colorscheme PaperColor
 
 " disable the annoying HTML link underlining
 hi link htmlLink NONE
