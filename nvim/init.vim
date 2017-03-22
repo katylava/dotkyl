@@ -25,7 +25,6 @@ Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
 Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
 Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
-Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'python-mode/python-mode', { 'for': ['python'] } " https://github.com/python-mode/python-mode
@@ -44,6 +43,7 @@ Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vi
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
+Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
 " Plug 'dracula/vim' " https://github.com/dracula/vim
 " Plug 'goatslacker/mango.vim'
 call plug#end()
@@ -121,7 +121,7 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " Theme
 " ------------------
 
-set background=light
+set background=dark
 colorscheme PaperColor
 
 " disable the annoying HTML link underlining
@@ -306,6 +306,8 @@ let NERDTreeWinSize = 45
 let g:pymode_lint_write = 1
 let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,E501,W0401,C0110,W0702,W0614,C0321,W0511,C1001,E1002,R0201"
 let g:pymode_lint_checker = "pyflakes,pep8"
+let g:pymode_rope_lookup_project = 0
+let g:pymode_rope = 0 " [Pymode] Initialize Rope project ... takes too long
 
 " syntastic
 " let g:syntastic_javascript_checkers = ['eslint']
