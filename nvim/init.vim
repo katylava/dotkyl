@@ -231,6 +231,10 @@ nnoremap ,tx :sp term://bash<CR>i
 nnoremap fs :SignifyFold<CR>
 nnoremap fi :set foldmethod=indent<CR>
 
+" background toggle
+map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+
+
 
 " ---------------------
 " Plugin configuration
