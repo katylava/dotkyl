@@ -75,7 +75,7 @@ set t_Co=256
 set title
 set ts=4 sw=4 ai expandtab
 set ttyfast
-set tw=80 colorcolumn=80
+set tw=99 colorcolumn=80,100
 set wildignore=.svn,.git,.env,*.bak,*.pyc,*.DS_Store,*.db,venv
 set wildmenu wildmode=list:longest
 
