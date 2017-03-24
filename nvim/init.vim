@@ -27,7 +27,6 @@ Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
-Plug 'python-mode/python-mode', { 'for': ['python'] } " https://github.com/python-mode/python-mode
 Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
