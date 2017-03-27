@@ -239,6 +239,13 @@ map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR
 " Plugin configuration
 " ---------------------
 
+" vim-easymotion
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+"let g:EasyMotion_smartcase = 1
+nmap ,z <Plug>(easymotion-overwin-f2)
+map ,j <Plug>(easymotion-j)
+map ,k <Plug>(easymotion-k)
+
 "  vim-jsx
 let g:jsx_ext_required = 0
 
@@ -251,20 +258,17 @@ let g:signify_vcs_list = [ 'git' ]
 
 " lightline
 let g:lightline = {
-      \ 'colorscheme': 'powerline',
+      \ 'colorscheme': 'PaperColor',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'fugitive', 'filedir', 'filename' ] ]
       \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"\ue0a2":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ 'component_function': {
+      \   'fugitive': 'LightlineFugitive',
+      \   'readonly': 'LightlineReadonly',
+      \   'modified': 'LightlineModified',
+      \   'filedir': 'FileDir',
+      \   'filename': 'LightlineFilename'
       \ },
       \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
@@ -357,6 +361,42 @@ function! FileDir()
     " Except these are better with vowels
     let filedir = substitute(l:filedir, '\.rg/', '.org/', 'g')
     return filedir
+endfunction
+
+function! LightlineModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! LightlineReadonly()
+  if &filetype == "help"
+    return ""
+  elseif &readonly
+    return "\ue0a2"
+  else
+    return ""
+  endif
+endfunction
+
+function! LightlineFugitive()
+  if exists("*fugitive#head")
+    let branch = fugitive#head()
+    return branch !=# '' ? ' '.branch : ''
+  endif
+  return ''
+endfunction
+
+function! LightlineFilename()
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+       \ ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
+       \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
 endfunction
 
 
