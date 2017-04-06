@@ -166,10 +166,10 @@ tnoremap <C-h> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
  " <opt> = - . ,
-nnoremap ≠ 15<C-W>+
-nnoremap – 15<C-W>-
-nnoremap ≥ 15<C-W>>
-nnoremap ≤ 15<C-W><
+nnoremap ≠ 10<C-W>+
+nnoremap – 10<C-W>-
+nnoremap ≥ 10<C-W>>
+nnoremap ≤ 10<C-W><
 
 " <opt> b f k j
 nnoremap ∫ <C-W>H
@@ -309,13 +309,6 @@ map ,d :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc$']
 let NERDTreeWinSize = 45
 
-" pymode
-let g:pymode_lint_write = 1
-let g:pymode_lint_ignore = "E126,E127,E128,E121,E124,E501,W0401,C0110,W0702,W0614,C0321,W0511,C1001,E1002,R0201"
-let g:pymode_lint_checker = "pyflakes,pep8"
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope = 0 " [Pymode] Initialize Rope project ... takes too long
-
 " syntastic
 " let g:syntastic_javascript_checkers = ['eslint']
 
@@ -323,7 +316,7 @@ let g:pymode_rope = 0 " [Pymode] Initialize Rope project ... takes too long
 autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
 let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501'] }
+let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501,E731'] }
 let g:neomake_python_enabled_makers = ['flake8']
 
 " vim-json
