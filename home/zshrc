@@ -30,6 +30,7 @@ export LESSCHARSET="utf-8"
 export GIT_PAGER='less -m -X --quit-at-eof'
 
 setopt autocd
+setopt interactivecomments
 
 autoload -U colors && colors
 
