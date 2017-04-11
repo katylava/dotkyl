@@ -99,6 +99,7 @@ autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set ts=2 sw=2
 autocmd FileType python     set foldmethod=indent omnifunc=pythoncomplete#Complete
 autocmd FileType sass       set foldmethod=indent sw=4
+autocmd FileType yaml       set foldmethod=indent sw=2 ts=2
 
 " To avoid error 'crontab: temp file must be edited in place'
 autocmd filetype crontab setlocal nobackup nowritebackup
