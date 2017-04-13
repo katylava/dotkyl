@@ -265,14 +265,21 @@ let g:lightline = {
       \ 'colorscheme': 'PaperColor',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'filedir', 'filename' ] ]
+      \             [ 'fugitive', 'filedir', 'filename' ] ],
+      \   'right': [ [ 'percent', 'lineinfo' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ],
+      \              [ 'time'] ],
+      \ },
+      \ 'component': {
+      \   'lineinfo': ' %2v:%-3l',
       \ },
       \ 'component_function': {
       \   'fugitive': 'LightlineFugitive',
       \   'readonly': 'LightlineReadonly',
       \   'modified': 'LightlineModified',
       \   'filedir': 'FileDir',
-      \   'filename': 'LightlineFilename'
+      \   'filename': 'LightlineFilename',
+      \   'time': 'LightlineTime'
       \ },
       \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
@@ -394,6 +401,10 @@ function! LightlineFilename()
   return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
        \ ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
+
+function! LightlineTime()
+    return strftime('%H:%M')
 endfunction
 
 
