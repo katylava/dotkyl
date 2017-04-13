@@ -90,6 +90,9 @@ autocmd BufRead *.sql       set filetype=sql commentstring=--\ %s
 autocmd BufRead *.txt       set filetype=markdown
 autocmd BufRead .zsh*      set filetype=sh
 
+autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
+autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
+
 autocmd FileType apex       set foldmethod=indent commentstring=//\ %s
 autocmd FileType ejs        set tw=0 foldmethod=indent
 autocmd FileType htmldjango set foldmethod=indent
