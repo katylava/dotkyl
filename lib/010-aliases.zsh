@@ -29,7 +29,7 @@ alias updatedb='export LC_ALL='C' && sudo gupdatedb'
 
 # things i just hate typing
 alias dice='rolldice -s'
-alias freecell='~/Code/Incubator/pyfreecell/freecell.py -w 8 -o 2'
+alias freecell='~/Code/Personal/pyfreecell/freecell.py -w 8 -o 2'
 alias ql='qlmanage -p'
 alias sopr='source ~/.zshrc'
 alias tabview='tabview --width max'
