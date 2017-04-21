@@ -3,3 +3,4 @@ lib/000-private.zsh
 nvim/.netrwhist
 nvim/autoload/plug.vim.old
 nvim/plugged
+home/urlwatch/cache.db
