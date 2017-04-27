@@ -29,6 +29,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pan
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
+Plug 'tpope/vim-rhubarb' " https://github.com/tpope/vim-rhubarb
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
 Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
