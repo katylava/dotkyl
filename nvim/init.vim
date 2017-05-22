@@ -18,6 +18,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
 Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
+Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
 Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
 Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
