@@ -22,3 +22,10 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # only complete local git branches
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
+
+fpath=(/usr/local/share/zsh-completions $fpath)
+fpath=(~/.dotkyl/completion $fpath)
+
+if [ $commands[kubectl] ]; then
+  source <(kubectl completion zsh)
+fi

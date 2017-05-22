@@ -34,9 +34,6 @@ setopt interactivecomments
 
 autoload -U colors && colors
 
-fpath=(/usr/local/share/zsh-completions $fpath)
-fpath=(~/.dotkyl/completion $fpath)
-
 for f in ~/.dotkyl/lib/*.zsh; do . $f; done
 
 function node_repl_path {
@@ -54,6 +51,7 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(pyenv init -)"
 eval "$(jump shell zsh)"
+eval $(thefuck --alias)
 
 [[ `docker-machine status default` != 'Stopped' ]] && eval "$(docker-machine env default)"
 
