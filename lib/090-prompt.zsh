@@ -3,7 +3,7 @@
 #
 
 function __promptline_fun {
-    printf "%s" "🌺 "
+    printf "%s" "❀"
 }
 function __promptline_mail {
     mail -e
@@ -11,6 +11,21 @@ function __promptline_mail {
     [ $? -ne 0 ] && return 1;
 
     printf "%s" "📬  "
+}
+function __promptline_kubecontext {
+   emulate -L zsh
+   setopt extended_glob
+   setopt +o nomatch
+
+   local context
+
+   if [ -d (../)#kube(/Y1:a:h) -a $commands[kubectl] ]; then
+       context=`kubectl config current-context`
+       printf "%s" "⧉ $context"
+       return
+   fi
+
+   return 1
 }
 function __promptline_last_exit_code {
 
@@ -129,6 +144,12 @@ function __promptline_left_prompt {
   slice_prefix="${c_bg}${sep}${c_fg}${c_bg}${space}" slice_suffix="$space${c_sep_fg}" slice_joiner="${c_fg}${c_bg}${alt_sep}${space}" slice_empty_prefix="${c_fg}${c_bg}${space}"
   [ $is_prompt_empty -eq 1 ] && slice_prefix="$slice_empty_prefix"
   # section "c" slices
+  __promptline_wrapper "$(__promptline_kubecontext)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
+
+  # section "d" header
+  slice_prefix="${d_bg}${sep}${d_fg}${d_bg}${space}" slice_suffix="$space${d_sep_fg}" slice_joiner="${d_fg}${d_bg}${alt_sep}${space}" slice_empty_prefix="${d_fg}${d_bg}${space}"
+  [ $is_prompt_empty -eq 1 ] && slice_prefix="$slice_empty_prefix"
+  # section "c" slices
   __promptline_wrapper "$(__promptline_fun)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
   # close sections
@@ -241,9 +262,12 @@ function __promptline {
   local b_fg="${wrap}38;5;255${end_wrap}"
   local b_bg="${wrap}48;5;205${end_wrap}"
   local b_sep_fg="${wrap}38;5;205${end_wrap}"
-  local c_fg="${wrap}38;5;85${end_wrap}"
-  local c_bg="${wrap}48;5;45${end_wrap}"
-  local c_sep_fg="${wrap}38;5;45${end_wrap}"
+  local c_fg="${wrap}38;5;182${end_wrap}"
+  local c_bg="${wrap}48;5;65${end_wrap}"
+  local c_sep_fg="${wrap}38;5;65${end_wrap}"
+  local d_fg="${wrap}38;5;23${end_wrap}"
+  local d_bg="${wrap}48;5;45${end_wrap}"
+  local d_sep_fg="${wrap}38;5;45${end_wrap}"
   local warn_fg="${wrap}38;5;232${end_wrap}"
   local warn_bg="${wrap}48;5;166${end_wrap}"
   local warn_sep_fg="${wrap}38;5;166${end_wrap}"
