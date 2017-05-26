@@ -1,0 +1,55 @@
+#compdef spotify
+
+_spotify() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    _arguments \
+        '1: :->command'\
+        '*:: :->subcmd'
+
+    case $state in
+    (command)
+        local -a commands
+        commands=(
+            play:'Play a song, album, artist, list, or uri'
+            next:'Skip to next track'
+            prev:'Back to prev track'
+            replay:'Replay current track'
+            pos:'Jump to pos <time>'
+            pause:'Pause'
+            quit:'Quit'
+            vol:'Up, down, set, or show'
+            status:'Current track info'
+            share:'Get url and/or uri for current track'
+            toggle:'Toggle shuffle or repeat'
+        )
+        _describe -t all_commands "all commands" commands
+        ;;
+    (subcmd)
+        case ${line[1]} in
+        (play)
+            local -a subcmds
+            subcmds=(album artist list uri)
+            _describe -t subcmds "play subcommands" subcmds
+            ;;
+        (vol)
+            local -a subcmds
+            subcmds=(up down show)
+            _describe -t subcmds "vol subcommands" subcmds
+            ;;
+        (share)
+            local -a subcmds
+            subcmds=(url uri)
+            _describe -t subcmds "share subcommands" subcmds
+            ;;
+        (toggle)
+            local -a subcmds
+            subcmds=(shuffle repeat)
+            _describe -t subcmds "toggle subcommands" subcmds
+            ;;
+        esac
+    esac
+}
+
+compdef _spotify spotify

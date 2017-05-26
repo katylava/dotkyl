@@ -1,11 +1,6 @@
-# The following lines were added by compinstall
-zstyle :compinstall filename '~/.zshrc'
+# zstyle :compinstall filename '~/.zshrc'
 
 autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
-# the rest is copied from oh-my-zsh because i assume it makes completion nicer...
 
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
@@ -23,9 +18,11 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 
-fpath=(/usr/local/share/zsh-completions $fpath)
-fpath=(~/.dotkyl/completion $fpath)
+fpath=(~/.dotkyl/completion /usr/local/share/zsh-completions $fpath)
 
-if [ $commands[kubectl] ]; then
-  source <(kubectl completion zsh)
-fi
+compinit
+
+# Too fucking slow
+# if [ $commands[kubectl] ]; then
+#   source <(kubectl completion zsh)
+# fi
