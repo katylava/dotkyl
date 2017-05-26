@@ -1,5 +1,5 @@
 # export ZLE_RPROMPT_INDENT=0 # this makes readline behavior on complete menu weird (-er)
-PROFILE_STARTUP=true
+PROFILE_STARTUP=false
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
     # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
