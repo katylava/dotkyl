@@ -42,6 +42,8 @@ Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
+" This modifies other plugins, so has to come last
+Plug 'ryanoasis/vim-devicons'
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
 Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
