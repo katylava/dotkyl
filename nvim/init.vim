@@ -287,6 +287,22 @@ let g:lightline = {
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
       \ }
 
+" PaperColor
+let g:PaperColor_Theme_Options = {
+      \   'theme': {
+      \     'default': {
+      \       'allow_bold': 1,
+      \       'allow_italic': 1,
+      \       'transparent_background': 1
+      \     }
+      \   },
+      \   'language': {
+      \     'python': {
+      \       'highlight_builtins' : 1
+      \     }
+      \   }
+      \ }
+
 " python
 let python_highlight_all = 1
 let g:pyflakes_use_quickfix = 0
