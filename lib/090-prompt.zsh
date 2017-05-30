@@ -8,6 +8,8 @@ function __promptline_symbol {
     mail -e
     [ $? -eq 0 ] && symbol="✉"
 
+    [ ! -z "${DOCKER_MACHINE_NAME}" ] && symbol=$(echo -e "\ue7b0")
+
     printf "%s" "${symbol}"
 }
 function __promptline_kubecontext {
