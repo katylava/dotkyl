@@ -379,9 +379,10 @@ function! FileDir()
     " Shorten these a lot
     let filedir = substitute(l:filedir, '.dotkyl/', '…', 'g')
     " Shorten everything else a little by removing vowels
-    let filedir = substitute(l:filedir, '[aeiou]', '', 'g')
+    " (unless that vowel is the beginning of a word)
+    let filedir = substitute(l:filedir, '\(\<\)\@<![aeiou]', '', 'g')
     " Then remove double letters
-    let filedir = substitute(l:filedir, '([a-zA-Z])\1', '\1', 'g')
+    let filedir = substitute(l:filedir, '\([a-zA-Z]\)\1', '\1', 'g')
     " Except these are better with vowels
     let filedir = substitute(l:filedir, '\.rg/', '.org/', 'g')
     return filedir
