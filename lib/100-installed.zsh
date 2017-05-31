@@ -16,10 +16,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-pyenv() {
-    eval "$(pyenv init -)"
-    pyenv "$@"
-}
 j() {
     eval "$(jump shell zsh)"
     j "$@"
@@ -29,5 +25,6 @@ fuck() {
     fuck
 }
 
+eval "$(pyenv init -)"
 # This is not worth the startup time
 # [[ $(docker-machine status default) != 'Stopped' ]] && eval "$(docker-machine env default)"
