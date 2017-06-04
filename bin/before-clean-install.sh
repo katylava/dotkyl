@@ -21,17 +21,20 @@ echo "BUT it's really better to just back up entire home directory to an externa
 tar -czvf ~/Dropbox/CleanInstall/Desktop.tgz --exclude={node_modules,.venv} ~/Desktop/
 tar -czvf ~/Dropbox/CleanInstall/Code-Vendor.tgz --exclude={node_modules,.venv} ~/Code/Vendor/
 tar -czvf ~/Dropbox/CleanInstall/Code-Playground.tgz --exclude={node_modules,.venv} ~/Code/Playground/
-tar -czvf ~/Dropbox/CleanInstall/Code-Incubator.tgz --exclude={node_modules,.venv} ~/Code/Incubator/
-tar -czvf ~/Dropbox/CleanInstall/Code-Web.tgz --exclude={node_modules,.venv} ~/Code/Web/
-tar -czvf ~/Dropbox/CleanInstall/Code-Mediocre-Experiments.tgz --exclude={node_modules,.venv} ~/Code/Mediocre/experiments/
+tar -czvf ~/Dropbox/CleanInstall/Code-Personal.tgz --exclude={node_modules,.venv} ~/Code/Personal/
 
-cp -r ~/Library/Fonts ~/Dropbox/CleanInstall/Library-Fonts
-cp -r ~/Library/Preferences ~/Dropbox/CleanInstall/Library-Preferences
+tar -czvf ~/Dropbox/CleanInstall/Library-Application-Support.tgz ~/Library/Application\ Support/
 
-cp -r ~/.config/pgcli ~/Dropbox/CleanInstall/dot-config-pgcli
-cp -r ~/.ngrok2 ~/Dropbox/CleanInstall/dot-ngrok2
-cp -r ~/.ssh ~/Dropbox/CleanInstall/dot-ssh
+cp -R ~/Library/Fonts ~/Dropbox/CleanInstall/Library-Fonts
+cp -R ~/Library/Preferences ~/Dropbox/CleanInstall/Library-Preferences
+
+cp -Rv ~/.config ~/Dropbox/CleanInstall/dot-config
+cp -Rv ~/.ngrok2 ~/Dropbox/CleanInstall/dot-ngrok2
+cp -Rv ~/.ssh ~/Dropbox/CleanInstall/dot-ssh
 
 cp ~/.histfile ~/Dropbox/CleanInstall/dot-histfile
 cp ~/.pyfreecell.db ~/Dropbox/CleanInstall/dot-pyfreecell.db
 cp ~/.dotkyl/lib/000-private.zsh
+
+# TODO: Add warnings if there is anything in ~/Code/Work that isn't synced to Github
+
