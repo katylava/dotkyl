@@ -14,6 +14,9 @@ alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
 
+# gcloud is weird
+alias gcloud='~/Code/Vendor/google-cloud-sdk/bin/gcloud'
+
 # things i forget
 alias diff2html='pygmentize -f html -O style=colorful,full -l diff -O encoding=utf-8'
 alias eject='hdiutil detach'
