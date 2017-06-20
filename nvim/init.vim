@@ -1,3 +1,5 @@
+let g:python_host_prog='/Users/kathleenlavalle/.pyenv/shims/python3'
+
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
 " Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
 " Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
@@ -28,6 +30,7 @@ Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
+Plug 'purpleP/python-syntax', { 'for': 'python' } " https://github.com/purpleP/python-syntax
 Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-rhubarb' " https://github.com/tpope/vim-rhubarb
