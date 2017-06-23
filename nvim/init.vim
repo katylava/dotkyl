@@ -67,6 +67,7 @@ set exrc secure " enable per-directory .vimrc files
 set grepprg=ag
 set ignorecase smartcase
 set iskeyword+=-
+set mouse=a
 set nobackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
 set nofixeol
@@ -100,15 +101,16 @@ autocmd BufRead .zsh*      set filetype=sh
 autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
 autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
 
-autocmd FileType apex       set foldmethod=indent commentstring=//\ %s
-autocmd FileType ejs        set tw=0 foldmethod=indent
-autocmd FileType htmldjango set foldmethod=indent
-autocmd FileType javascript set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType javascript.jsx set tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType apex       set ts=4 sw=4 foldmethod=indent commentstring=//\ %s
+autocmd FileType ejs        set ts=4 sw=4 tw=0 foldmethod=indent
+autocmd FileType htmldjango set ts=4 sw=4 foldmethod=indent
+autocmd FileType javascript set ts=4 sw=4 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript.jsx set ts=4 sw=4 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType json       set foldmethod=syntax
-autocmd FileType mkd        set ts=2 sw=2
-autocmd FileType python     set foldmethod=indent omnifunc=pythoncomplete#Complete
-autocmd FileType sass       set foldmethod=indent sw=4
+autocmd FileType mkd        set tw=79 ts=2 sw=2
+autocmd FileType mardkdown  set tw=79 ts=2 sw=2
+autocmd FileType python     set ts=4 sw=4 foldmethod=indent omnifunc=pythoncomplete#Complete
+autocmd FileType sass       set ts=4 sw=4 foldmethod=indent sw=4
 autocmd FileType yaml       set foldmethod=indent sw=2 ts=2
 
 " To avoid error 'crontab: temp file must be edited in place'
