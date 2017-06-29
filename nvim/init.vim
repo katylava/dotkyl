@@ -47,6 +47,7 @@ Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vi
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
 " This modifies other plugins, so has to come last
 Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 " colorschemes
 Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
 Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
@@ -309,6 +310,11 @@ let g:PaperColor_Theme_Options = {
       \     }
       \   }
       \ }
+" ...somehow the backround is never actually transparent
+:hi Normal ctermbg=none
+:hi NonText ctermbg=none
+:hi LineNr ctermbg=none
+:hi SignColumn ctermbg=none
 
 " python
 let python_highlight_all = 1
@@ -344,6 +350,32 @@ let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 map ,d :NERDTreeToggle<CR>
 let NERDTreeIgnore = ['\.pyc$']
 let NERDTreeWinSize = 45
+let NERDTreeShowHidden=1
+
+" vim-nerdtree-syntax-highlight
+let s:brown = '905532'
+let s:aqua =  '3AFFDB'
+let s:blue = '689FB6'
+let s:darkBlue = '44788E'
+let s:purple = '834F79'
+let s:lightPurple = '834F79'
+let s:red = 'AE403F'
+let s:beige = 'F5C06F'
+let s:yellow = 'F09F17'
+let s:orange = 'D4843E'
+let s:darkOrange = 'F16529'
+let s:pink = 'CB6F6F'
+let s:salmon = 'EE6E73'
+let s:green = '8FAA54'
+let s:lightGreen = '31B53E'
+let s:white = 'FFFFFF'
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+let g:NERDTreeExtensionHighlightColor = {}
+let g:NERDTreeExtensionHighlightColor['py'] = s:blue
+let g:NERDTreeExtensionHighlightColor['md'] = s:purple
+let g:NERDTreeExtensionHighlightColor['yml'] = s:pink
+let g:NERDTreeExtensionHighlightColor['ini'] = s:pink
 
 " syntastic
 " let g:syntastic_javascript_checkers = ['eslint']
