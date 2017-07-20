@@ -1,7 +1,7 @@
 PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.fzf/bin
 
 # 45 17 * * 1-5 say -v Cello "Well I got five forty-five and its five forty-five"
-30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied"
+30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -v keybase
 30 15 * * * /usr/local/bin/brew update
 # 55 15 * * * outdated
 55 15 * * * /usr/local/bin/brew outdated
