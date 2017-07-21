@@ -4,6 +4,6 @@
 # http://pawelgoscicki.com/archives/2012/09/vi-mode-indicator-in-zsh-prompt/
 bindkey -e
 bindkey -M menuselect '^o' accept-and-infer-next-history
-bindkey '\e[A' history-beginning-search-backward
-bindkey '\e[B' history-beginning-search-forward
+# bindkey '\e[A' history-beginning-search-backward
+# bindkey '\e[B' history-beginning-search-forward
 bindkey '^J' autosuggest-accept
