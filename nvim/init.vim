@@ -142,7 +142,6 @@ hi link htmlLink NONE
 hi link htmlItalic NONE
 
 hi mkdCode ctermfg=109
-hi mkdListItemLine ctermfg=139
 hi mkdLink ctermfg=105
 hi mkdURL ctermfg=60
 hi htmlH1 ctermfg=225
