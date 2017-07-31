@@ -5,6 +5,7 @@ PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/goc
 30 15 * * * /usr/local/bin/brew update
 # 55 15 * * * outdated
 55 15 * * * /usr/local/bin/brew outdated
+57 15 * * * /usr/local/bin/brew cask outdated
 15,45 * * * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 
