@@ -7,6 +7,13 @@ echo "-----------------------------------"
 echo "brew upgrade <package>"
 echo -e "\n"
 
+echo "brew cask"
+echo "-----------------------------------"
+brew cask outdated
+echo "-----------------------------------"
+echo "brew upgrade <package>"
+echo -e "\n"
+
 echo "pip2"
 echo "-----------------------------------"
 pip2 list --outdated --format=columns
