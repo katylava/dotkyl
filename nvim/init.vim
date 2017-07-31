@@ -240,8 +240,7 @@ nnoremap ,tv :vsp term://bash<CR>i
 nnoremap ,tx :sp term://bash<CR>i
 
 " folding
-nnoremap fs :SignifyFold<CR>
-nnoremap fi :set foldmethod=indent<CR>
+nnoremap <Leader>s :SignifyFold<CR>
 
 " background toggle
 map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
