@@ -12,6 +12,7 @@ Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
+Plug 'fatih/vim-go', { 'for': 'go' } " https://github.com/fatih/vim-go
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
 Plug 'itchyny/lightline.vim' " https://github.com/itchyny/lightline.vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
@@ -109,7 +110,7 @@ autocmd FileType javascript set ts=4 sw=4 tw=120 colorcolumn=120 foldmethod=inde
 autocmd FileType javascript.jsx set ts=4 sw=4 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set tw=79 ts=2 sw=2
-autocmd FileType mardkdown  set tw=79 ts=2 sw=2
+autocmd FileType markdown   set tw=79 ts=2 sw=2
 autocmd FileType python     set ts=4 sw=4 foldmethod=indent omnifunc=pythoncomplete#Complete
 autocmd FileType sass       set ts=4 sw=4 foldmethod=indent sw=4
 autocmd FileType yaml       set foldmethod=indent sw=2 ts=2
@@ -250,6 +251,12 @@ map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR
 " ---------------------
 " Plugin configuration
 " ---------------------
+
+" vim-go
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
 
 " vim-easymotion
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
