@@ -35,3 +35,6 @@ fuck() {
 eval "$(pyenv init -)"
 # This is not worth the startup time
 # [[ $(docker-machine status default) != 'Stopped' ]] && eval "$(docker-machine env default)"
+
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
