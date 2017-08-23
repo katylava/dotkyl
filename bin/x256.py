@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 fgtpl = "[38;5;{color}m{text:>4}[m"
 bgtpl = "[48;5;{color}m [30m{text:>3} [m"
