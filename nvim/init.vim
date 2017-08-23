@@ -1,12 +1,8 @@
 let g:python_host_prog='/Users/kathleenlavalle/.pyenv/shims/python3'
 
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
-" Plug 'edkolev/promptline.vim' " https://github.com/edkolev/promptline.vim
-" Plug 'scrooloose/syntastic' " https://github.com/scrooloose/syntastic
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
-" Plug 'bling/vim-airline' " https://github.com/bling/vim-airline
-" Plug 'briancollins/vim-jst', { 'for': 'ejs' } " https://github.com/briancollins/vim-jst
 Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
@@ -46,14 +42,14 @@ Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
+
+" colorschemes
+Plug 'NLKNguyen/papercolor-theme'
+
 " This modifies other plugins, so has to come last
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-" colorschemes
-Plug 'crusoexia/vim-monokai' " https://github.com/crusoexia/vim-monokai
-Plug 'NLKNguyen/papercolor-theme' " https://github.com/NLKNguyen/papercolor-theme
-" Plug 'dracula/vim' " https://github.com/dracula/vim
-" Plug 'goatslacker/mango.vim'
+
 call plug#end()
 
 filetype on
@@ -65,7 +61,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set completeopt=menu,longest,preview
 " set cursorline " didn't realize this makes vim slower
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
-set exrc secure " enable per-directory .vimrc files
+" set exrc secure " enable per-directory .vimrc files
 set grepprg=ag
 set ignorecase smartcase
 set iskeyword+=-
@@ -79,8 +75,8 @@ set number
 set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
-set synmaxcol=200
-set t_Co=256
+set synmaxcol=200 " disable syntax highlight after 200 chars for performance
+set termguicolors " probably don't need this since $NVIM_TUI_ENABLE_TRUE_COLOR is set
 set title
 set ts=4 sw=4 ai expandtab
 set ttyfast
@@ -98,7 +94,7 @@ autocmd BufRead *.py        set filetype=python commentstring=#\ %s
 autocmd BufRead *.scss      set filetype=sass
 autocmd BufRead *.sql       set filetype=sql commentstring=--\ %s
 autocmd BufRead *.txt       set filetype=markdown
-autocmd BufRead .zsh*      set filetype=sh
+autocmd BufRead .zsh*       set filetype=sh
 
 autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
 autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
@@ -134,7 +130,6 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " ------------------
 " Theme
 " ------------------
-
 set background=dark
 colorscheme PaperColor
 
@@ -142,6 +137,7 @@ colorscheme PaperColor
 hi link htmlLink NONE
 hi link htmlItalic NONE
 
+" tweak colors
 hi mkdCode ctermfg=109
 hi mkdLink ctermfg=105
 hi mkdURL ctermfg=60
@@ -151,6 +147,8 @@ hi htmlH3 ctermfg=182
 hi htmlH4 ctermfg=139
 hi htmlH5 ctermfg=96
 hi htmlH6 ctermfg=239
+hi FunctionParameters guifg=#AAC4FF
+hi pythonString guifg=#5f8700
 
 
 " -------------
@@ -165,10 +163,6 @@ inoremap jk <Esc>
 inoremap <TAB><TAB> <C-p>
 
 tnoremap jk <C-\><C-n>
-
-" i'm not sure why i have these, can't remember when i needed them
-nnoremap [[ [{
-nnoremap ]] ]}
 
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
@@ -191,19 +185,13 @@ nnoremap ƒ <C-W>L
 nnoremap ˚ <C-W>K
 nnoremap ∆ <C-W>J
 
-" <opt> 0 9 p o
-nnoremap º :tabnext<CR>
-nnoremap ª :tabprevious<CR>
+" <opt> p o
 nnoremap π :tabnext<CR>
 nnoremap ø :tabprevious<CR>
 
 " popup window - use Ctrl+j/k instead of Ctrl+n/p
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-
-" _ does the same as ^, as far as i can tell, so may as well remap it
-nnoremap _ g_
-vnoremap _ g_
 
 " select just-pasted lines
 nnoremap gp `[v`]
@@ -315,14 +303,14 @@ let g:PaperColor_Theme_Options = {
       \     }
       \   }
       \ }
-" ...somehow the backround is never actually transparent
-:hi Normal ctermbg=none
-:hi NonText ctermbg=none
-:hi LineNr ctermbg=none
-:hi SignColumn ctermbg=none
+" ...somehow the background is never actually transparent
+:hi Normal guibg=none ctermbg=none
+:hi NonText guibg=none ctermbg=none
+:hi LineNr guibg=none ctermbg=none
+:hi SignColumn guibg=none ctermbg=none
 
 " python
-let python_highlight_all = 1
+let g:python_highlight_all = 1
 let g:pyflakes_use_quickfix = 0
 
 " CtrlP
@@ -382,30 +370,16 @@ let g:NERDTreeExtensionHighlightColor['md'] = s:purple
 let g:NERDTreeExtensionHighlightColor['yml'] = s:pink
 let g:NERDTreeExtensionHighlightColor['ini'] = s:pink
 
-" syntastic
-" let g:syntastic_javascript_checkers = ['eslint']
-
 " neomake
 autocmd BufWritePost * Neomake
 autocmd! QuitPre * let g:neomake_verbose = 0
+let g:neomake_go_enabled_makers = ['golint']
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501,E731'] }
 let g:neomake_python_enabled_makers = ['flake8']
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
-
-
-" promptline
-" let g:promptline_preset = {
-"         \'a' : [ promptline#slices#cwd() ],
-"         \'b' : [ promptline#slices#python_virtualenv() ],
-"         \'c' : [ '⛵️' ],
-"         \'x' : [ '%*' ],
-"         \'y' : [ promptline#slices#vcs_branch() ],
-"         \'z' : [ promptline#slices#git_status() ],
-"         \'warn' : [ promptline#slices#last_exit_code() ]}
-
 
 
 " -----------
