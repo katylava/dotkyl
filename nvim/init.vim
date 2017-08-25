@@ -131,7 +131,12 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " Theme
 " ------------------
 set background=dark
+
+" these have to be in this order to work
+source ~/.config/nvim/pcthemes/kyl.vim
+let g:PaperColor_Theme = 'kyl'
 colorscheme PaperColor
+hi FunctionParameters guifg=#AAC4FF
 
 " disable the annoying HTML link underlining
 hi link htmlLink NONE
@@ -147,8 +152,6 @@ hi htmlH3 ctermfg=182
 hi htmlH4 ctermfg=139
 hi htmlH5 ctermfg=96
 hi htmlH6 ctermfg=239
-hi FunctionParameters guifg=#AAC4FF
-hi pythonString guifg=#5f8700
 
 
 " -------------
@@ -288,21 +291,6 @@ let g:lightline = {
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
       \ }
 
-" PaperColor
-let g:PaperColor_Theme_Options = {
-      \   'theme': {
-      \     'default': {
-      \       'allow_bold': 1,
-      \       'allow_italic': 1,
-      \       'transparent_background': 1
-      \     }
-      \   },
-      \   'language': {
-      \     'python': {
-      \       'highlight_builtins' : 1
-      \     }
-      \   }
-      \ }
 " ...somehow the background is never actually transparent
 :hi Normal guibg=none ctermbg=none
 :hi NonText guibg=none ctermbg=none
