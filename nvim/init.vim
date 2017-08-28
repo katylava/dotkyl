@@ -1,4 +1,4 @@
-let g:python_host_prog='/Users/kathleenlavalle/.pyenv/shims/python3'
+let g:python_host_prog='~/.pyenv/versions/3.5.3/bin/python'
 
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
 Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
