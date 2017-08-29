@@ -5,3 +5,16 @@ for f in ~/Code/Work/*; do
         echo "${f}" && cd "${f}" && git fetch
     fi
 done
+
+# do i really need this stuff in my go path?
+for f in $GOPATH/src/github.com/safarijv/*; do
+    if [ -d "${f}" -a -d "${f}"/.git ]; then
+        echo "${f}" && cd "${f}" && git fetch
+    fi
+done
+for f in $GOPATH/src/github.com/oreillymedia/*; do
+    if [ -d "${f}" -a -d "${f}"/.git ]; then
+        echo "${f}" && cd "${f}" && git fetch
+    fi
+done
+
