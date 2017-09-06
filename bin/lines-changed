@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# I use this script to measure my productivity at work by counting up changed
+# lines of code per day across all work repos.
+#
+# Way too many words about that:
+#
+# - If I change the same line in more than one commit in a given day, it will
+#   be counted for each commit. This is fine, because it represents work I did,
+#   even if I threw it away.
+# - Since I'm measuring this way, I *have* to make frequent commits or work
+#   that was really hard and caused me to change my mind a lot would not be
+#   measured. Frequent commits work well for me anyway, because I prefer to
+#   commit a "rough draft", and refine my code in further commits.
+# - Even though I commit frequently, I chose to count lines changed instead of
+#   commits because some commits still represent a lot more work than others.
+# - Ok, there is some danger in that if I copy and paste a bunch of stuff
+#   (tests, usually) it will look like I worked harder than I actually did. I'm
+#   fine with this as long as I customize the copy-pasted code *before* I
+#   commit it.
+# - A lot of our work as engineers involves discussion and documentation
+#   outside of our version control system. I can't measure that work, so this is
+#   imperfect. But, I think I spend too much time talking and not enough
+#   coding, so the act of measuring lines changed should help me with that.
+
+# **Requires GNU's date command** -- brew install coreutils
+
+# Hard-coded vars for my environment
+AUTHOR=katy
+PATHS=(
+    ~/Code/Work/
+    $GOPATH/src/github.com/oreillymedia/
+    $GOPATH/src/github.com/safarijv/
+)
+
+# Only script argument -- how far back to go
+DAYS_AGO=${1:-30}
+
+# Initialize for first git command
+until=$(date -d "+1 day" +%Y-%m-%d)
+
+calc_lines_changed() {
+    local path="${1}"
+    local since=$2
+    local until=$3
+
+    cd "${path}"
+
+    local lines_changed=`
+        git log \
+            --all \
+            --author=$AUTHOR \
+            --no-merges \
+            --numstat \
+            --pretty= \
+            --since=$since \
+            --until=$until \
+        | cut -f1,2 \
+        | paste -s \
+        | tr '\t' '+' \
+        | bc
+    `
+
+    if [ -z $lines_changed ]; then
+        echo 0
+    else
+        echo $lines_changed
+    fi
+}
+
+for i in $(seq 0 $DAYS_AGO); do
+    since=$(date -d "now -$i days" +%Y-%m-%d)
+
+    lines_changed=0
+
+    for path in ${PATHS[@]}; do
+        for node in "${path}"*; do
+            if [ -d "${node}" -a -d "${node}"/.git ]; then
+                _lines_changed=$(calc_lines_changed "${node}" $since $until)
+                lines_changed=$(($lines_changed+$_lines_changed))
+            fi
+        done
+    done
+
+    echo $(date -d $since +"%a %b %e") $lines_changed
+
+    # Set `until` to previous day for next loop
+    until=$since
+done;
