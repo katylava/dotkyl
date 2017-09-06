@@ -31,7 +31,12 @@ PATHS=(
     ~/Code/Work/
     $GOPATH/src/github.com/oreillymedia/
     $GOPATH/src/github.com/safarijv/
-)
+) # dirs which contain child dirs which contain .git dirs
+
+# Appearance
+CLR_RESET="\e[0m"
+CLR_WEEKDAY="\e[36m"
+CLR_WEEKEND="\e[34m"
 
 # Only script argument -- how far back to go
 DAYS_AGO=${1:-30}
@@ -41,8 +46,8 @@ until=$(date -d "+1 day" +%Y-%m-%d)
 
 calc_lines_changed() {
     local path="${1}"
-    local since=$2
-    local until=$3
+    local since=${2}T00:00:00
+    local until=${3}T00:00:00
 
     cd "${path}"
 
@@ -68,22 +73,33 @@ calc_lines_changed() {
     fi
 }
 
+max_value=0
+
 for i in $(seq 0 $DAYS_AGO); do
     since=$(date -d "now -$i days" +%Y-%m-%d)
 
     lines_changed=0
+    repos=()
 
     for path in ${PATHS[@]}; do
         for node in "${path}"*; do
             if [ -d "${node}" -a -d "${node}"/.git ]; then
                 _lines_changed=$(calc_lines_changed "${node}" $since $until)
                 lines_changed=$(($lines_changed+$_lines_changed))
+
+                if [ $_lines_changed -gt 0 ]; then
+                    repos+=($(basename "${node}"))
+                fi
             fi
         done
     done
 
-    echo $(date -d $since +"%a %b %e") $lines_changed
+    date_str=$(date -d $since +"%a %b %e")
+    color=$CLR_WEEKDAY
+    [[ $date_str == S* ]] && color=$CLR_WEEKEND
+
+    echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$CLR_RESET"
 
     # Set `until` to previous day for next loop
     until=$since
-done;
+done
