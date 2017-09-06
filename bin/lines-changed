@@ -55,6 +55,7 @@ if [ $COLOR == "on" ]; then
     clr_reset="\e[0m"
     clr_weekday="\e[36m"
     clr_weekend="\e[34m"
+    clr_weekday_zero="\e[0m"
 fi
 
 # Initialize for first git command
@@ -89,8 +90,6 @@ calc_lines_changed() {
     fi
 }
 
-max_value=0
-
 for i in $(seq 0 $DAYS_AGO); do
     since=$(date -d "now -$i days" +%Y-%m-%d)
 
@@ -112,6 +111,7 @@ for i in $(seq 0 $DAYS_AGO); do
 
     date_str=$(date -d $since +"%a %b %e")
     color=$clr_weekday
+    [[ $lines_changed -eq 0 ]] && color=$clr_weekday_zero
     [[ $date_str == S* ]] && color=$clr_weekend
 
     lines_changed=$(printf "%4s" $lines_changed)
