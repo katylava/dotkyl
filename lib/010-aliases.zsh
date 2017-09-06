@@ -16,6 +16,7 @@ alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
 
 # gcloud is weird
 alias gcloud='~/Code/Vendor/google-cloud-sdk/bin/gcloud'
+alias gkubectl='~/Code/Vendor/google-cloud-sdk/bin/gkubectl'
 
 # things i forget
 alias diff2html='pygmentize -f html -O style=colorful,full -l diff -O encoding=utf-8'
