@@ -33,13 +33,29 @@ PATHS=(
     $GOPATH/src/github.com/safarijv/
 ) # dirs which contain child dirs which contain .git dirs
 
-# Appearance
-CLR_RESET="\e[0m"
-CLR_WEEKDAY="\e[36m"
-CLR_WEEKEND="\e[34m"
-
-# Only script argument -- how far back to go
+# Script args
 DAYS_AGO=${1:-30}
+COLOR=on
+
+for i in "$@"; do
+    case $i in
+        -p|--no-color)
+            COLOR=off
+            ;;
+        *)
+            ;;
+    esac
+done
+
+# Appearance
+clr_reset=""
+clr_weekday=""
+clr_weekend=""
+if [ $COLOR == "on" ]; then
+    clr_reset="\e[0m"
+    clr_weekday="\e[36m"
+    clr_weekend="\e[34m"
+fi
 
 # Initialize for first git command
 until=$(date -d "+1 day" +%Y-%m-%d)
@@ -95,10 +111,11 @@ for i in $(seq 0 $DAYS_AGO); do
     done
 
     date_str=$(date -d $since +"%a %b %e")
-    color=$CLR_WEEKDAY
-    [[ $date_str == S* ]] && color=$CLR_WEEKEND
+    color=$clr_weekday
+    [[ $date_str == S* ]] && color=$clr_weekend
 
-    echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$CLR_RESET"
+    lines_changed=$(printf "%4s" $lines_changed)
+    echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$clr_reset"
 
     # Set `until` to previous day for next loop
     until=$since
