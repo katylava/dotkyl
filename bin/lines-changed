@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # I use this script to measure my productivity at work by counting up changed
 # lines of code per day across all work repos.
 #
@@ -31,35 +32,68 @@ PATHS=(
     ~/Code/Work/
     $GOPATH/src/github.com/oreillymedia/
     $GOPATH/src/github.com/safarijv/
-) # dirs which contain child dirs which contain .git dirs
+)  # dirs which contain child dirs which contain .git dirs
 
 # Script args
 DAYS_AGO=${1:-30}
 COLOR=on
+SUMMARY=on
+
+# Caching
+# - caches lines changed per day per repo in .git/lc-cache/[since-until]
+# - caches lines changed for all in ~/.lc-cache/[since-until]
+# - when run with --clear-cache, removes all those directories
+CACHE=on
+CLEAR_CACHE=off
 
 for i in "$@"; do
     case $i in
-        -p|--no-color)
+        -c|--color)
+            COLOR=on
+            ;;
+        -s|--summary)
+            SUMMARY=on
+            ;;
+        --no-color)
             COLOR=off
+            ;;
+        --no-summary)
+            SUMMARY=off
+            ;;
+        --no-cache)
+            CACHE=off
+            ;;
+        --clear-cache)
+            CLEAR_CACHE=on
             ;;
         *)
             ;;
     esac
 done
 
+if [ $CLEAR_CACHE == "on" ]; then
+    [ -d ~/.lc-cache ] && rm -fr ~/.lc-cache
+fi
+
 # Appearance
 clr_reset=""
+clr_summary=""
 clr_weekday=""
+clr_weekday_zero=""
 clr_weekend=""
 if [ $COLOR == "on" ]; then
     clr_reset="\e[0m"
+    clr_summary="\e[33m"
     clr_weekday="\e[36m"
-    clr_weekend="\e[34m"
     clr_weekday_zero="\e[0m"
+    clr_weekend="\e[34m"
 fi
 
-# Initialize for first git command
+# Initialize vars
 until=$(date -d "+1 day" +%Y-%m-%d)
+total_lines=0
+weekdays=0
+non_zero_days=0
 
 calc_lines_changed() {
     local path="${1}"
@@ -67,6 +101,19 @@ calc_lines_changed() {
     local until=${3}T00:00:00
 
     cd "${path}"
+
+    if [ $CLEAR_CACHE == "on" ]; then
+        [ -d ./.git/lc-cache ] && rm -fr .git/lc-cache
+    fi
+
+    if [ $CACHE == "on" ]; then
+        [ ! -d ./.git/lc-cache ] && mkdir ./.git/lc-cache
+
+        if [ -f "./.git/lc-cache/$2-$3" ]; then
+            lines_changed=`cat "./.git/lc-cache/$2-$3"`
+            [ ! -z $lines_changed ] && echo $lines_changed && return
+        fi
+    fi
 
     local lines_changed=`
         git log \
@@ -79,44 +126,80 @@ calc_lines_changed() {
             --until=$until \
         | cut -f1,2 \
         | paste -s \
-        | tr '\t' '+' \
+        | tr "\t" "+" \
         | bc
     `
 
-    if [ -z $lines_changed ]; then
-        echo 0
-    else
-        echo $lines_changed
+    [ -z $lines_changed ] && lines_changed=0
+
+    if [ $CACHE == "on" ]; then
+        echo $lines_changed > "./.git/lc-cache/$2-$3"
     fi
+
+    echo $lines_changed
 }
 
 for i in $(seq 0 $DAYS_AGO); do
     since=$(date -d "now -$i days" +%Y-%m-%d)
+    lines_changed=''
 
-    lines_changed=0
-    repos=()
+    if [ $CACHE == "on" ]; then
+        [ ! -d ~/.lc-cache ] && mkdir ~/.lc-cache
 
-    for path in ${PATHS[@]}; do
-        for node in "${path}"*; do
-            if [ -d "${node}" -a -d "${node}"/.git ]; then
-                _lines_changed=$(calc_lines_changed "${node}" $since $until)
-                lines_changed=$(($lines_changed+$_lines_changed))
-
-                if [ $_lines_changed -gt 0 ]; then
-                    repos+=($(basename "${node}"))
-                fi
+        if [ -f "~/.lc-cache/${since}-${until}" ]; then
+            mapfile -n2 -t cached_value < "~/.lc-cache/${since}-${until}"
+            if [ ! -z $cached_value[0] ]; then
+                lines_changed=$cached_value[0]
+                repos=($cached_value[1])
             fi
-        done
-    done
+        fi
+    fi
 
+    if [ -z $lines_changed ]; then
+        lines_changed=0
+        repos=()
+
+        for path in ${PATHS[@]}; do
+            for node in "${path}"*; do
+                if [ -d "${node}" -a -d "${node}"/.git ]; then
+                    _lines_changed=$(calc_lines_changed "${node}" $since $until)
+                    lines_changed=$(($lines_changed+$_lines_changed))
+
+                    if [ $_lines_changed -gt 0 ]; then
+                        repos+=($(basename "${node}"))
+                    fi
+                fi
+            done
+        done
+
+        if [ $CACHE == "on" ]; then
+            echo -e "$lines_changed\n${repos[@]}" > "$HOME/.lc-cache/${since}-${until}"
+        fi
+    fi
+
+    # Print day
     date_str=$(date -d $since +"%a %b %e")
     color=$clr_weekday
     [[ $lines_changed -eq 0 ]] && color=$clr_weekday_zero
     [[ $date_str == S* ]] && color=$clr_weekend
-
     lines_changed=$(printf "%4s" $lines_changed)
     echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$clr_reset"
+
+    # Update summary
+    total_lines=$(($total_lines+$lines_changed))
+    [[ $lines_changed -gt 0 ]] && non_zero_days=$(($non_zero_days+1))
+    [[ $date_str != S* ]] && weekdays=$(($weekdays+1))
 
     # Set `until` to previous day for next loop
     until=$since
 done
+
+if [ $SUMMARY == 'on' ]; then
+    average_non_zero=$(($total_lines/$non_zero_days))
+    average_weekdays=$(($total_lines/$weekdays))
+
+    echo -e $clr_summary
+    echo "Averages"
+    echo "Coding days: $average_non_zero"
+    echo "Weekdays: $average_weekdays"
+fi
