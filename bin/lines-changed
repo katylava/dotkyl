@@ -113,7 +113,7 @@ calc_lines_changed() {
         [ -d ./.git/lc-cache ] && rm -fr .git/lc-cache
     fi
 
-    if [[ $CACHE == "on" && $1 != $TODAY ]]; then
+    if [[ $CACHE == "on" && $2 != $TODAY ]]; then
         [ ! -d ./.git/lc-cache ] && mkdir ./.git/lc-cache
 
         if [ -f "./.git/lc-cache/$2-$3" ]; then
@@ -139,7 +139,7 @@ calc_lines_changed() {
 
     [ -z $lines_changed ] && lines_changed=0
 
-    if [[ $CACHE == "on" && $1 != $TODAY ]]; then
+    if [[ $CACHE == "on" && $2 != $TODAY ]]; then
         echo $lines_changed > "./.git/lc-cache/$2-$3"
     fi
 
