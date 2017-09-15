@@ -7,7 +7,7 @@ USAGE="Usage: lines-changed [days] [options]
     Sums up all lines added and deleted in multiple repos for each commit for
     each day for a specific author.
 
-    lines_changed works backwards from the current day, so the 'days' argument is
+    lines-changed works backwards from the current day, so the 'days' argument is
     how many days to go back. It can be left out if there are no options -- the
     default is 30.
 
