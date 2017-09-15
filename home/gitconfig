@@ -11,8 +11,8 @@
 	ca = commit -a
 	co = checkout
 	br = branch
-	ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %cn %Creset%s' -20
-	lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %cn %Creset%n%C(yellow)%cd%n%s' --stat
+	ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
+	lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
     df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
 	dl = log -p --relative
     di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
