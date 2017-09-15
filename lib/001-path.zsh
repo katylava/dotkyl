@@ -1,4 +1,4 @@
-export PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:$PATH
+export PATH=/usr/local/opt/python/libexec/bin:/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:$PATH
 export GOPATH=~/Code/gocode
 
 function node_repl_path {
