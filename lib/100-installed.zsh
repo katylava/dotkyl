@@ -11,6 +11,9 @@ export GIT_PAGER='less -m -X --quit-at-eof'
 
 export HH_CONFIG=hicolor
 
+export LINESCH_AUTHOR=katy
+export LINESCH_PATHS=~/Code/Work/:$GOPATH/src/github.com/oreillymedia/:$GOPATH/src/github.com/safarijv/
+
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh

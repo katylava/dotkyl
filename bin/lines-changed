@@ -1,57 +1,72 @@
 #!/usr/bin/env bash
 
-# **Requires GNU's date command** -- brew install coreutils
+# **Requires GNU commands** -- `date` and `echo` -- brew install coreutils
 
+USAGE="Usage: lines-changed [days] [options]
 
-# I use this script to measure my productivity at work by counting up changed
-# lines of code per day across all work repos.
-#
-# Way too many words about that:
-#
-# - If I change the same line in more than one commit in a given day, it will
-#   be counted for each commit. This is fine, because it represents work I did,
-#   even if I threw it away.
-# - Since I'm measuring this way, I *have* to make frequent commits or work
-#   that was really hard and caused me to change my mind a lot would not be
-#   measured. Frequent commits work well for me anyway, because I prefer to
-#   commit a "rough draft", and refine my code in further commits.
-# - Even though I commit frequently, I chose to count lines changed instead of
-#   commits because some commits still represent a lot more work than others.
-# - Ok, there is some danger in that if I copy and paste a bunch of stuff
-#   (tests, usually) it will look like I worked harder than I actually did. I'm
-#   fine with this as long as I customize the copy-pasted code *before* I
-#   commit it.
-# - A lot of our work as engineers involves discussion and documentation
-#   outside of our version control system. I can't measure that work, so this is
-#   imperfect. But, I think I spend too much time talking and not enough
-#   coding, so the act of measuring lines changed should help me with that.
+    Sums up all lines added and deleted in multiple repos for each commit for
+    each day for a specific author.
 
+    lines_changed works backwards from the current day, so the 'days' argument is
+    how many days to go back. It can be left out if there are no options -- the
+    default is 30.
 
-# Hard-coded vars for my environment
-AUTHOR=katy
-PATHS=(
-    ~/Code/Work/
-    $GOPATH/src/github.com/oreillymedia/
-    $GOPATH/src/github.com/safarijv/
-)  # dirs which contain child dirs which contain .git dirs
+    Values are cached by default in ~/.lc-cache for all repos. Values for
+    individual repos are cached in the repo under .git/lc-cache.
 
+    Output options:
+        -a, --author=AUTHOR
+            Limit the commits counted to this author. If this option is not
+            set, will read author from LINESCH_AUTHOR env var.
+        -c, --color
+            Print colors. This is the default, use --no-color for plain output.
+        -p, --paths
+            Directories in which to look for repos, separated by colons (:).
+            These must be parent directories which hold repos, not the path to
+            each repo itself. If this option is not set, will read paths from
+            LINESCH_PATHS env var.
+        -s, --summary
+            Print a summary with average lines changed per weekday, and average
+            lines changed over all non-zero days. This is the default, use
+            --no-summary to skip summary.
+
+    Cache options:
+        --cache
+            Use the cache (this is the default, use --no-cache to skip cache)
+        --clear-cache=[on|off|all]
+            With 'on', clears and recreates the cache for the specifed author
+            for each day in the range. With 'all', deletes ~/.lc_cache and all
+            .git/lc-cache directories.
+        --no-cache
+            Skip the cache and get values from git log again
+
+    Issues:
+        - Lines from squashed merges are double-counted.
+"
 
 # Script args
-DAYS_AGO=${1:-30}
-COLOR=on
-SUMMARY=on
-
-# Caching
-# - caches lines changed per day per repo in .git/lc-cache/[since-until]
-# - caches lines changed for all in ~/.lc-cache/[since-until]
-# - when run with --clear-cache, removes all those directories
+AUTHOR="${LINESCH_AUTHOR}"
 CACHE=on
 CLEAR_CACHE=off
+COLOR=on
+DAYS_AGO=${1:-30}
+PATHS="${LINESCH_PATHS}"
+SUMMARY=on
 
 for i in "$@"; do
     case $i in
+        -a|--author=*)
+            AUTHOR="${i#*=}"
+            ;;
         -c|--color)
             COLOR=on
+            ;;
+        -h|--help)
+            echo "${USAGE}"
+            exit
+            ;;
+        -p|--paths=*)
+            PATHS="${i#*=}"
             ;;
         -s|--summary)
             SUMMARY=on
@@ -62,11 +77,14 @@ for i in "$@"; do
         --no-summary)
             SUMMARY=off
             ;;
+        --cache)
+            CACHE=on
+            ;;
         --no-cache)
             CACHE=off
             ;;
-        --clear-cache)
-            CLEAR_CACHE=on
+        --clear-cache=*)
+            CLEAR_CACHE="${i#*=}"
             ;;
         *)
             ;;
@@ -74,12 +92,6 @@ for i in "$@"; do
 done
 
 
-if [ $CLEAR_CACHE == "on" ]; then
-    [ -d ~/.lc-cache ] && rm -fr ~/.lc-cache
-fi
-
-
-# Appearance
 clr_reset=""
 clr_summary=""
 clr_weekday=""
@@ -94,30 +106,26 @@ if [ $COLOR == "on" ]; then
 fi
 
 
-# Initialize vars
-TODAY=$(date +%Y-%m-%d)
-until=$(date -d "+1 day" +%Y-%m-%d)
-total_lines=0
-weekdays=0
-non_zero_days=0
-
-
 calc_lines_changed() {
     local path="${1}"
     local since=${2}T00:00:00
     local until=${3}T00:00:00
+    local filename lines_changed
 
     cd "${path}"
 
-    if [ $CLEAR_CACHE == "on" ]; then
+    if [ $CLEAR_CACHE == "all" ]; then
         [ -d ./.git/lc-cache ] && rm -fr .git/lc-cache
     fi
 
     if [[ $CACHE == "on" && $2 != $TODAY ]]; then
         [ ! -d ./.git/lc-cache ] && mkdir ./.git/lc-cache
+        [ ! -d "./.git/lc-cache/${AUTHOR}" ] && mkdir "./.git/lc-cache/${AUTHOR}"
+        filename="./.git/lc-cache/${AUTHOR}/$2-$3"
 
-        if [ -f "./.git/lc-cache/$2-$3" ]; then
-            lines_changed=`cat "./.git/lc-cache/$2-$3"`
+        if [ -f "${filename}" ]; then
+            [ $CLEAR_CACHE == "on" ] && rm "$filename"
+            lines_changed=`cat "${filename}`
             [ ! -z $lines_changed ] && echo $lines_changed && return
         fi
     fi
@@ -125,7 +133,7 @@ calc_lines_changed() {
     local lines_changed=`
         git log \
             --all \
-            --author=$AUTHOR \
+            --author="${AUTHOR}" \
             --no-merges \
             --numstat \
             --pretty= \
@@ -147,68 +155,127 @@ calc_lines_changed() {
 }
 
 
-for i in $(seq 0 $DAYS_AGO); do
-    since=$(date -d "now -$i days" +%Y-%m-%d)
-    lines_changed=''
+check() {
+    if [ -z "${AUTHOR}" -o -z "${PATHS}" ]; then
+        [ -z "${AUTHOR}" ] && echo "ERROR: Missing LINESCH_AUTHOR or --author"
+        [ -z "${PATHS}" ] && echo "ERROR: Missing LINESCH_PATHS or --paths"
+        echo 'See "lines_changed --help" for more info'
+        exit 1
+    fi
+}
 
-    if [[ $CACHE == "on" && $since != $TODAY ]]; then
-        [ ! -d ~/.lc-cache ] && mkdir ~/.lc-cache
 
-        if [ -f "~/.lc-cache/${since}-${until}" ]; then
-            mapfile -n2 -t cached_value < "~/.lc-cache/${since}-${until}"
-            if [ ! -z $cached_value[0] ]; then
-                lines_changed=$cached_value[0]
-                repos=($cached_value[1])
-            fi
-        fi
+GLOBAL_IFS=$IFS
+
+main() {
+    local TODAY=$(date +%Y-%m-%d)
+    local until=$(date -d "+1 day" +%Y-%m-%d)
+    local total_lines=0
+    local weekdays=0
+    local non_zero_days=0
+    local since filename cached_value lines_changed _lines_changed repos
+    local date_str color average_non_zero average_weekdays
+
+    local IFS=:
+    local paths_arr=( $PATHS )
+    local IFS=$GLOBAL_IFS
+
+    if [ $CLEAR_CACHE == "all" ]; then
+        [ -d $HOME/.lc-cache ] && rm -fr $HOME/.lc-cache
     fi
 
-    if [ -z $lines_changed ]; then
-        lines_changed=0
-        repos=()
-
-        for path in ${PATHS[@]}; do
-            for node in "${path}"*; do
-                if [ -d "${node}" -a -d "${node}"/.git ]; then
-                    _lines_changed=$(calc_lines_changed "${node}" $since $until)
-                    lines_changed=$(($lines_changed+$_lines_changed))
-
-                    if [ $_lines_changed -gt 0 ]; then
-                        repos+=($(basename "${node}"))
-                    fi
-                fi
-            done
-        done
+    for i in $(seq 0 $DAYS_AGO); do
+        since=$(date -d "now -$i days" +%Y-%m-%d)
+        lines_changed=''
 
         if [[ $CACHE == "on" && $since != $TODAY ]]; then
-            echo -e "$lines_changed\n${repos[@]}" > "$HOME/.lc-cache/${since}-${until}"
+            [ ! -d $HOME/.lc-cache ] && mkdir $HOME/.lc-cache
+            [ ! -d "$HOME/.lc-cache/${AUTHOR}" ] && mkdir "$HOME/.lc-cache/${AUTHOR}"
+            filename="$HOME/.lc-cache/${AUTHOR}/${since}-${until}"
+
+            if [ -f "${filename}" ]; then
+                if [ $CLEAR_CACHE == "on" ]; then
+                    rm "${filename}"
+                else
+                    mapfile -n2 -t cached_value < "${filename}"
+                    if [ ! -z ${cached_value[0]} ]; then
+                        lines_changed=${cached_value[0]}
+                        repos=(${cached_value[1]})
+                    fi
+                fi
+            fi
         fi
+
+        if [ -z $lines_changed ]; then
+            lines_changed=0
+            repos=()
+
+            for path in ${paths_arr[@]}; do
+                for node in "${path}"*; do
+                    if [ -d "${node}" -a -d "${node}/.git" ]; then
+                        _lines_changed=$(calc_lines_changed "${node}" $since $until)
+                        lines_changed=$(($lines_changed+$_lines_changed))
+
+                        if [ $_lines_changed -gt 0 ]; then
+                            repos+=($(basename "${node}"))
+                        fi
+                    fi
+                done
+            done
+
+            if [ $CACHE == "on" -a $since != $TODAY ]; then
+                echo -e "$lines_changed\n${repos[@]}" > "$HOME/.lc-cache/$AUTHOR/${since}-${until}"
+            fi
+        fi
+
+        # Print day
+        date_str=$(date -d $since +"%a %b %e")
+        color=$clr_weekday
+        [ $lines_changed -eq 0 ] && color=$clr_weekday_zero
+        [[ $date_str == S* ]] && color=$clr_weekend
+        lines_changed=$(printf "%4s" $lines_changed)
+        echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$clr_reset"
+
+        # Update summary
+        total_lines=$(($total_lines+$lines_changed))
+        [ $lines_changed -gt 0 ] && non_zero_days=$(($non_zero_days+1))
+        [[ $date_str != S* ]] && weekdays=$(($weekdays+1))
+
+        # Set `until` to previous day for next loop
+        until=$since
+    done
+
+
+    if [ $SUMMARY == 'on' ]; then
+        average_non_zero=$(($total_lines/$non_zero_days))
+        average_weekdays=$(($total_lines/$weekdays))
+
+        echo -e $clr_summary
+        echo "Averages"
+        echo "Coding days: $average_non_zero"
+        echo "Weekdays: $average_weekdays"
     fi
+}
 
-    # Print day
-    date_str=$(date -d $since +"%a %b %e")
-    color=$clr_weekday
-    [[ $lines_changed -eq 0 ]] && color=$clr_weekday_zero
-    [[ $date_str == S* ]] && color=$clr_weekend
-    lines_changed=$(printf "%4s" $lines_changed)
-    echo -e "$color$date_str \t $lines_changed \t ${repos[@]}$clr_reset"
+check
+main
 
-    # Update summary
-    total_lines=$(($total_lines+$lines_changed))
-    [[ $lines_changed -gt 0 ]] && non_zero_days=$(($non_zero_days+1))
-    [[ $date_str != S* ]] && weekdays=$(($weekdays+1))
+# Copyright (c) 2017 Kathleen LaVallee <katylava@gmail.com>
 
-    # Set `until` to previous day for next loop
-    until=$since
-done
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 
-if [ $SUMMARY == 'on' ]; then
-    average_non_zero=$(($total_lines/$non_zero_days))
-    average_weekdays=$(($total_lines/$weekdays))
-
-    echo -e $clr_summary
-    echo "Averages"
-    echo "Coding days: $average_non_zero"
-    echo "Weekdays: $average_weekdays"
-fi
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
