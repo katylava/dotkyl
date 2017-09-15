@@ -20,7 +20,7 @@
 
 # not sure how, but this makes shift+tab work as expected
 #"\e[Z": "\e-1\C-i"
-#"\t": menu-complete
+"\t": menu-complete
 
 \C-p:menu-complete
 \C-o:"\e--\C-p"
@@ -28,4 +28,4 @@
 set completion-ignore-case On
 #set editing-mode vi
 set mark-directories On
-set complete TAB
+# set complete TAB
