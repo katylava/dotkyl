@@ -71,7 +71,7 @@ set noerrorbells visualbell t_vb=
 set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
-set number
+set number relativenumber
 set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
