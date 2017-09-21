@@ -1,10 +1,12 @@
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 # GIT
-GIT_UNCOMMITTED="${GIT_UNCOMMITTED:-+}"
-GIT_UNSTAGED="${GIT_UNSTAGED:-!}"
-GIT_UNTRACKED="${GIT_UNTRACKED:-?}"
-GIT_STASHED="${GIT_STASHED:-$}"
-GIT_UNPULLED="${GIT_UNPULLED:-⇣}"
-GIT_UNPUSHED="${GIT_UNPUSHED:-⇡}"
+GIT_UNCOMMITTED="${GIT_UNCOMMITTED:-✚}"
+GIT_UNSTAGED="${GIT_UNSTAGED:-✽}"
+GIT_UNTRACKED="${GIT_UNTRACKED:-…}"
+# GIT_STASHED="${GIT_STASHED:-$}"
+GIT_UNPULLED="${GIT_UNPULLED:-↓}"
+GIT_UNPUSHED="${GIT_UNPUSHED:-↑}"
 
 # Output name of current branch.
 git_current_branch() {
@@ -77,7 +79,7 @@ touchbar_precmd() {
 
   # CURRENT_DIR
   # -----------
-  echo -ne "\033]1337;SetKeyLabel=F1=👉 $(echo $(pwd) | awk -F/ '{print $(NF-1)"/"$(NF)}')\a"
+  # echo -ne "\033]1337;SetKeyLabel=F1=👉 $(echo $(pwd) | awk -F/ '{print $(NF-1)"/"$(NF)}')\a"
 
   # GIT
   # ---
@@ -96,13 +98,14 @@ touchbar_precmd() {
     indicators+="$(git_uncomitted)"
     indicators+="$(git_unstaged)"
     indicators+="$(git_untracked)"
-    indicators+="$(git_stashed)"
+    # indicators+="$(git_stashed)"
     indicators+="$(git_unpushed_unpulled)"
 
-    [ -n "${indicators}" ] && touchbarIndicators="🔥[${indicators}]" || touchbarIndicators="🙌";
+    [ -z "${indicators}" ] && touchbarIndicators="🙌" || touchbarIndicators="🔥${indicators}"
 
-    echo -ne "\033]1337;SetKeyLabel=F2=🎋 $(git_current_branch)\a"
-    echo -ne "\033]1337;SetKeyLabel=F3=$touchbarIndicators\a"
+    local _status="🎋 $(git_current_branch) $touchbarIndicators"
+
+    it2setkeylabel set status "${_status}"
   fi
 }
 
