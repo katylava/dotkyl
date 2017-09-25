@@ -328,6 +328,7 @@ let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
 " NERDtree
 map ,d :NERDTreeToggle<CR>
+map ,e :NERDTreeFind<CR>
 let NERDTreeIgnore = ['\.pyc$']
 let NERDTreeWinSize = 45
 let NERDTreeShowHidden=1
