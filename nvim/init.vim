@@ -233,8 +233,8 @@ map <F1> <ESC>
 nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " getting into terminal mode
-nnoremap ,tv :vsp term://bash<CR>i
-nnoremap ,tx :sp term://bash<CR>i
+nnoremap ,tv :vsp term://zsh -f<CR>i
+nnoremap ,tx :sp term://zsh -f<CR>i
 
 " folding
 nnoremap <Leader>s :SignifyFold<CR>
