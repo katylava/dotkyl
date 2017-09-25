@@ -143,15 +143,20 @@ hi link htmlLink NONE
 hi link htmlItalic NONE
 
 " tweak colors
-hi mkdCode ctermfg=109
-hi mkdLink ctermfg=105
-hi mkdURL ctermfg=60
+" ...this is a dumb way to do this
+" ...i should create my own color scheme
 hi htmlH1 ctermfg=225
 hi htmlH2 ctermfg=218
 hi htmlH3 ctermfg=182
 hi htmlH4 ctermfg=139
 hi htmlH5 ctermfg=96
 hi htmlH6 ctermfg=239
+hi mkdCode ctermfg=109
+hi mkdLink ctermfg=105
+hi mkdURL ctermfg=60
+hi IndentGuidesOdd guibg=#233046
+hi IndentGuidesEven guibg=#2F3648
+hi SignColumn guibg=none ctermbg=none
 
 
 " -------------
@@ -290,12 +295,6 @@ let g:lightline = {
       \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
       \ }
-
-" ...somehow the background is never actually transparent
-:hi Normal guibg=none ctermbg=none
-:hi NonText guibg=none ctermbg=none
-:hi LineNr guibg=none ctermbg=none
-:hi SignColumn guibg=none ctermbg=none
 
 " python
 let g:python_highlight_all = 1
