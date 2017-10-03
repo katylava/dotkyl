@@ -3,7 +3,8 @@
 #
 
 function __promptline_symbol {
-    local symbol="❀"
+    # local symbol="❀"
+    local symbol="🍂 "
 
     mail -e
     [ $? -eq 0 ] && symbol="✉"
@@ -266,8 +267,8 @@ function __promptline {
   local c_bg="${wrap}48;5;65${end_wrap}"
   local c_sep_fg="${wrap}38;5;65${end_wrap}"
   local d_fg="${wrap}38;5;23${end_wrap}"
-  local d_bg="${wrap}48;5;45${end_wrap}"
-  local d_sep_fg="${wrap}38;5;45${end_wrap}"
+  local d_bg="${wrap}48;5;109${end_wrap}"
+  local d_sep_fg="${wrap}38;5;109${end_wrap}"
   local warn_fg="${wrap}38;5;232${end_wrap}"
   local warn_bg="${wrap}48;5;166${end_wrap}"
   local warn_sep_fg="${wrap}38;5;166${end_wrap}"
