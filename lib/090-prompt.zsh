@@ -1,10 +1,18 @@
 #
 # This shell prompt config file was created by promptline.vim
 #
+typeset -A colors
+colors[winedregs]='2;104;35;61'
+colors[blackshadows]='2;200;175;184'
+colors[tigerseye]='2;239;128;59'
+colors[rubyred]='2;165;19;32'
+colors[armygreen]='2;72;82;43'
+colors[mellowyellow]='2;255;213;124'
+colors[peach]='2;255;232;183'
 
 function __promptline_symbol {
     # local symbol="❀"
-    local symbol="🍂 "
+    local symbol=%1{'🍂 '%}
 
     mail -e
     [ $? -eq 0 ] && symbol="✉"
@@ -154,7 +162,7 @@ function __promptline_left_prompt {
   __promptline_wrapper "$(__promptline_symbol)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
   # close sections
-  printf "%s" "${reset_bg}${sep}$reset$space"
+  printf "%s" "${reset_bg}${sep}$reset$space$space"
 }
 function __promptline_wrapper {
   # wrap the text in $1 with $2 and $3, only if $1 is not empty
@@ -257,30 +265,30 @@ function __promptline {
   local alt_rsep=""
   local reset="${wrap}0${end_wrap}"
   local reset_bg="${wrap}49${end_wrap}"
-  local a_fg="${wrap}38;5;17${end_wrap}"
-  local a_bg="${wrap}48;5;190${end_wrap}"
-  local a_sep_fg="${wrap}38;5;190${end_wrap}"
-  local b_fg="${wrap}38;5;255${end_wrap}"
-  local b_bg="${wrap}48;5;205${end_wrap}"
-  local b_sep_fg="${wrap}38;5;205${end_wrap}"
-  local c_fg="${wrap}38;5;182${end_wrap}"
-  local c_bg="${wrap}48;5;65${end_wrap}"
-  local c_sep_fg="${wrap}38;5;65${end_wrap}"
+  local a_fg="${wrap}38;${colors[blackshadows]}${end_wrap}"
+  local a_bg="${wrap}48;${colors[armygreen]}${end_wrap}"
+  local a_sep_fg="${wrap}38;${colors[armygreen]}${end_wrap}"
+  local b_fg="${wrap}38;${colors[peach]}${end_wrap}"
+  local b_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
+  local b_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
+  local c_fg="${wrap}38;5;89${end_wrap}"
+  local c_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
+  local c_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
   local d_fg="${wrap}38;5;23${end_wrap}"
-  local d_bg="${wrap}48;5;109${end_wrap}"
-  local d_sep_fg="${wrap}38;5;109${end_wrap}"
-  local warn_fg="${wrap}38;5;232${end_wrap}"
-  local warn_bg="${wrap}48;5;166${end_wrap}"
-  local warn_sep_fg="${wrap}38;5;166${end_wrap}"
-  local x_fg="${wrap}38;5;85${end_wrap}"
-  local x_bg="${wrap}48;5;234${end_wrap}"
-  local x_sep_fg="${wrap}38;5;234${end_wrap}"
+  local d_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
+  local d_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
+  local warn_fg="${wrap}38;${colors[peach]}${end_wrap}"
+  local warn_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
+  local warn_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
+  local x_fg="${wrap}38;${colors[armygreen]}${end_wrap}"
+  local x_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
+  local x_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
   local y_fg="${wrap}38;5;255${end_wrap}"
-  local y_bg="${wrap}48;5;238${end_wrap}"
-  local y_sep_fg="${wrap}38;5;238${end_wrap}"
+  local y_bg="${wrap}48;${colors[winedregs]}${end_wrap}"
+  local y_sep_fg="${wrap}38;${colors[winedregs]}${end_wrap}"
   local z_fg="${wrap}38;5;17${end_wrap}"
-  local z_bg="${wrap}48;5;190${end_wrap}"
-  local z_sep_fg="${wrap}38;5;190${end_wrap}"
+  local z_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
+  local z_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then
     PROMPT="$(__promptline_left_prompt)"
     RPROMPT="$(__promptline_right_prompt)"
