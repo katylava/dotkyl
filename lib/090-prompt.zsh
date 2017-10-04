@@ -9,6 +9,7 @@ colors[rubyred]='2;165;19;32'
 colors[armygreen]='2;72;82;43'
 colors[mellowyellow]='2;255;213;124'
 colors[peach]='2;255;232;183'
+colors[pansypurple]='2;89;19;77'
 
 function __promptline_symbol {
     # local symbol="❀"
@@ -265,28 +266,28 @@ function __promptline {
   local alt_rsep=""
   local reset="${wrap}0${end_wrap}"
   local reset_bg="${wrap}49${end_wrap}"
-  local a_fg="${wrap}38;${colors[blackshadows]}${end_wrap}"
+  local a_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
   local a_bg="${wrap}48;${colors[armygreen]}${end_wrap}"
   local a_sep_fg="${wrap}38;${colors[armygreen]}${end_wrap}"
-  local b_fg="${wrap}38;${colors[peach]}${end_wrap}"
+  local b_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
   local b_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
   local b_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
-  local c_fg="${wrap}38;5;89${end_wrap}"
+  local c_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
   local c_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
   local c_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
-  local d_fg="${wrap}38;5;23${end_wrap}"
+  local d_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
   local d_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
   local d_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
   local warn_fg="${wrap}38;${colors[peach]}${end_wrap}"
   local warn_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
   local warn_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
-  local x_fg="${wrap}38;${colors[armygreen]}${end_wrap}"
-  local x_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
-  local x_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
-  local y_fg="${wrap}38;5;255${end_wrap}"
-  local y_bg="${wrap}48;${colors[winedregs]}${end_wrap}"
-  local y_sep_fg="${wrap}38;${colors[winedregs]}${end_wrap}"
-  local z_fg="${wrap}38;5;17${end_wrap}"
+  local x_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
+  local x_bg="${wrap}48;${colors[pansypurple]}${end_wrap}"
+  local x_sep_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
+  local y_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
+  local y_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
+  local y_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
+  local z_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
   local z_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
   local z_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then
