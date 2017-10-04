@@ -1,15 +1,7 @@
 #!/usr/bin/env python2
 
-fgtpl = "[38;5;{color}m{text:>4}[m"
+fgtpl = "[48;5;{bg}m [38;5;{color}m{text:>4}[m"
 bgtpl = "[48;5;{color}m [30m{text:>3} [m"
-
-fgs = []
-bgs = []
-
-for color in range(0,256):
-    kwargs = {'color': color, 'text': color}
-    fgs.append(fgtpl.format(**kwargs))
-    bgs.append(bgtpl.format(**kwargs))
 
 
 tpl = """
@@ -17,6 +9,7 @@ tpl = """
 {59} {241}{242}{243}{244}{102} {245}{246}{247}{248}
 {145}{249}{250}{251} {252}{253}{188}{254}{255}{231}
 
+{53} {89}  {125} {161} {197} |{204}|{168}|{132}|{96} |{139}|{182}|{225}|{218}|{175}|{211}|{204}|
 {52} {88}  {124} {160} {196} |{203}|{167}|{131}|{95} |{138}|{181}|{224}|{217}|{174}|{210}|{203}|
 {52} {88}  {124} {160} {196} |{209}|{167}|{131}|{95} |{138}|{181}|{224}|{217}|{174}|{210}|{209}|
 {52} {88}  {124} {160} {196} |{209}|{173}|{131}|{95} |{138}|{181}|{224}|{217}|{174}|{210}|{209}|
@@ -129,9 +122,34 @@ tpl = """
 {53} {89}  {125} {161} {197} |{205}|{169}|{132}|{96} |{139}|{182}|{225}|{218}|{175}|{211}|{205}|
 {53} {89}  {125} {161} {197} |{205}|{168}|{132}|{96} |{139}|{182}|{225}|{218}|{175}|{211}|{205}|
 {53} {89}  {125} {161} {197} |{204}|{168}|{132}|{96} |{139}|{182}|{225}|{218}|{175}|{211}|{204}|
+{52} {88}  {124} {160} {196} |{203}|{167}|{131}|{95} |{138}|{181}|{224}|{217}|{174}|{210}|{203}|
 """
 
-tpl = tpl.replace(' ', '').replace('|','')
+if __name__ == '__main__':
+    import sys
 
-print tpl.format(*bgs, sp=' '*5)
-print tpl.format(*fgs, sp=' '*4)
+    args = sys.argv[1:] if len(sys.argv) > 1 else []
+    bg = ''
+    fg = None
+
+    for arg in args:
+        if arg.startswith('--bg='):
+            bg = arg.replace('--bg=', '')
+        if arg.startswith('--fg='):
+            fg = arg.replace('--fg=', '')
+
+    fgs = []
+    bgs = []
+
+    for color in range(0, 256):
+        fg_kwargs = {'bg': bg, 'color': color, 'text': color}
+        fgs.append(fgtpl.format(**fg_kwargs))
+        bg_space = ' ' if color < 100 else ''
+        bg_text = '{}{} {}'.format(bg_space, color, fg) if fg else color
+        bg_kwargs = {'color': color, 'text': bg_text}
+        bgs.append(bgtpl.format(**bg_kwargs))
+
+    tpl = tpl.replace(' ', '').replace('|', '')
+
+    print(tpl.format(*bgs))
+    print(tpl.format(*fgs))
