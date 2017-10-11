@@ -1,7 +1,8 @@
-let g:python_host_prog='/usr/local/bin/python3'
+let g:python_host_prog='/usr/local/bin/python'
+let g:python3_host_prog='/usr/local/bin/python3'
 
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
-Plug 'Shougo/deoplete.nvim' " https://github.com/Shougo/deoplete.nvim
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " https://github.com/Shougo/deoplete.nvim
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
 Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
@@ -42,6 +43,7 @@ Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
 Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
+Plug 'zchee/deoplete-jedi' " https://github.com/zchee/deoplete-jedi
 
 " colorschemes
 Plug 'NLKNguyen/papercolor-theme'
