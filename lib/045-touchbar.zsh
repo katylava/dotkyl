@@ -101,9 +101,9 @@ touchbar_precmd() {
     # indicators+="$(git_stashed)"
     indicators+="$(git_unpushed_unpulled)"
 
-    [ -z "${indicators}" ] && touchbarIndicators="🙌" || touchbarIndicators="🔥${indicators}"
+    [ -z "${indicators}" ] && touchbarIndicators="✔" || touchbarIndicators="${indicators}"
 
-    local _status="🎋 $(git_current_branch) $touchbarIndicators"
+    local _status="ᛅ $(git_current_branch) $touchbarIndicators"
 
     it2setkeylabel set status "${_status}"
   fi
