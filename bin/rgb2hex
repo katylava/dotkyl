@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+
+import re
+import sys
+
+
+pattern = r'^(\d+)[^\d](\d+)[^\d](\d+)$'
+out_format = '{:x}{:x}{:x}'
+err_msg = '"{}" does not seem to have rgb values'
+
+
+if __name__ == '__main__':
+    out = re.match(pattern, sys.argv[1])
+
+    if out:
+        print(out_format.format(*[int(v) for v in out.groups()]))
+        sys.exit()
+
+    print(err_msg.format(sys.argv[1]))
+    sys.exit(1)
