@@ -13,7 +13,11 @@ colors[pansypurple]='2;89;19;77'
 
 function __promptline_symbol {
     # local symbol="❀"
-    local symbol=%1{'🍂 '%}
+
+    # checking "Use Unicode Version 9 Widths" in iTerm2
+    # (under Profile > Text) seems to fix any weirdness
+    # with using an emoji in the prompt
+    local symbol='🍂'
 
     mail -e
     [ $? -eq 0 ] && symbol="✉"
@@ -159,11 +163,11 @@ function __promptline_left_prompt {
   # section "d" header
   slice_prefix="${d_bg}${sep}${d_fg}${d_bg}${space}" slice_suffix="$space${d_sep_fg}" slice_joiner="${d_fg}${d_bg}${alt_sep}${space}" slice_empty_prefix="${d_fg}${d_bg}${space}"
   [ $is_prompt_empty -eq 1 ] && slice_prefix="$slice_empty_prefix"
-  # section "c" slices
+  # section "d" slices
   __promptline_wrapper "$(__promptline_symbol)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
   # close sections
-  printf "%s" "${reset_bg}${sep}$reset$space$space"
+  printf "%s" "${reset_bg}${sep}$reset$space"
 }
 function __promptline_wrapper {
   # wrap the text in $1 with $2 and $3, only if $1 is not empty
