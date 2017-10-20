@@ -292,10 +292,21 @@ let g:lightline = {
       \   'modified': 'LightlineModified',
       \   'filedir': 'FileDir',
       \   'filename': 'LightlineFilename',
-      \   'time': 'LightlineTime'
+      \   'time': 'LightlineTime',
+      \   'devicon': 'LightlineDevicon',
       \ },
       \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
-      \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
+      \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" },
+      \ 'tab_component_function': {
+      \   'devicon': 'LightlineDevicon',
+      \   'modified': 'lightline#tab#modified',
+      \   'readonly': 'lightline#tab#readonly',
+      \   'tabnum': 'lightline#tab#tabnum'
+      \ },
+      \ 'tab': {
+      \   'active': [ 'tabnum', 'devicon', 'filename', 'modified' ],
+      \   'inactive': [ 'tabnum', 'devicon', 'filename', 'modified' ],
+      \ },
       \ }
 
 " python
@@ -432,6 +443,13 @@ endfunction
 
 function! LightlineTime()
     return strftime('%H:%M')
+endfunction
+
+function! LightlineDevicon(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let fname = expand('#'.buflist[winnr - 1].':t')
+  return WebDevIconsGetFileTypeSymbol(fname)
 endfunction
 
 
