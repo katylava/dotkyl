@@ -2,6 +2,7 @@
 
 """
 From https://github.com/jpverkamp/dotfiles/blob/master/bin/uni
+(modified)
 """
 
 import argparse
@@ -11,15 +12,21 @@ import sys
 from fuzzywuzzy import fuzz
 
 parser = argparse.ArgumentParser('Search unicode characters')
-parser.add_argument('name', nargs = '+', help = 'The name to search for')
-parser.add_argument('--block', '-b', help = 'Search in specific blocks')
-parser.add_argument('--block-threshold', default = 0.9, help = 'How exact to be in matching block name')
-parser.add_argument('--name-threshold', default = 0.9, help = 'How exact to be in matching character name')
-parser.add_argument('--count', default = 0, type = int, help = 'How many characters to return; default is all of them')
-parser.add_argument('--quiet', '-q', default = False, action = 'store_true', help = 'Print only the character, not the name')
+parser.add_argument('name', nargs='+', help='The name to search for')
+parser.add_argument('--block', '-b', help='Search in specific blocks')
+parser.add_argument('--block-threshold', default=0.9, help='How exact to be in matching block name')
+parser.add_argument('--name-threshold', '-t', default=0.7, help='How exact to be in matching character name')
+parser.add_argument('--count', '-n', default=0, type=int, help='How many characters to return; default is all of them')
+parser.add_argument('--codepoint', '-c', default=False, action='store_true', help='Show the codepoint')
+parser.add_argument('--quiet', '-q', default=False, action='store_true', help='Print only the character, not the name')
 args = parser.parse_args()
 
 args.name = ' '.join(args.name)
+
+# custom list of words I've used to find a symbol which didn't match
+keywords = {
+    'sparkles': 'star',
+}
 
 # ftp://ftp.unicode.org/Public/8.0.0/ucd/Blocks.txt
 all_blocks = '''0000..007F; Basic Latin
@@ -346,7 +353,7 @@ blocks = []
 
 if args.block:
     for line in all_blocks.split('\n'):
-        if fuzz.token_set_ratio(args.block, line.split('; ')[-1]) > 100 * args.block_threshold:
+        if fuzz.token_set_ratio(args.block, line.split('; ')[-1]) > 100 * float(args.block_threshold):
             blocks.append(line)
 else:
     blocks = default_blocks.split('\n')
@@ -369,10 +376,13 @@ for block in blocks:
         try:
             character = chr(codepoint)
             name = unicodedata.name(character, None).lower()
-            score = fuzz.token_set_ratio(args.name, name)
+            score = fuzz.token_set_ratio(
+                args.name,
+                '{} {}'.format(name, keywords.get(name, ''))
+            )
 
-            if score > 100 * args.name_threshold:
-                results.append((score, name, character))
+            if score > 100 * float(args.name_threshold):
+                results.append((score, name, character, codepoint))
         except:
             pass
 
@@ -381,11 +391,13 @@ if not results:
     sys.exit(-1)
 
 # Only print out the requested number of results
-for count, (score, name, character) in enumerate(sorted(results)):
+for count, (score, name, character, codepoint) in enumerate(sorted(results)):
     if args.count and count >= args.count:
         break
 
     if args.quiet:
         print(character)
+    if args.codepoint:
+        print(character, '{:x}'.format(codepoint).upper(), name, sep='\t')
     else:
-        print(character, name, sep = '\t')
+        print(character, name, sep='\t')
