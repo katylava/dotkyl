@@ -1,0 +1,55 @@
+#!/usr/bin/env zsh
+
+
+FILEPATH="${1}"
+COLORCOUNT="${2}"
+COLORSPACE="${3}"
+
+usage() {
+    echo "Usage: imgclrs FILEPATH COLORCOUNT [COLORSPACE]"
+    echo "Colorspaces: RGB CMY sRGB GRAY XYZ LAB LUV HSL HSB HWB YIQ YUV OHTA"
+    exit
+}
+
+# TODO: Experiment with adding -posterize and -contrast-stretch
+
+[ -z "${FILEPATH}" ] && usage
+[ -z "${COLORCOUNT}" ] && usage
+
+
+[ -z "${COLORSPACE}" ] && {
+    convert "${FILEPATH}" \
+        +dither \
+        -colors "${COLORCOUNT}" \
+        -unique-colors \
+        /tmp/imgclrs.txt
+} || {
+    convert "${FILEPATH}" \
+        -quantize "${COLORSPACE}" \
+        +dither \
+        -colors "${COLORCOUNT}" \
+        -unique-colors \
+        /tmp/imgclrs.txt
+}
+
+hexs=(
+    `cat /tmp/imgclrs.txt \
+    | tail -n+2 \
+    | cut -d' ' -f4`
+)
+
+rgbs=(
+    `cat /tmp/imgclrs.txt \
+    | tail -n+2 \
+    | cut -d' ' -f6 \
+    | tr -d 'a-z()' \
+    | tr ',' ';'`
+)
+
+index=1
+
+for c in $rgbs; do
+    h=${hexs[$index]}
+    printf "\e[38;2;${c}m$h\e[0m\t\e[48;2;${c}m$h\e[0m\n"
+    index=$(($index + 1))
+done
