@@ -2,54 +2,80 @@
 
 
 FILEPATH="${1}"
-COLORCOUNT="${2}"
-COLORSPACE="${3}"
+shift
+COLORCOUNT="${1}"
+shift
+MODS=($@)
 
 usage() {
-    echo "Usage: imgclrs FILEPATH COLORCOUNT [COLORSPACE]"
-    echo "Colorspaces: RGB CMY sRGB GRAY XYZ LAB LUV HSL HSB HWB YIQ YUV OHTA"
+    echo "Usage: imgclrs FILEPATH COLORCOUNT [MOD...]"
+    echo "Example:"
+    echo "> imgclors path/to/image.jpg 5 150,100,100 50,100,100"
+    echo "- Generate 3 5-color palettes, one default, one 50% brighter, and one 50% darker"
+    echo "Each MOD is passed directly to \`convert -modulate\`"
     exit
 }
-
-# TODO: Experiment with adding -posterize and -contrast-stretch
 
 [ -z "${FILEPATH}" ] && usage
 [ -z "${COLORCOUNT}" ] && usage
 
-
-[ -z "${COLORSPACE}" ] && {
-    convert "${FILEPATH}" \
-        +dither \
-        -colors "${COLORCOUNT}" \
-        -unique-colors \
-        /tmp/imgclrs.txt
-} || {
-    convert "${FILEPATH}" \
-        -quantize "${COLORSPACE}" \
-        +dither \
-        -colors "${COLORCOUNT}" \
-        -unique-colors \
-        /tmp/imgclrs.txt
+extract_colors() {
+    convert "${FILEPATH}" +dither -colors ${COLORCOUNT} -unique-colors txt:- \
+        | tail -n+2 \
+        | cut -d' ' -f4,6 \
+        | tr -d 'a-z()' \
+        | tr ',' ';'
 }
 
-hexs=(
-    `cat /tmp/imgclrs.txt \
-    | tail -n+2 \
-    | cut -d' ' -f4`
-)
+mod_color() {
+    convert -size 1x1 canvas:$1 -modulate $2 -depth 8 txt:- \
+        | tail -n+2 \
+        | cut -d' ' -f4,6 \
+        | tr -d 'a-z()' \
+        | tr ',' ';'
+}
 
-rgbs=(
-    `cat /tmp/imgclrs.txt \
-    | tail -n+2 \
-    | cut -d' ' -f6 \
-    | tr -d 'a-z()' \
-    | tr ',' ';'`
-)
+color_str() {
+    local fb=${1}
+    local hex=${2}
+    local rgb=${3}
 
-index=1
+    [ -z $rgb -a $hex = '#FFFFFF' ] && rgb='255;255;255'
+    [ -z $rgb -a $hex = '#000000' ] && rgb='0;0;0'
 
-for c in $rgbs; do
-    h=${hexs[$index]}
-    printf "\e[38;2;${c}m$h\e[0m\t\e[48;2;${c}m$h\e[0m\n"
-    index=$(($index + 1))
-done
+    [ $fb = 'f' ] && {
+        printf "\e[38;2;${rgb}m$hex\e[0m"
+    }
+    [ $fb = 'b' ] && {
+        printf "\e[48;2;${rgb}m$hex\e[0m"
+    }
+}
+
+
+main() {
+    local -a normal
+
+    normal=("${(@f)$(extract_colors)}")
+
+    for color in $normal; do
+        n=(${(s: :)color})
+
+        color_str f $n
+
+        for mod in $MODS; do
+            m=(${(s: :)$(mod_color $n[1] $mod)})
+            color_str f $m
+        done
+
+        color_str b $n
+
+        for mod in $MODS; do
+            m=(${(s: :)$(mod_color $n[1] $mod)})
+            color_str b $m
+        done
+
+        echo
+    done
+}
+
+main
