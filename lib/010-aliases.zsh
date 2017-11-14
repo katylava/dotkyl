@@ -16,6 +16,7 @@ alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
 
 # gcloud is weird
 alias gcloud='~/Code/Vendor/google-cloud-sdk/bin/gcloud'
+alias gsutil='~/Code/Vendor/google-cloud-sdk/bin/gsutil'
 alias gkubectl='~/Code/Vendor/google-cloud-sdk/bin/gkubectl'
 
 # things i forget
