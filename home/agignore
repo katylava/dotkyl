@@ -10,3 +10,4 @@ jquery.*
 react.js
 socket.io.js
 us.json
+/**/tests/data/*
