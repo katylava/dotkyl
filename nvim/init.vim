@@ -326,6 +326,7 @@ let g:ctrlp_dotfiles = 0
 let g:ctrlp_map = '<C-q>'
 let g:ctrlp_switch_buffer = 'Et'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|env'
+let g:ctrlp_root_markers = ['.ctrlp']
 
 " FZF
 let g:fzf_layout = { 'down': '~40%' }
