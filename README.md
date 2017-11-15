@@ -1,6 +1,6 @@
 # dotkyl
 
-my dotfiles (kyl is my initials)
+my dotfiles (my initials are kyl)
 
 ## Contents
 
