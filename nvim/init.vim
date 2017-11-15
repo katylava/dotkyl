@@ -103,6 +103,7 @@ autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
 
 autocmd FileType apex       set ts=4 sw=4 foldmethod=indent commentstring=//\ %s
 autocmd FileType cfg        set ts=4 sw=4 tw=0 foldmethod=indent commentstring=#\ %s
+autocmd FileType css        set ts=2 sw=2 tw=0
 autocmd FileType ejs        set ts=4 sw=4 tw=0 foldmethod=indent
 autocmd FileType htmldjango set ts=2 sw=2 foldmethod=indent
 autocmd FileType javascript set ts=2 sw=2 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
