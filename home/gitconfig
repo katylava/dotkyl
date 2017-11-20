@@ -4,7 +4,6 @@
 [github]
 	user = katylava
 [alias]
-	stat = status
 	st = status --short --branch
 	ci = commit
 	cm = commit -am
@@ -13,12 +12,17 @@
 	br = branch
 	ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
 	lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
+	lp = log -p --relative
     df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
-	dl = log -p --relative
     di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
     sh = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git show --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
 	track = push -u origin
 	squash = merge --squash --no-commit
+
+    # only use this when merging into main feature branch that i control
+    # completely and don't do any work on directly. this allows me to make
+    # messy wip commits and keep PRs clean.
+    merge-wip = merge -s recursive -X theirs --squash --no-commit
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
