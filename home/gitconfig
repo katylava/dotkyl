@@ -1,46 +1,47 @@
 [user]
-	name = katy lavallee
-	email = katylava@gmail.com
+    name = katy lavallee
+    email = katylava@gmail.com
 [github]
-	user = katylava
+    user = katylava
 [alias]
-	st = status --short --branch
-	ci = commit
-	cm = commit -am
-	ca = commit -a
-	co = checkout
-	br = branch
-	ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
-	lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
-	lp = log -p --relative
+    br = branch
+    ca = commit -a
+    ci = commit
+    cm = commit -am
+    co = checkout
     df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
     di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
+    lp = log -p --relative
+    ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
     sh = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git show --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
-	track = push -u origin
-	squash = merge --squash --no-commit
+    squash = merge --squash --no-commit
+    st = status --short --branch
+    track = push -u origin
 
     # only use this when merging into main feature branch that i control
     # completely and don't do any work on directly. this allows me to make
     # messy wip commits and keep PRs clean.
     merge-wip = merge -s recursive -X theirs --squash --no-commit
 [core]
-	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
-	whitespace = cr-at-eol
-	autocrlf = false
+    attributesfile = ~/.gitattributes
+    autocrlf = false
+    excludesfile = ~/.gitignore
+    whitespace = cr-at-eol
 [diff "mdls"]
-	textconv = mdls
+    textconv = mdls
 [push]
-	default = current
+    default = current
 [rerere]
-	enabled = true
+    enabled = true
 [filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
+    clean = git-media-clean %f
+    smudge = git-media-smudge %f
 [merge]
-	tool = vimdiff
+    conflictstyle = diff3
+    tool = vimdiff
 [mergetool]
-	keepBackups = true
+    keepBackups = true
 
 
 
@@ -53,31 +54,36 @@
 # any, doesn't matter.
 
 [color]
-	ui = auto
+    ui = auto
 [color "branch"]
-	current = white green bold 
-	local = normal
-	remote = red
+    current = white green bold
+    local = normal
+    remote = red
 [color "diff"]
-	meta = cyan
-	frag = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = white cyan
-	commit = white yellow bold
+    meta = cyan
+    frag = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = white cyan
+    commit = white yellow bold
 [color "status"]
-	added = green bold 
-	changed = red 
-	untracked = normal reverse
+    added = green bold
+    changed = red
+    untracked = normal reverse
+
+
+
+# Added by tools
+
 [ghi]
-	token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w
+    token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [diff-so-fancy]
-	first-run = false
+    first-run = false
 [credential]
-	helper = osxkeychain
+    helper = osxkeychain
