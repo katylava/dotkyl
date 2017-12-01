@@ -18,4 +18,5 @@ __set_iterm() {
     fi
 }
 
-precmd_functions+=(__set_iterm)
+# badges are dumb when you have a right prompt :P
+# precmd_functions+=(__set_iterm)
