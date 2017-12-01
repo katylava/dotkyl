@@ -107,14 +107,14 @@ function __promptline_danger_branch {
     return ${DANGER_BRANCHES[(I)${1}]}
 }
 function __promptline_vcs_branch {
-  local branch
+  local branch=`git_current_branch`
   local branch_symbol=" "
   local blink="%{[5m%}"
   local blinkoff="%{[25m%}"
 
   # git
   if hash git 2>/dev/null; then
-    if branch=$( git_current_branch 2>/dev/null ); then
+    if [ ! -z $branch ]; then
 
       __promptline_danger_branch $branch
 
