@@ -1,0 +1,13 @@
+{
+    "Profiles": [
+        {
+            "Description": "Base with no blur",
+            "Dynamic Profile Parent Name": "Base",
+            "Guid": "8b599bc2-4048-4b77-84dd-fde730b250c6",
+            "Name": "NoBlur",
+            "Blur": false,
+            "Only The Default BG Color Uses Transparency": true,
+            "Transparency": 0.20
+        }
+    ]
+}
