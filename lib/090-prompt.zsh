@@ -102,15 +102,29 @@ function __promptline_ps1 {
   # close sections
   printf "%s" "${reset_bg}${sep}$reset$space"
 }
+function __promptline_danger_branch {
+    [ -z ${(t)DANGER_BRANCHES} ] && return 0
+    return ${DANGER_BRANCHES[(I)${1}]}
+}
 function __promptline_vcs_branch {
   local branch
   local branch_symbol=" "
+  local blink="%{[5m%}"
+  local blinkoff="%{[25m%}"
 
   # git
   if hash git 2>/dev/null; then
-    if branch=$( { git symbolic-ref --quiet HEAD || git rev-parse --short HEAD; } 2>/dev/null ); then
+    if branch=$( git_current_branch 2>/dev/null ); then
+
+      __promptline_danger_branch $branch
+
+      if [ $? -eq 0 ]; then
+          blink=''
+          blinkoff=''
+      fi
+
       branch=${branch##*/}
-      printf "%s" "${branch_symbol}${branch:-unknown}"
+      printf "%s" "${blink}${branch_symbol}${branch:-unknown}${blinkoff}"
       return
     fi
   fi
