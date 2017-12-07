@@ -110,6 +110,7 @@ function __promptline_danger_branch {
 function __promptline_vcs_branch {
   local branch=`git_current_branch`
   local branch_symbol=" "
+  local stash_symbol=" ᛋ"
   local blink="%{[5m%}"
   local blinkoff="%{[25m%}"
 
@@ -124,8 +125,14 @@ function __promptline_vcs_branch {
           blinkoff=''
       fi
 
+      git stash list | grep ${branch} > /dev/null 2>&1
+
+      if [ $? -eq 1 ]; then
+          stash_symbol=''
+      fi
+
       branch=${branch##*/}
-      printf "%s" "${blink}${branch_symbol}${branch:-unknown}${blinkoff}"
+      printf "%s" "${blink}${branch_symbol}${branch:-unknown}${stash_symbol}${blinkoff}"
       return
     fi
   fi
