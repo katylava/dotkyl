@@ -12,12 +12,13 @@ colors[peach]='2;255;232;183'
 colors[pansypurple]='2;89;19;77'
 
 function __promptline_symbol {
-    # local symbol="❀"
+    # local symbol="❅"
 
     # checking "Use Unicode Version 9 Widths" in iTerm2
     # (under Profile > Text) seems to fix any weirdness
     # with using an emoji in the prompt
-    local symbol='🍂'
+    # local symbol='🍂'
+    local symbol='🎄'
 
     mail -e
     [ $? -eq 0 ] && symbol="✉"
@@ -291,30 +292,30 @@ function __promptline {
   local alt_rsep=""
   local reset="${wrap}0${end_wrap}"
   local reset_bg="${wrap}49${end_wrap}"
-  local a_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
-  local a_bg="${wrap}48;${colors[armygreen]}${end_wrap}"
-  local a_sep_fg="${wrap}38;${colors[armygreen]}${end_wrap}"
-  local b_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
-  local b_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
-  local b_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
-  local c_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
-  local c_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
-  local c_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
-  local d_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
-  local d_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
-  local d_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
-  local warn_fg="${wrap}38;${colors[peach]}${end_wrap}"
-  local warn_bg="${wrap}48;${colors[rubyred]}${end_wrap}"
-  local warn_sep_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
-  local x_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
-  local x_bg="${wrap}48;${colors[pansypurple]}${end_wrap}"
-  local x_sep_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
-  local y_fg="${wrap}38;${colors[pansypurple]}${end_wrap}"
-  local y_bg="${wrap}48;${colors[tigerseye]}${end_wrap}"
-  local y_sep_fg="${wrap}38;${colors[tigerseye]}${end_wrap}"
-  local z_fg="${wrap}38;${colors[rubyred]}${end_wrap}"
-  local z_bg="${wrap}48;${colors[mellowyellow]}${end_wrap}"
-  local z_sep_fg="${wrap}38;${colors[mellowyellow]}${end_wrap}"
+  local a_fg="${wrap}30${end_wrap}"
+  local a_bg="${wrap}46${end_wrap}"
+  local a_sep_fg="${wrap}36${end_wrap}"
+  local b_fg="${wrap}33${end_wrap}"
+  local b_bg="${wrap}45${end_wrap}"
+  local b_sep_fg="${wrap}45${end_wrap}"
+  local c_fg="${wrap}30${end_wrap}"
+  local c_bg="${wrap}44${end_wrap}"
+  local c_sep_fg="${wrap}34${end_wrap}"
+  local d_fg="${wrap}32${end_wrap}"
+  local d_bg="${wrap}40${end_wrap}"
+  local d_sep_fg="${wrap}30${end_wrap}"
+  local warn_fg="${wrap}30${end_wrap}"
+  local warn_bg="${wrap}41${end_wrap}"
+  local warn_sep_fg="${wrap}31${end_wrap}"
+  local x_fg="${wrap}37${end_wrap}"
+  local x_bg="${wrap}40${end_wrap}"
+  local x_sep_fg="${wrap}30${end_wrap}"
+  local y_fg="${wrap}30${end_wrap}"
+  local y_bg="${wrap}42${end_wrap}"
+  local y_sep_fg="${wrap}32${end_wrap}"
+  local z_fg="${wrap}1;30${end_wrap}"
+  local z_bg="${wrap}43${end_wrap}"
+  local z_sep_fg="${wrap}33${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then
     PROMPT="$(__promptline_left_prompt)"
     RPROMPT="$(__promptline_right_prompt)"
