@@ -1,15 +1,6 @@
 #
 # This shell prompt config file was created by promptline.vim
 #
-typeset -A colors
-colors[winedregs]='2;104;35;61'
-colors[blackshadows]='2;200;175;184'
-colors[tigerseye]='2;239;128;59'
-colors[rubyred]='2;165;19;32'
-colors[armygreen]='2;72;82;43'
-colors[mellowyellow]='2;255;213;124'
-colors[peach]='2;255;232;183'
-colors[pansypurple]='2;89;19;77'
 
 function __promptline_symbol {
     # local symbol="❅"
@@ -304,7 +295,7 @@ function __promptline {
   local a_sep_fg="${wrap}36${end_wrap}"
   local b_fg="${wrap}33${end_wrap}"
   local b_bg="${wrap}45${end_wrap}"
-  local b_sep_fg="${wrap}45${end_wrap}"
+  local b_sep_fg="${wrap}35${end_wrap}"
   local c_fg="${wrap}30${end_wrap}"
   local c_bg="${wrap}44${end_wrap}"
   local c_sep_fg="${wrap}34${end_wrap}"
