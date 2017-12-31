@@ -42,9 +42,13 @@ function __promptline_last_exit_code {
 function __promptline_virtualenv {
   [[ -z "${VIRTUAL_ENV}" ]] && return 1
 
-  local dir=$(dirname "${VIRTUAL_ENV}")
+  local name=$(basename "${VIRTUAL_ENV}")
 
-  printf "\ue606 %s" $(basename "${dir}")
+  if [[ "${name}" =~ "\.v?env" ]]; then
+      name=$(basename $(dirname "${VIRTUAL_ENV}"))
+  fi
+
+  printf "\ue606 %s" "$name"
 }
 function __promptline_ps1 {
   local slice_prefix slice_empty_prefix slice_joiner slice_suffix is_prompt_empty=1
