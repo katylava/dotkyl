@@ -84,3 +84,6 @@ not set these up on a server.
   instead of entire directory.
 * Fix or remove that really terrible before-clean-install script.
 * Maybe add iTerm2 dynamic profiles (currently in Dropbox).
+* Use Go scripts to build prompt
+  ([like powerline-go](https://github.com/justjanne/powerline-go), but simpler and
+  with a right prompt.)
