@@ -11,6 +11,10 @@ my dotfiles (my initials are kyl)
 Half of these are from other people's gists or other uninstallable utils. The
 other half are dumb things I wrote.
 
+### /bookmarks
+
+Empty directory (in git) which will contain symlinks to bookmarked directories.
+
 ### /completion
 
 Zsh completion scripts that I couldn't get from homebrew `zsh-completions`. Not
@@ -51,18 +55,30 @@ These installation instructions are for my future self. But I guess they could
 be useful if you decided to set up your dotfiles like mine.
 
 ```
-cd ~
+cd ~  # this is important or setup-dotfiles won't work
 git clone git@github.com:katylava/dotkyl.git .dotkyl
 .dotkyl/bin/setup-dotfiles
-crontab .dotkyl/crontab.txt
-mkdir .dotkyl/bookmarks
 cp path/to/000-private.zsh .dotkyl/lib/
 ```
 
-Also there are files in Dropbox/dotkyl-private that I might want to manually
-symlink to the home directory.
+### Neovim
+
+To set up neovim with python support, install both major versions of
+python via homebrew first, then use each version's pip to install python stuff
+for neovim. I don't know the perfect setup for neovim+python, but this works
+for me, I think because of [these two
+lines](https://github.com/katylava/dotkyl/blob/adc90bc8be25a39952b7f24832c62a955149a07f/nvim/init.vim#L1-L2)
+in my init.vim. There are probably disadvantages to this method when working in
+a virtualenv.
+
+```
+brew install python python3 neovim/neovim/neovim
+pip install neovim
+pip3 install neovim
+```
 
 To finish setting up neovim, open it and do `:PlugInstall`.
+
 
 ## Usage
 
