@@ -53,7 +53,7 @@ be useful if you decided to set up your dotfiles like mine.
 ```
 cd ~
 git clone git@github.com:katylava/dotkyl.git .dotkyl
-.dotkyl/bin/setup-dotfiles  # must be executed from home dir
+.dotkyl/bin/setup-dotfiles
 crontab .dotkyl/crontab.txt
 mkdir .dotkyl/bookmarks
 cp path/to/000-private.zsh .dotkyl/lib/
@@ -74,16 +74,18 @@ not set these up on a server.
 
 ## TODO
 
-* Make `bin/setup-dotfiles` work right when executed from anywhere.
-* Add crontab command to `bin/setup-dotfiles`.
-* Keep `lib/000-private.zsh` in Dropbox and add command to `bin/setup-dotfiles`
-  to symlink it.
-* Add commands to `bin/setup-dotfiles` to symlink files in
-  Dropbox/dotkyl-private.
-* Add `.gitkeep` file to `.dotkyl/bookmarks` and ignore contents of directory
-  instead of entire directory.
-* Fix or remove that really terrible before-clean-install script.
-* Use Go scripts to build prompt – [like powerline-go](https://github.com/justjanne/powerline-go),
-  but use my terminal colors, and add customizable symbol segment, and special
-  warning when on dangerous branches.
+* Add alternate zshrc for use inside nvim terminals.
+* Find a way to keep secrets even secreter via keychain. [This looks
+  useful](https://github.com/sorah/envchain).
+* Terminal palettes – find some way to store and use themes with alternate
+  colors which go with the main 8 terminal colors.
+* Use Go scripts to build prompt – [like
+  powerline-go](https://github.com/justjanne/powerline-go), but:
+  - use my terminal colors
+  - customize symbol segment from command line
+  - special formatting when on dangerous branches
+  - left-pointing powerline symbols for right prompt
+  - maybe all git statuses in one segment
+  - maybe kube current context instead of cluster + namespace
+  - only show kube info if current directory has kube folder
 
