@@ -136,9 +136,9 @@ autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir(
 " ------------------
 set background=dark
 
-" these have to be in this order to work
+" these have to be in this order to work, maybe?
+let g:PaperColor_Theme = 'default'
 source ~/.config/nvim/pcthemes/kyl.vim
-let g:PaperColor_Theme = 'kyl'
 colorscheme PaperColor
 hi FunctionParameters guifg=#AAC4FF
 
