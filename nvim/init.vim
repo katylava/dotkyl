@@ -106,8 +106,8 @@ autocmd FileType cfg        set ts=4 sw=4 tw=0 foldmethod=indent commentstring=#
 autocmd FileType css        set ts=2 sw=2 tw=0 foldmethod=indent
 autocmd FileType ejs        set ts=4 sw=4 tw=0 foldmethod=indent
 autocmd FileType htmldjango set ts=2 sw=2 foldmethod=indent
-autocmd FileType javascript set ts=2 sw=2 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType javascript.jsx set ts=2 sw=2 tw=120 colorcolumn=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript.jsx set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set tw=79 ts=2 sw=2
 autocmd FileType markdown   set tw=79 ts=2 sw=2
