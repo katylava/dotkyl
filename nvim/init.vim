@@ -6,7 +6,7 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " https://github.c
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
 Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
-Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
+" Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
 Plug 'fatih/vim-go', { 'for': 'go' } " https://github.com/fatih/vim-go
@@ -19,8 +19,8 @@ Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
 Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
-Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
-Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
+" Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
+" Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
 Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
 Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
@@ -29,12 +29,12 @@ Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-in
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'purpleP/python-syntax', { 'for': 'python' } " https://github.com/purpleP/python-syntax
-Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
+" Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-rhubarb' " https://github.com/tpope/vim-rhubarb
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
-Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
+" Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
 Plug 'tpope/vim-eunuch' " https://github.com/tpope/vim-eunuch
 Plug 'tpope/vim-fugitive' " https://github.com/tpope/vim-fugitive
 Plug 'tpope/vim-repeat' " https://github.com/tpope/vim-repeat
