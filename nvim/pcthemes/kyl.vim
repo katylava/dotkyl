@@ -155,13 +155,22 @@ let g:PaperColor_Theme_kyl.light = {
       \   }
 
 
-" PaperColor
 let g:PaperColor_Theme_Options = {
       \   'theme': {
       \     'kyl': {
       \       'allow_bold': 1,
       \       'allow_italic': 1,
       \       'transparent_background': 1
+      \     },
+      \     'default.dark': {
+      \       'allow_bold': 1,
+      \       'allow_italic': 1,
+      \       'transparent_background': 1
+      \     },
+      \     'default.light': {
+      \       'allow_bold': 1,
+      \       'allow_italic': 1,
+      \       'transparent_background': 0
       \     }
       \   },
       \   'language': {
@@ -170,3 +179,6 @@ let g:PaperColor_Theme_Options = {
       \     }
       \   }
       \ }
+
+let g:PaperColor_Theme_Options.theme['default.dark'].override = g:PaperColor_Theme_kyl.dark.palette
+let g:PaperColor_Theme_Options.theme['default.light'].override = g:PaperColor_Theme_kyl.light.palette
