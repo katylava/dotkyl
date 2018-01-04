@@ -17,7 +17,7 @@ setopt autocd
 
 for f in ~/.dotkyl/lib/*.zsh; do . $f; done
 
-# If I remove this, it will reappear
+# If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
