@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+_findup() {
+    setopt extendedglob
+    echo (../)#${1}(Y1:a:h)
+}
+
+_findup $@ 2>/dev/null
