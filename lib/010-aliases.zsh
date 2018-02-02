@@ -10,6 +10,7 @@ alias ls='gls --color=auto -NFh'
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
 alias edit.kubeconf='nvim ~/.kube/config'
+alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
