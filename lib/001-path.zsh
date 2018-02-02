@@ -1,4 +1,16 @@
-export PATH=/usr/local/opt/python/libexec/bin:/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/Code/gocode/bin:~/.dotkyl/bin:$PATH
+typeset -U path
+
+# $path is a magical variable from which $PATH is set
+path=(
+    /usr/local/opt/curl/bin
+    /usr/local/opt/python/libexec/bin
+    /usr/local/share/npm/bin
+    /usr/local/opt/coreutils/libexec/gnubin
+    ~/Code/gocode/bin
+    ~/.dotkyl/bin
+    $path
+)
+export PATH
 export GOPATH=~/Code/gocode
 
 function node_repl_path {
