@@ -202,8 +202,8 @@ nnoremap π :tabnext<CR>
 nnoremap ø :tabprevious<CR>
 
 " popup window - use Ctrl+j/k instead of Ctrl+n/p
-inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+" inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+" inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " select just-pasted lines
 nnoremap gp `[v`]
