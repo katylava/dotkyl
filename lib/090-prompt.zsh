@@ -12,7 +12,7 @@ function __promptline_symbol {
     local symbol='⛄'
 
     mail -e
-    [ $? -eq 0 ] && symbol="✉"
+    [ $? -eq 0 ] && symbol="📨"
 
     [ ! -z "${DOCKER_MACHINE_NAME}" ] && symbol=$(echo -e "\ue7b0")
 
