@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
 hash=$(echo -n $1 | sha1sum | tr 'a-z' 'A-Z' | cut -d' ' -f1)
-pt "^${hash}" ~/Downloads/pwned-passwords-2.0.txt
-
-
+curl -s https://api.pwnedpasswords.com/range/${hash:0:5} | grep ${hash:5}
