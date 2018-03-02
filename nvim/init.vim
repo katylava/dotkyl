@@ -15,6 +15,8 @@ Plug 'itchyny/lightline.vim' " https://github.com/itchyny/lightline.vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'  " Distraction-free writing
+Plug 'junegunn/limelight.vim'  " Dims all but current block for focus (to use with goyo)
 Plug 'kana/vim-textobj-line' " https://github.com/kana/vim-textobj-line
 Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
@@ -385,6 +387,20 @@ let g:neomake_python_enabled_makers = ['flake8']
 " vim-json
 let g:vim_json_syntax_conceal = 0
 
+" goyo/limelight
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+" let g:limelight_default_coefficient = 0.7
+function! s:goyo_enter()
+    " Remove artifacts for NeoVim on true colors transparent background.
+    " guifg is the terminal's background color.
+    " hi! VertSplit gui=NONE guifg=#1b202a guibg=NONE
+    " hi! StatusLine gui=NONE guifg=#1b202a guibg=NONE
+    " hi! StatusLineNC gui=NONE guifg=#1b202a guibg=NONE
+    hi! NonText gui=NONE guifg=#1b202a guibg=NONE
+endfunction
 
 " -----------
 " Functions
