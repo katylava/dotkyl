@@ -1,9 +1,6 @@
 {
   "Profiles": [
     {
-      "ASCII Anti Aliased": true,
-      "ASCII Ligatures": true,
-      "Ambiguous Double Width": false,
       "Ansi 0 Color": {
         "Blue Component": 0.19370138645172119,
         "Green Component": 0.15575926005840302,
