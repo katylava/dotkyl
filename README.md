@@ -25,6 +25,10 @@ many.
 Actual dot files, without the dot. `bin/setup-dotfiles` symlinks them to home
 dir (with the dot).
 
+### /iterm
+
+iTerm2 themes.
+
 ### /lib
 
 Files that are sourced by `~/.zshrc`. Coolest thing in here is
