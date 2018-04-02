@@ -69,6 +69,7 @@ set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by def
 set grepprg=ag
 set ignorecase smartcase
 set iskeyword+=-
+set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 set mouse=a
 set nobackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
@@ -79,6 +80,7 @@ set number relativenumber
 set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
+set showbreak=↪\
 set synmaxcol=200 " disable syntax highlight after 200 chars for performance
 set termguicolors " probably don't need this since $NVIM_TUI_ENABLE_TRUE_COLOR is set
 set title
