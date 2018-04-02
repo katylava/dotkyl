@@ -9,7 +9,7 @@ function __promptline_symbol {
     # (under Profile > Text) seems to fix any weirdness
     # with using an emoji in the prompt
     # local symbol='🍂'
-    local symbol='⛄'
+    local symbol='🍀'
 
     mail -e
     [ $? -eq 0 ] && symbol="📨"
