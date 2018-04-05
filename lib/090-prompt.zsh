@@ -27,7 +27,7 @@ function __promptline_kubecontext {
 
    if [ -d (../)#kube(/Y1:a:h) -a $commands[kubectl] ]; then
        context=`kubectl config current-context`
-       printf "%s" "⧉ $context"
+       printf "%s" "⎈ $context"
        return
    fi
 
