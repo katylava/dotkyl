@@ -14,6 +14,7 @@ alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
+alias unstuck='nvim ~/Desktop/unstuck.md'
 
 # gcloud is weird
 alias gcloud='~/Code/Vendor/google-cloud-sdk/bin/gcloud'
