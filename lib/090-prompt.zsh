@@ -9,7 +9,8 @@ function __promptline_symbol {
     # (under Profile > Text) seems to fix any weirdness
     # with using an emoji in the prompt
     # local symbol='🍂'
-    local symbol='🍀'
+    # local symbol='🍀'
+    local symbol='⛵'
 
     mail -e
     [ $? -eq 0 ] && symbol="📨"
@@ -294,9 +295,9 @@ function __promptline {
   local alt_rsep=""
   local reset="${wrap}0${end_wrap}"
   local reset_bg="${wrap}49${end_wrap}"
-  local a_fg="${wrap}30${end_wrap}"
-  local a_bg="${wrap}46${end_wrap}"
-  local a_sep_fg="${wrap}36${end_wrap}"
+  local a_fg="${wrap}36${end_wrap}"
+  local a_bg="${wrap}40${end_wrap}"
+  local a_sep_fg="${wrap}30${end_wrap}"
   local b_fg="${wrap}33${end_wrap}"
   local b_bg="${wrap}45${end_wrap}"
   local b_sep_fg="${wrap}35${end_wrap}"
@@ -304,8 +305,8 @@ function __promptline {
   local c_bg="${wrap}44${end_wrap}"
   local c_sep_fg="${wrap}34${end_wrap}"
   local d_fg="${wrap}32${end_wrap}"
-  local d_bg="${wrap}40${end_wrap}"
-  local d_sep_fg="${wrap}30${end_wrap}"
+  local d_bg="${wrap}46${end_wrap}"
+  local d_sep_fg="${wrap}36${end_wrap}"
   local warn_fg="${wrap}30${end_wrap}"
   local warn_bg="${wrap}41${end_wrap}"
   local warn_sep_fg="${wrap}31${end_wrap}"
