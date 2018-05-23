@@ -331,6 +331,13 @@ let g:ctrlp_map = '<C-q>'
 let g:ctrlp_switch_buffer = 'Et'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|env'
 let g:ctrlp_root_markers = ['.ctrlp']
+let g:ctrlp_dont_split = 'NERD'
+let g:ctrlp_prompt_mappings = {
+    \ 'PrtSelectMove("j")':   ['<c-n>', '<down>'],
+    \ 'PrtSelectMove("k")':   ['<c-p>', '<up>'],
+    \ 'PrtHistory(-1)':       ['<c-j>'],
+    \ 'PrtHistory(1)':        ['<c-k>'],
+    \ }
 
 " FZF
 let g:fzf_layout = { 'down': '~40%' }
