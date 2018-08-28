@@ -29,7 +29,8 @@ function __promptline_kubecontext {
 
    if [ -d (../)#kube(/Y1:a:h) -a $commands[kubectl] ]; then
        context=`kubectl config current-context`
-       printf "%s" "⎈ $context"
+       namespace=`kubectl config view --minify --output 'jsonpath={..namespace}'`
+       printf "%s" "⎈ $context:$namespace"
        return
    fi
 
