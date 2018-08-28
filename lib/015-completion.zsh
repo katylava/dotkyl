@@ -26,3 +26,6 @@ compinit
 # if [ $commands[kubectl] ]; then
 #   source <(kubectl completion zsh)
 # fi
+#
+
+source /Users/kathleenlavalle/Code/Vendor/google-cloud-sdk/completion.zsh.inc
