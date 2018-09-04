@@ -358,7 +358,12 @@ map ,d :NERDTreeToggle<CR>
 map ,e :NERDTreeFind<CR>
 let NERDTreeIgnore = ['\.pyc$']
 let NERDTreeWinSize = 45
-let NERDTreeShowHidden=1
+let NERDTreeShowHidden = 1
+
+" Since the following commit, devicons are indented too much in NerdTree
+" https://github.com/ryanoasis/vim-devicons/commit/40040ba86e29595cd8c42c1142313793b25d16d9
+" ... fix by overriding padding before glyph
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
 
 " vim-nerdtree-syntax-highlight
 let s:brown = '905532'
