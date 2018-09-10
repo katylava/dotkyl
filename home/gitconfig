@@ -18,11 +18,14 @@
     squash = merge --squash --no-commit
     st = status --short --branch
     track = push -u origin
+    unstage = reset HEAD
 
     # only use this when merging into main feature branch that i control
     # completely and don't do any work on directly. this allows me to make
     # messy wip commits and keep PRs clean.
     merge-wip = merge -s recursive -X theirs --squash --no-commit
+[branch]
+    sort = -authordate
 [core]
     attributesfile = ~/.gitattributes
     autocrlf = false
