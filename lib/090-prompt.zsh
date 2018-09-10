@@ -27,11 +27,20 @@ function __promptline_kubecontext {
 
    local context
 
-   if [ -d (../)#kube(/Y1:a:h) -a $commands[kubectl] ]; then
-       context=`kubectl config current-context`
-       namespace=`kubectl config view --minify --output 'jsonpath={..namespace}'`
-       printf "%s" "⎈ $context:$namespace"
-       return
+   if [ $commands[kubectl] ]; then
+       if [ -d (../)#kube(/Y1:a:h) ]; then
+           context=`kubectl config current-context`
+           namespace=`kubectl config view --minify --output 'jsonpath={..namespace}'`
+           printf "%s" "⎈ $context:$namespace"
+           return
+       fi
+
+       if [ `findup application.json` ]; then
+           context=`kubectl config current-context`
+           namespace=`kubectl config view --minify --output 'jsonpath={..namespace}'`
+           printf "%s" "⎈ $context:$namespace"
+           return
+       fi
    fi
 
    return 1
