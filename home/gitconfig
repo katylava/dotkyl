@@ -9,16 +9,17 @@
     ci = commit
     cm = commit -am
     co = checkout
-    df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
-    di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
     lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
     lp = log -p --relative
     ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
-    sh = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git show --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    sh = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git show --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
     squash = merge --squash --no-commit
     st = status --short --branch
     track = push -u origin
     unstage = reset HEAD
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 
     # only use this when merging into main feature branch that i control
     # completely and don't do any work on directly. this allows me to make
