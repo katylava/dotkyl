@@ -422,7 +422,6 @@ endfunction
 
 function! FileDir()
     let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
-    let filedir = substitute(expand("%:p:h"), '/Users/kathleenlavalle/', '', 'g')
     " Don't show common parent directories
     let filedir = substitute(l:filedir, 'Code/', '', 'g')
     let filedir = substitute(l:filedir, 'Work/', '', 'g')
