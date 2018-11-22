@@ -28,4 +28,4 @@ compinit
 # fi
 #
 
-source /Users/kathleenlavalle/Code/Vendor/google-cloud-sdk/completion.zsh.inc
+source /Users/kyl/google-cloud-sdk/completion.zsh.inc
