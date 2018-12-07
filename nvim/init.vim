@@ -324,6 +324,7 @@ map ,f :CtrlP<CR>
 map ,m :CtrlPMRU<CR>
 map ,g :CtrlPBuffer<CR>
 map ,r :CtrlPClearCache<CR>
+map ,w :CtrlP<CR><C-\>w
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_dotfiles = 0
