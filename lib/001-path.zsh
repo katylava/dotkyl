@@ -8,7 +8,7 @@ path=(
     /usr/local/opt/coreutils/libexec/gnubin
     ~/Code/gocode/bin
     ~/.dotkyl/bin
-    ~/Code/Vendor/google-cloud-sdk/bin
+    ~/google-cloud-sdk/bin
     $path
 )
 export PATH
