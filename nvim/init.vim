@@ -133,7 +133,7 @@ autocmd BufWritePost *.sh silent !chmod +x %
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
 " Title string
-autocmd BufEnter * let &titlestring = 'δ ' . expand("%:t") . ' ∈ ' . FileDir()
+autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 
 " ------------------
 " Theme
