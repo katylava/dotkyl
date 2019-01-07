@@ -46,8 +46,10 @@ __() {
             # existing one.
             local -a delete
             zparseopts -D d=delete
+
             if (( $+delete[1] )); then
                 # With `-d`, we delete an existing bookmark
+                [[ -z $1 ]] && echo 'Argument required - name of bookmark to delete' && return 1
                 command rm $MARKPATH/$1
             else
                 # Otherwise, add a bookmark to the current
@@ -62,7 +64,6 @@ __() {
     }
 } && __
 
-g() { echo "$bg[red]$fg_bold[white]Use @@bookmark$reset_color" && return 1 }
 b() { bookmark }
 d() { bookmark -d $1 }
 l() { bookmark | sort -t'>' -k2,2 }
