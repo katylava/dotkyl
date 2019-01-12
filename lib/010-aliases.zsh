@@ -4,8 +4,10 @@ alias rem='rmtrash'
 
 # listing and grepping
 alias lgrep='ll | grep'
-alias ll='gls --color=auto -NFalh'
-alias ls='gls --color=auto -NFh'
+# alias ll='gls --color=auto -NFalh'
+# alias ls='gls --color=auto -NFh'
+alias ll='lsd -Fal'
+alias ls='lsd -F'
 
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
