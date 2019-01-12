@@ -176,6 +176,7 @@ hi SignColumn guibg=none ctermbg=none
 nnoremap ,n :source ~/.config/nvim/init.vim<CR>
 
 inoremap jk <Esc>
+inoremap kk <Esc>
 inoremap <TAB><TAB> <C-p>
 
 tnoremap jk <C-\><C-n>
