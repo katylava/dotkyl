@@ -12,7 +12,7 @@ path=(
     $path
 )
 export PATH
-export GOPATH=~/Code/gocode
+export GOPATH=~/go
 
 function node_repl_path {
     [ -d ./node_modules ] && export NODE_PATH="${PWD}/node_modules"
