@@ -1,0 +1,13 @@
+{
+    "Profiles": [
+        {
+            "Description": "Base opaque",
+            "Dynamic Profile Parent Name": "Base",
+            "Guid": "8D631E6B-ED9C-4D10-8D90-ED711CABF0EA",
+            "Name": "Opaque",
+            "Blur": false,
+            "Only The Default BG Color Uses Transparency": true,
+            "Transparency": 0.00
+        }
+    ]
+}
