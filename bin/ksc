@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+[ -z $1 ] && { echo "context required"; exit 1 }
+
+kubectl config set-context $1 --namespace=$2
