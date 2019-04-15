@@ -12,3 +12,4 @@ socket.io.js
 us.json
 /**/tests/data/*
 package-lock.json
+*.js.map
