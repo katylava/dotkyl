@@ -16,7 +16,7 @@ alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
-alias unstuck='nvim ~/Desktop/unstuck.md'
+alias unstuck='nvim ~/Dropbox/desktop/unstuck.md'
 
 # things i forget
 alias diff2html='pygmentize -f html -O style=colorful,full -l diff -O encoding=utf-8'
