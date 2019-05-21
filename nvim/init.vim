@@ -179,6 +179,7 @@ nnoremap ,n :source ~/.config/nvim/init.vim<CR>
 inoremap jk <Esc>
 inoremap kk <Esc>
 inoremap <TAB><TAB> <C-p>
+inoremap <C-o> <C-x><C-o>
 
 tnoremap jk <C-\><C-n>
 
