@@ -8,7 +8,7 @@ path=(
     /usr/local/opt/python/libexec/bin
     /usr/local/share/npm/bin
     /usr/local/opt/coreutils/libexec/gnubin
-    ~/Code/gocode/bin
+    ~/go/bin
     ~/.dotkyl/bin
     ~/google-cloud-sdk/bin
 )
