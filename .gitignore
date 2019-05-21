@@ -3,3 +3,5 @@ nvim/.netrwhist
 nvim/autoload/plug.vim.old
 nvim/plugged
 home/urlwatch/cache.db
+nvim/autoload/gocomplete.vim
+nvim/ftplugin/go/gocomplete.vim
