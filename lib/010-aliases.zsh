@@ -6,6 +6,7 @@ alias rem='rmtrash'
 alias lgrep='ll | grep'
 # alias ll='gls --color=auto -NFalh'
 # alias ls='gls --color=auto -NFh'
+alias la='lsd -Fa'
 alias ll='lsd -Fal'
 alias ls='lsd -F'
 
