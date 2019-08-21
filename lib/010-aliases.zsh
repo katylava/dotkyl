@@ -43,7 +43,6 @@ alias jira='jira-cli'
 alias k='kubectl'
 alias kc='kubectl config use-context'
 alias kcc='kubectl config current-context'
-alias kg='kubectl get'
 alias kgp='kubectl get pods'
 alias kl='kubectl logs'
 alias klist="kubectl config view -o jsonpath='{.contexts[*].name}'"
