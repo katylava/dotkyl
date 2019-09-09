@@ -26,6 +26,7 @@ alias encoding="vim -c 'execute \"silent !echo \" . &fileencoding | q'"
 alias ezrsync='rsync -avhC --progress --no-o'
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder && say "flushed DNS"'
 alias history='fc -il 1'
+alias killcam='sudo killall AppleCameraAssistant; sudo killall VDCAssistant'
 alias locate='glocate'
 alias locip='ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d " " -f 2 | head -n 1'
 alias noderl='env NODE_NO_READLINE=1 rlwrap node'
