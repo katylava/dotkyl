@@ -34,6 +34,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pan
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'purpleP/python-syntax', { 'for': 'python' } " https://github.com/purpleP/python-syntax
 " Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
+Plug 'sbdchd/neoformat' " https://github.com/sbdchd/neoformat
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
 Plug 'tpope/vim-rhubarb' " https://github.com/tpope/vim-rhubarb
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
@@ -272,6 +273,13 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 nmap ,z <Plug>(easymotion-overwin-f2)
 map ,j <Plug>(easymotion-j)
 map ,k <Plug>(easymotion-k)
+
+" neoformat
+let g:neoformat_run_all_formatters = 1
+augroup fmt
+    autocmd!
+    autocmd BufWritePre * undojoin | Neoformat
+augroup END
 
 "  vim-jsx
 let g:jsx_ext_required = 0
