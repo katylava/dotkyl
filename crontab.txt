@@ -1,4 +1,4 @@
-PATH=/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:~/.dotkyl/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.fzf/bin
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/opt/curl/bin:/usr/local/opt/python/libexec/bin:/usr/local/share/npm/bin:/usr/local/opt/coreutils/libexec/gnubin:/Users/kyl/go/bin:/Users/kyl/.dotkyl/bin:/Users/kyl/google-cloud-sdk/bin:/Users/kyl/.fzf/bin
 
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted"
