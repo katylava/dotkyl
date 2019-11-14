@@ -275,11 +275,12 @@ map ,j <Plug>(easymotion-j)
 map ,k <Plug>(easymotion-k)
 
 " neoformat
+let g:neoformat_enabled_json = []
 let g:neoformat_run_all_formatters = 1
-augroup fmt
-    autocmd!
-    autocmd BufWritePre * undojoin | Neoformat
-augroup END
+" augroup fmt
+"     autocmd!
+"     autocmd BufWritePre * undojoin | Neoformat
+" augroup END
 
 "  vim-jsx
 let g:jsx_ext_required = 0
