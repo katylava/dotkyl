@@ -8,6 +8,7 @@ PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/opt
 15 */2 * * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
-50 10 * * * gcloud components list --show-versions --only-local-state
+# 50 10 * * * gcloud components list --show-versions --only-local-state
+50 10 * * * gcloud components update
 
 # vim: ft=crontab
