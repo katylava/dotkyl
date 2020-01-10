@@ -9,6 +9,6 @@ PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/opt
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
 # 50 10 * * * gcloud components list --show-versions --only-local-state
-50 10 * * * gcloud components update
+50 10 * * * gcloud components update 2&>1 | grep -v "All components are up to date"
 
 # vim: ft=crontab
