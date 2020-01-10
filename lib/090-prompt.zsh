@@ -110,6 +110,10 @@ function __promptline_cwd {
     local part="${cwd##*/}"
     cwd="${cwd%/*}"
 
+    len="${#part}"
+
+    [[ len -gt 15 ]] && part=${part:0:7}⁎${part:$len-7:7}
+
     formatted_cwd="$dir_sep$part$formatted_cwd"
     part_count=$((part_count+1))
 
