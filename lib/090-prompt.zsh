@@ -5,6 +5,8 @@
 
 NEWLINE=$'\n'
 
+SYMBOL=' ⁍ '
+
 function __promptline_symbol {
     # checking "Use Unicode Version 9 Widths" in iTerm2
     # (under Profile > Text) seems to fix any weirdness
@@ -290,7 +292,7 @@ function __promptline {
   local z_bg="${wrap}43${end_wrap}"
   local z_sep_fg="${wrap}33${end_wrap}"
   if [[ -n ${ZSH_VERSION-} ]]; then
-    PROMPT="$(__promptline_left_prompt)$NEWLINE➯ "
+    PROMPT="$(__promptline_left_prompt)$NEWLINE$SYMBOL "
     RPROMPT="$(__promptline_right_prompt)"
   elif [[ -n ${FISH_VERSION-} ]]; then
     if [[ -n "$1" ]]; then
