@@ -26,6 +26,7 @@ Plug 'kylef/apiblueprint.vim', { 'for': 'apiblueprint' } " https://github.com/ky
 " Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
 Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
+Plug 'mustache/vim-mustache-handlebars' " https://github.com/mustache/vim-mustache-handlebars
 Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
 Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
