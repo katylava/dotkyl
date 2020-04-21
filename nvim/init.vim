@@ -85,7 +85,7 @@ set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
 set showbreak=↪\
-set synmaxcol=200 " disable syntax highlight after 200 chars for performance
+" set synmaxcol=200 " disable syntax highlight after 200 chars for performance
 set termguicolors " probably don't need this since $NVIM_TUI_ENABLE_TRUE_COLOR is set
 set title
 set ts=4 sw=4 ai expandtab
@@ -341,7 +341,8 @@ map ,r :CtrlPClearCache<CR>
 map ,w :CtrlP<CR><C-\>w
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_dotfiles = 0
+" let g:ctrlp_dotfiles = 0
+let g:ctrlp_show_hidden = 1
 let g:ctrlp_map = '<C-q>'
 let g:ctrlp_switch_buffer = 'Et'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|coverage'
