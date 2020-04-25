@@ -68,6 +68,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set completeopt=menu,longest,preview
 " set cursorline " didn't realize this makes vim slower
+set cursorcolumn " highlight current column
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
 " set exrc secure " enable per-directory .vimrc files
 set grepprg=ag
