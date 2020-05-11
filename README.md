@@ -124,6 +124,8 @@ Then I save lists of installed things to dropbox:
 
 And I copy my .histfile to dropbox too.
 
+Backup iStat menus preferences from "File > Export settings", also in Dropbox.
+
 Before I move on to the clean install, I should make sure I don't have any
 uncommited changes in my work repos:
 
