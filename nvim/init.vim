@@ -178,8 +178,6 @@ hi SignColumn guibg=none ctermbg=none
 
 :let mapleader='\'
 
-nnoremap ,n :source ~/.config/nvim/init.vim<CR>
-
 inoremap jk <Esc>
 inoremap kk <Esc>
 inoremap <TAB><TAB> <C-p>
@@ -279,6 +277,8 @@ map ,k <Plug>(easymotion-k)
 " neoformat
 let g:neoformat_enabled_json = []
 let g:neoformat_run_all_formatters = 1
+let g:neoformat_enabled_python = ['black', 'isort']
+map ,n :Neoformat<CR>
 " augroup fmt
 "     autocmd!
 "     autocmd BufWritePre * undojoin | Neoformat
