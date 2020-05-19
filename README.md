@@ -155,7 +155,8 @@ I google this.
 6. After that, `git` will certainly have been installed, so I clone my dotfiles
    and set those up.
 7. Clone the work repos I know I'll be working on soon.
-8. Lastly I create a generic admin user, set the same system preferences, and
+8. Contact IT to install security software required by work.
+9. Lastly I create a generic admin user, set the same system preferences, and
    install SuperDuper!. After a while I will log in as the admin user and use
    SuperDuper! to overwrite my pre-clean-install backup with regular backups of
    my current system. I do this as a different user so all my usual background
