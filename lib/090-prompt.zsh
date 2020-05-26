@@ -46,6 +46,11 @@ function __promptline_last_exit_code {
 
   printf "%s" "$last_exit_code"
 }
+function __promptline_last_exec_time {
+    local t=`fc -lD | tail -n1 | cut -f3 -d' '`
+
+    printf "%s" "${t}"
+}
 function __promptline_virtualenv {
   [[ -z "${VIRTUAL_ENV}" ]] && return 1
 
@@ -233,7 +238,7 @@ function __promptline_right_prompt {
   # section "x" header
   slice_prefix="${x_sep_fg}${rsep}${x_fg}${x_bg}${space}" slice_suffix="$space${x_sep_fg}" slice_joiner="${x_fg}${x_bg}${alt_rsep}${space}" slice_empty_prefix=""
   # section "x" slices
-  __promptline_wrapper "%*" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; }
+  __promptline_wrapper "$(__promptline_last_exec_time) %*" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; }
 
   # section "y" header
   slice_prefix="${y_sep_fg}${rsep}${y_fg}${y_bg}${space}" slice_suffix="$space${y_sep_fg}" slice_joiner="${y_fg}${y_bg}${alt_rsep}${space}" slice_empty_prefix=""
