@@ -99,7 +99,7 @@ autocmd BufRead .bash*      set filetype=sh
 autocmd BufRead *.cls       set filetype=apex
 autocmd BufRead *.ejs       set filetype=ejs
 autocmd BufRead *.htm*      set filetype=htmldjango omnifunc=htmlcomplete#CompleteTags
-autocmd BufRead *.md        set filetype=markdown
+autocmd BufRead *.md        set filetype=markdown comments=n:>
 autocmd BufRead *.page      set filetype=visualforce
 autocmd BufRead *.py        set filetype=python commentstring=#\ %s
 autocmd BufRead *.scss      set filetype=sass
