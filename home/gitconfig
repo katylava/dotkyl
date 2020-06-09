@@ -91,3 +91,5 @@
     first-run = false
 [credential]
     helper = osxkeychain
+[pull]
+	rebase = false
