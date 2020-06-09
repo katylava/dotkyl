@@ -2,15 +2,15 @@ typeset -U path
 
 # $path is a magical variable from which $PATH is set
 path=(
-    $path
-    /usr/local/sbin
-    /usr/local/opt/curl/bin
-    /usr/local/opt/python/libexec/bin
-    /usr/local/share/npm/bin
-    /usr/local/opt/coreutils/libexec/gnubin
-    ~/go/bin
     ~/.dotkyl/bin
+    ~/go/bin
     ~/google-cloud-sdk/bin
+    /usr/local/opt/coreutils/libexec/gnubin
+    /usr/local/share/npm/bin
+    /usr/local/opt/python/libexec/bin
+    /usr/local/opt/curl/bin
+    /usr/local/sbin
+    $path
 )
 export PATH
 export GOPATH=~/go
