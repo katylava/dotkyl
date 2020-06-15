@@ -22,7 +22,7 @@ fpath=(~/.dotkyl/completion /usr/local/share/zsh-completions $fpath)
 
 compinit
 
-# Too fucking slow
+# Too slow
 # if [ $commands[kubectl] ]; then
 #   source <(kubectl completion zsh)
 # fi
