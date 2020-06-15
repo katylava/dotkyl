@@ -1,12 +1,6 @@
 # export ZLE_RPROMPT_INDENT=0 # this makes readline behavior on complete menu weird (-er)
-PROFILE_STARTUP=false
 
-if [[ "$PROFILE_STARTUP" == true ]]; then
-    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
-    PS4=$'%D{%M%S%.} %N:%i> '
-    exec 3>&2 2>$HOME/.tmp/startlog.$$
-    setopt xtrace prompt_subst
-fi
+# zmodload zsh/zprof
 
 export GREP_OPTIONS="-s --color=auto --exclude-dir=node_modules --exclude-dir=.env --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.Trash --exclude-dir=.ropeproject"
 
@@ -19,8 +13,3 @@ for f in ~/.dotkyl/lib/*.zsh; do . $f; done
 
 # If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-if [[ "$PROFILE_STARTUP" == true ]]; then
-    unsetopt xtrace
-    exec 2>&3 3>&-
-fi
