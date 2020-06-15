@@ -109,4 +109,5 @@ touchbar_precmd() {
   fi
 }
 
-precmd_functions+=(touchbar_precmd)
+# i never actually use this, so commenting it out for now
+# precmd_functions+=(touchbar_precmd)
