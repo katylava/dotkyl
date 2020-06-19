@@ -22,17 +22,11 @@ function __promptline_symbol {
     printf "%s" "${symbol}"
 }
 function __promptline_kubecontext {
-   # emulate -L zsh
-   # setopt extended_glob
-   # setopt +o nomatch
-
    local context
    local namespace
 
    if [ $commands[kubectl] ]; then
-       ## using kubectl is too slow
-       # context=`kubectl config current-context`
-       # namespace=`kubectl config view --minify --output 'jsonpath={..namespace}'`
+       # using kubectl is too slow
        context=`ag current-context ~/.kube/config | cut -d' ' -f2`
        namespace=`ag --nonumbers "name: ${context}" -B2 ~/.kube/config | ag namespace | gsed -E 's/^\s+//' | cut -d' ' -f2`
 
