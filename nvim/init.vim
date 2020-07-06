@@ -1,4 +1,6 @@
-let g:python_host_prog='/usr/local/bin/python2'
+" let g:python_host_prog='/usr/local/bin/python2'
+" let g:python3_host_prog='/usr/local/bin/python3'
+let g:python_host_prog='/usr/local/bin/python3'
 let g:python3_host_prog='/usr/local/bin/python3'
 
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
@@ -23,7 +25,9 @@ Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
 Plug 'kylef/apiblueprint.vim', { 'for': 'apiblueprint' } " https://github.com/kylef/apiblueprint.vim
 " Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
+Plug 'lighttiger2505/deoplete-vim-lsp'
 " Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
+Plug 'mattn/vim-lsp-settings'
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
 Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
 Plug 'mustache/vim-mustache-handlebars' " https://github.com/mustache/vim-mustache-handlebars
@@ -33,6 +37,7 @@ Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-in
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
+Plug 'prabirshrestha/vim-lsp'
 Plug 'purpleP/python-syntax', { 'for': 'python' } " https://github.com/purpleP/python-syntax
 " Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'sbdchd/neoformat' " https://github.com/sbdchd/neoformat
@@ -260,6 +265,16 @@ map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR
 " ---------------------
 " Plugin configuration
 " ---------------------
+
+let g:lsp_settings = {
+\   'pyls': {
+\     'workspace_config': {
+\       'pyls': {
+\         'configurationSources': ['flake8']
+\       }
+\     }
+\   },
+\}
 
 " vim-go
 let g:go_highlight_types = 1
