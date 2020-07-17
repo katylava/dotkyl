@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+default=`git symbolic-ref --short HEAD`
+
 git remote prune origin
 
-for b in `git br --merged main | grep -v "^\s\+main$" | grep -v "^\*"`; do
+for b in `git br --merged $default | grep -v "^\s\+${default}$" | grep -v "^\*"`; do
     git br -d $b
 done
