@@ -2,8 +2,6 @@
 
 git remote prune origin
 
-for b in `git br --merged master | grep -v "^\s\+master$" | grep -v "^\*"`; do
+for b in `git br --merged main | grep -v "^\s\+main$" | grep -v "^\*"`; do
     git br -d $b
 done
-
-# gist git-cleanup -u 10907671
