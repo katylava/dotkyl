@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+title="${1}"
+message="${2}"
+subtitle="${3}"
+
+[[ -z "${title}" ]] && title="Notification"
+[[ -z "${message}" ]] && message="(no message)"
+
+cmd="display notification \""${message}"\" with title \""${title}"\""
+[[ -n "${subtitle}" ]] && cmd="${cmd} subtitle \""${subtitle}"\""
+
+osascript -e "${cmd}"
+
+
