@@ -1,6 +1,7 @@
 [user]
     name = katy lavallee
     email = katylava@gmail.com
+	signingkey = B7BA5359396D04C1
 [github]
     user = katylava
 [alias]
