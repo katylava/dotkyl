@@ -125,7 +125,7 @@ autocmd FileType javascript.jsx set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=
 autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set tw=79 ts=2 sw=2
 autocmd FileType markdown   set tw=79 ts=2 sw=2
-autocmd FileType python     set ts=4 sw=4 foldmethod=indent omnifunc=pythoncomplete#Complete
+autocmd FileType python     set ts=4 sw=4 foldmethod=indent omnifunc=lsp#complete()
 autocmd FileType sass       set ts=4 sw=4 foldmethod=indent sw=4
 autocmd FileType yaml       set foldmethod=indent sw=2 ts=2
 
