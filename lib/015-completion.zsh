@@ -18,7 +18,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 
-fpath=(~/.dotkyl/completion /usr/local/share/zsh-completions $fpath)
+fpath=(~/.dotkyl/completion /usr/local/opt/zsh-completions $fpath)
 
 compinit
 
