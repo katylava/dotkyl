@@ -5,6 +5,7 @@ path=(
     ~/.dotkyl/bin
     ~/go/bin
     ~/google-cloud-sdk/bin
+    ~/.pyenv/shims
     /usr/local/opt/coreutils/libexec/gnubin
     /usr/local/share/npm/bin
     /usr/local/opt/python/libexec/bin
