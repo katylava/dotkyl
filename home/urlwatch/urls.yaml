@@ -3,14 +3,3 @@ url: "http://philcalcado.com/microservices-patterns.html"
 ---
 name: "Phil Calçado"
 url: "http://philcalcado.com/"
----
-name: "Hack nerd font updates"
-url: "https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack"
-filter: "element-by-class:commit-tease"
----
-name: "FiraCode nerd font updates"
-url: "https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode"
-filter: "element-by-class:commit-tease"
----
-name: "Carrollton city news"
-url: "https://www.cityofcarrollton.com/about-us/connect-with-us/latest-city-news"
