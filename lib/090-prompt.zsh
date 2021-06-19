@@ -153,11 +153,11 @@ function __promptline_left_prompt {
   # section "b" slices
   __promptline_wrapper "$(__promptline_virtualenv)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
-  # section "c" header
-  slice_prefix="${c_bg}${sep}${c_fg}${c_bg}${space}" slice_suffix="$space${c_sep_fg}" slice_joiner="${c_fg}${c_bg}${alt_sep}${space}" slice_empty_prefix="${c_fg}${c_bg}${space}"
-  [ $is_prompt_empty -eq 1 ] && slice_prefix="$slice_empty_prefix"
-  # section "c" slices
-  __promptline_wrapper "$(__promptline_kubecontext)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
+  # # section "c" header
+  # slice_prefix="${c_bg}${sep}${c_fg}${c_bg}${space}" slice_suffix="$space${c_sep_fg}" slice_joiner="${c_fg}${c_bg}${alt_sep}${space}" slice_empty_prefix="${c_fg}${c_bg}${space}"
+  # [ $is_prompt_empty -eq 1 ] && slice_prefix="$slice_empty_prefix"
+  # # section "c" slices
+  # __promptline_wrapper "$(__promptline_kubecontext)" "$slice_prefix" "$slice_suffix" && { slice_prefix="$slice_joiner"; is_prompt_empty=0; }
 
   # section "d" header
   slice_prefix="${d_bg}${sep}${d_fg}${d_bg}${space}" slice_suffix="$space${d_sep_fg}" slice_joiner="${d_fg}${d_bg}${alt_sep}${space}" slice_empty_prefix="${d_fg}${d_bg}${space}"
