@@ -26,8 +26,6 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # must come after zsh-syntax-highlighting
 source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-source /Users/kyl/.config/broot/launcher/bash/br
-
 j() {
     eval "$(jump shell zsh)"
     j "$@"
