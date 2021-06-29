@@ -48,7 +48,7 @@ alias kcc='kubectl config current-context'
 alias kgp='kubectl get pods'
 alias kl='kubectl logs'
 alias klist="kubectl config view -o jsonpath='{.contexts[*].name}'"
-alias ql='qlmanage -p'
+alias ql='qlmanage -p 2>/dev/null'
 alias sopr='source ~/.zshrc'
 alias t='todolist'
 alias tabview='tabview --width max'
