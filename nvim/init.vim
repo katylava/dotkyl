@@ -10,6 +10,7 @@ Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-synta
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
 " Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
+Plug 'editorconfig/editorconfig-vim' "https://github.com/editorconfig/editorconfig-vim"
 Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
 Plug 'fatih/vim-go', { 'for': 'go' } " https://github.com/fatih/vim-go
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
