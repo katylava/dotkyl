@@ -7,6 +7,7 @@
             "Name": "NoBlur",
             "Blur": false,
             "Only The Default BG Color Uses Transparency": true,
+            "Shortcut": "T",
             "Transparency": 0.20
         }
     ]
