@@ -7,4 +7,4 @@ fi
 COLUMNS=`tput cols`
 LINES=`tput lines`
 TERM=xterm
-kubectl exec -it $@ env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash
+kubectl exec -it $@ -- env COLUMNS=$COLUMNS LINES=$LINES TERM=$TERM bash
