@@ -13,7 +13,8 @@ function __promptline_symbol {
     # with using an emoji in the prompt
     # ... never mind, no it doesn't
     # local symbol='🍂'
-    local symbol='❄'
+    # local symbol='❄'
+    local symbol='🌵'
 
     mail -e
     [ $? -eq 0 ] && symbol="📨"
