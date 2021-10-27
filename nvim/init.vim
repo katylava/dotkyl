@@ -434,6 +434,9 @@ let g:neomake_javascript_enabled_makers = ['eslint']
 " vim-json
 let g:vim_json_syntax_conceal = 0
 
+" do <C-w>m in one split, then in another split and they will be swapped
+nnoremap <C-w>m :call WindowSwapping()<CR>
+
 " goyo/limelight
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
@@ -525,6 +528,32 @@ function! ConflictsHighlight() abort
     highlight conflictStart ctermbg=red ctermfg=black
     highlight conflictMiddle ctermbg=blue ctermfg=black
     highlight conflictEnd ctermbg=green cterm=bold ctermfg=black
+endfunction
+
+" swapping splits
+" from https://stackoverflow.com/a/15508593/111362
+let s:markedWinNum = -1
+function! DoWindowSwap()
+    "Mark destination
+    let curNum = winnr()
+    let curBuf = bufnr( "%" )
+    exe s:markedWinNum . "wincmd w"
+    "Switch to source and shuffle dest->source
+    let markedBuf = bufnr( "%" )
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' curBuf
+    "Switch to dest and shuffle source->dest
+    exe curNum . "wincmd w"
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' markedBuf
+endfunction
+function! WindowSwapping()
+    if s:markedWinNum == -1
+        let s:markedWinNum = winnr()
+    else
+        call DoWindowSwap()
+        let s:markedWinNum = -1
+    endif
 endfunction
 
 
