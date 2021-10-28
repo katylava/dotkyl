@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+prev=$(git branch --contains $1 --merged)
+curr=$(git branch --contains $2 --merged)
+file=$3
+
+[[ "$file" == "0" ]] && exit
+[[ "$prev" != "$curr" ]] && exit
+
+echo "$curr" | grep -w "main" | grep -v '*'
+[[ $? -eq 0 ]] && echo -e "\033[0;31mWARNING! You are creating a branch off main\033[0m]" || exit 0
+
+
