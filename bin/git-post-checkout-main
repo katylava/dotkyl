@@ -7,7 +7,7 @@ file=$3
 [[ "$file" == "0" ]] && exit
 [[ "$prev" != "$curr" ]] && exit
 
-echo "$curr" | grep -w "main" | grep -v '*'
-[[ $? -eq 0 ]] && echo -e "\033[0;31mWARNING! You are creating a branch off main\033[0m]" || exit 0
+echo "$curr" | grep -w "main" | grep -v '*' > /dev/null
+[[ $? -eq 0 ]] && echo -e "\033[0;31mWARNING! You are creating a branch off main\033[0m" || exit 0
 
 
