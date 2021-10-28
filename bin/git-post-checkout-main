@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Get a warning when you create a branch off of main.
+# Save to your project's repo as .git/hooks/post-checkout
+
 prev=$(git branch --contains $1 --merged)
 curr=$(git branch --contains $2 --merged)
 file=$3
