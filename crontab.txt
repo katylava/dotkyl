@@ -5,9 +5,9 @@ PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/opt
 30 15 * * * /usr/local/bin/brew update
 55 15 * * * /usr/local/bin/brew outdated
 57 15 * * * /usr/local/bin/brew outdated --cask
-# 15 */2 * * * env LC_ALL=en_US.UTF-8 urlwatch
+15 11 */2 * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
-# 05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
+05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
 
 # vim: ft=crontab
