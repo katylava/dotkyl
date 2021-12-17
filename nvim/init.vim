@@ -27,6 +27,7 @@ Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
 Plug 'kylef/apiblueprint.vim', { 'for': 'apiblueprint' } " https://github.com/kylef/apiblueprint.vim
 " Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
 Plug 'lighttiger2505/deoplete-vim-lsp'
+Plug 'luochen1990/rainbow' " https://github.com/luochen1990/rainbow
 " Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mattn/vim-lsp-settings'
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
@@ -275,6 +276,14 @@ let g:lsp_settings = {
 \       }
 \     }
 \   },
+\}
+
+" rainbow
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+\	'separately': {
+\		'nerdtree': 0,
+\	}
 \}
 
 " vim-go
