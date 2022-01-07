@@ -9,5 +9,6 @@ PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/opt
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
 05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
+03 13 * * 3 find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +30 -type f -delete
 
 # vim: ft=crontab
