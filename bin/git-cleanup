@@ -2,6 +2,8 @@
 
 default=`git symbolic-ref --short HEAD`
 
+[ $default != "main" ] && [ $default != "master" ] && echo "You should only call this from your main or master branch" && exit
+
 git remote prune origin
 
 for b in `git branch --merged $default | grep -v "^\s\+${default}$" | grep -v "^\*"`; do
