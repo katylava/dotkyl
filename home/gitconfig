@@ -20,7 +20,7 @@
     st = status --short --branch
     track = push -u origin
     unstage = reset HEAD
-    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-main}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 
     # only use this when merging into main feature branch that i control
     # completely and don't do any work on directly. this allows me to make
@@ -81,12 +81,6 @@
 
 [ghi]
     token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [diff-so-fancy]
     first-run = false
 [credential]
