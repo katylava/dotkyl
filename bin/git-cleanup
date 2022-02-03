@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-default=`git symbolic-ref --short HEAD`
+default=`git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
+
 
 git remote prune origin
 
