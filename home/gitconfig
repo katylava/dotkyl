@@ -65,11 +65,11 @@
     remote = red
 [color "diff"]
     meta = cyan
-    frag = yellow bold
+    frag = magenta bold
     old = red bold
     new = green bold
     whitespace = white cyan
-    commit = white yellow bold
+    commit = yellow bold
 [color "status"]
     added = green bold
     changed = red
