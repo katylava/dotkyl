@@ -2,7 +2,6 @@
 
 default=`git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
 
-
 git remote prune origin
 
 for b in `git branch --merged $default | grep -v "^\s\+${default}$" | grep -v "^\*"`; do
