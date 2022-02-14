@@ -1,3 +1,6 @@
+# temporary
+alias pip='pip --use-deprecated=html5lib'
+
 # safety
 alias r='rm -ir'
 alias rem='rmtrash'
