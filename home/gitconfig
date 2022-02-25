@@ -10,12 +10,12 @@
     ci = commit
     cm = commit -am
     co = checkout
-    df = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --cached --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
-    di = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    df = diff --cached
+    di = diff
     lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
     lp = log -p --relative
     ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%s' -20
-    sh = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git show --color $@ -- ':!package-lock.json' | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    sh = show -- :!package-lock.json
     squash = merge --squash --no-commit
     st = status --short --branch
     track = push -u origin
@@ -32,9 +32,14 @@
     attributesfile = ~/.gitattributes
     autocrlf = false
     excludesfile = ~/.gitignore
+    pager = delta
     whitespace = cr-at-eol
+[diff]
+    colorMoved = default
 [diff "mdls"]
     textconv = mdls
+[interactive]
+    diffFilter = delta --color-only
 [push]
     default = current
 [rerere]
@@ -46,6 +51,20 @@
     tool = vimdiff
 [mergetool]
     keepBackups = true
+[delta]
+    features = decorations
+    navigate = true
+    line-numbers = true
+[delta "interactive"]
+    keep-plus-minus-markers = false
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
 
 
 
@@ -81,8 +100,6 @@
 
 [ghi]
     token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w
-[diff-so-fancy]
-    first-run = false
 [credential]
     helper = osxkeychain
 [pull]
