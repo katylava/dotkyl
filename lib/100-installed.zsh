@@ -7,8 +7,6 @@ export CPPFLAGS=-Qunused-arguments
 export DEFAULT_CHEAT_DIR=~/Dropbox/CheatSheets
 export CHEATCOLORS=true
 
-export GIT_PAGER='less -m -X --quit-at-eof'
-
 export GPG_TTY=$(tty)
 
 export HH_CONFIG=hicolor
