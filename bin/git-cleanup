@@ -2,12 +2,14 @@
 
 default=`git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
 
-git remote prune origin
-
-# TODO: handle squash merges by getting branch names from output of prune
-# origin, seeing if they exist locally and delete them if so (with prompt for
-# confirmation)
-
 for b in `git branch --merged $default | grep -v "^\s\+${default}$" | grep -v "^\*"`; do
     git branch -d $b
+done
+
+pruned=`git remote prune origin | tail -n+3 | cut -d' ' -f4 | cut -d'/' -f2`
+for branch in $pruned; do
+   if `git show-ref -q --verify refs/heads/$branch`; then
+       read -p "Upstream branch $branch no longer exists. Enter 'y' to delete local branch $branch:" y
+       [[ $y == 'y' ]] && git branch -D $branch
+   fi
 done
