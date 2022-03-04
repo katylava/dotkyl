@@ -4,6 +4,10 @@ default=`git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
 
 git remote prune origin
 
+# TODO: handle squash merges by getting branch names from output of prune
+# origin, seeing if they exist locally and delete them if so (with prompt for
+# confirmation)
+
 for b in `git branch --merged $default | grep -v "^\s\+${default}$" | grep -v "^\*"`; do
     git branch -d $b
 done
