@@ -8,8 +8,9 @@ done
 
 pruned=`git remote prune origin | tail -n+3 | cut -d' ' -f4 | cut -d'/' -f2`
 for branch in $pruned; do
-   if `git show-ref -q --verify refs/heads/$branch`; then
-       read -p "Upstream branch $branch no longer exists. Enter 'y' to delete local branch $branch:" y
-       [[ $y == 'y' ]] && git branch -D $branch
-   fi
+    echo "Pruned remote branch $branch"
+    if `git show-ref -q --verify refs/heads/$branch`; then
+        read -p "Upstream branch $branch no longer exists. Enter 'y' to delete local branch $branch:" y
+        [[ $y == 'y' ]] && git branch -D $branch
+    fi
 done
