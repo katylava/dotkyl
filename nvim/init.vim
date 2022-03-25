@@ -13,6 +13,7 @@ Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'editorconfig/editorconfig-vim' "https://github.com/editorconfig/editorconfig-vim"
 Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
 Plug 'fatih/vim-go', { 'for': 'go' } " https://github.com/fatih/vim-go
+Plug 'github/copilot.vim' " https://github.com/github/copilot.vim#getting-started
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
 Plug 'itchyny/lightline.vim' " https://github.com/itchyny/lightline.vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
