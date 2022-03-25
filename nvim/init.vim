@@ -26,7 +26,7 @@ Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
 Plug 'kylef/apiblueprint.vim', { 'for': 'apiblueprint' } " https://github.com/kylef/apiblueprint.vim
 " Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
-Plug 'lighttiger2505/deoplete-vim-lsp'
+" Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'luochen1990/rainbow' " https://github.com/luochen1990/rainbow
 " Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mattn/vim-lsp-settings'
@@ -270,9 +270,9 @@ map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR
 " ---------------------
 
 let g:lsp_settings = {
-\   'pyls': {
+\   'pylsp-all': {
 \     'workspace_config': {
-\       'pyls': {
+\       'pylsp': {
 \         'configurationSources': ['flake8']
 \       }
 \     }
