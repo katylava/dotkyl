@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
 
 cd
-for f in ~/.dotkyl/home/*; do ln -s "${f}" '.'`basename $f`; done
+for f in ~/.dotkyl/home/*; [[ "${f}" != "config" ]] && do ln -s "${f}" '.'`basename $f`; done
 for f in ~/Dropbox/dotkyl-private/.*; do ln -s "${f}"; done
 
 test -d ~/.config || mkdir ~/.config
 cd ~/.config
 ln -s ../.dotkyl/nvim
+for f in ~/.dotkyl/home/config/*; do ln -s "${f}"; done
 
 cd ~/.dotkyl
 crontab crontab.txt
