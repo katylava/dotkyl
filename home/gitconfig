@@ -53,6 +53,7 @@
     keepBackups = true
 [delta]
     navigate = true
+    pager = less -X
 
 
 
