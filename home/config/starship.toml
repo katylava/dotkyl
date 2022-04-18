@@ -1,0 +1,6 @@
+format = "${custom.pwd} :: "
+
+[custom.pwd]
+    command = "~/.dotkyl/bin/mypwd"
+    description = "Shows current directory's bookmark if there is one, otherwise a middle-truncated path to the current directory."
+    when = "true"
