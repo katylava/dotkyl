@@ -1,22 +1,15 @@
-let g:python_host_prog='/usr/local/opt/python/libexec/bin/python'
-let g:python3_host_prog='/usr/local/opt/python/libexec/bin/python'
-" let g:python_host_prog='/Users/kyl/.pyenv/shims/python'
-" let g:python3_host_prog='/Users/kyl/.pyenv/shims/python'
+let g:python_host_prog='/Users/kyl/.pyenv/shims/python'
+let g:python3_host_prog='/Users/kyl/.pyenv/shims/python'
 
 call plug#begin('~/.config/nvim/plugged') " https://github.com/junegunn/vim-plug
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " https://github.com/Shougo/deoplete.nvim
 Plug 'benekastah/neomake' " https://github.com/benekastah/neomake
-Plug 'nikvdp/ejs-syntax', { 'for': 'ejs' } " https://github.com/nikvdp/ejs-syntax
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " https://github.com/chrisbra/csv.cim
-" Plug 'davidoc/taskpaper.vim' " https://github.com/davidoc/taskpaper.vim
 Plug 'easymotion/vim-easymotion' " https://github.com/easymotion/vim-easymotion
 Plug 'editorconfig/editorconfig-vim' "https://github.com/editorconfig/editorconfig-vim"
-Plug 'elzr/vim-json', { 'for': 'json' } " https://github.com/elzr/vim-json
 Plug 'fatih/vim-go', { 'for': 'go' } " https://github.com/fatih/vim-go
 Plug 'github/copilot.vim' " https://github.com/github/copilot.vim#getting-started
 Plug 'godlygeek/tabular' " https://github.com/godlygeek/tabular
 Plug 'itchyny/lightline.vim' " https://github.com/itchyny/lightline.vim
-Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' } " https://github.com/jelera/vim-javascript-syntax
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'  " Distraction-free writing
@@ -26,29 +19,20 @@ Plug 'kana/vim-textobj-user' " https://github.com/kana/vim-textobj-user
 Plug 'kien/ctrlp.vim' " https://github.com/kien/ctrlp.vim
 Plug 'kshenoy/vim-signature' " https://github.com/kshenoy/vim-signature
 Plug 'kylef/apiblueprint.vim', { 'for': 'apiblueprint' } " https://github.com/kylef/apiblueprint.vim
-" Plug 'lambdatoast/elm.vim' " https://github.com/lambdatoast/elm.vim
-" Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'luochen1990/rainbow' " https://github.com/luochen1990/rainbow
-" Plug 'mattn/emmet-vim', { 'for': ['html', 'htmldjango', 'ejs'] } " https://github.com/mattn/emmet-vim
 Plug 'mattn/vim-lsp-settings'
 Plug 'mhinz/vim-signify' " https://github.com/mhinz/vim-signify
-Plug 'moll/vim-node', { 'for': 'javascript' } " https://github.com/moll/vim-node
 Plug 'mustache/vim-mustache-handlebars' " https://github.com/mustache/vim-mustache-handlebars
-Plug 'mxw/vim-jsx', { 'for': 'javascript' } " https://github.com/mxw/vim-jsx
-Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' } " https://github.com/myhere/vim-nodejs-complete
 Plug 'nathanaelkane/vim-indent-guides' " https://github.com/nathanaelkane/vim-indent-guides
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' } " https://github.com/pangloss/vim-javascript
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } " https://github.com/plasticboy/vim-markdown
 Plug 'prabirshrestha/vim-lsp'
-Plug 'purpleP/python-syntax', { 'for': 'python' } " https://github.com/purpleP/python-syntax
 " Plug 'rizzatti/dash.vim' " https://github.com/rizzatti/dash.vim
 Plug 'sbdchd/neoformat' " https://github.com/sbdchd/neoformat
 Plug 'scrooloose/nerdtree' " https://github.com/scrooloose/nerdtree
+Plug 'sheerun/vim-polyglot' " https://github.com/sheerun/vim-polyglot
 Plug 'tpope/vim-rhubarb' " https://github.com/tpope/vim-rhubarb
 Plug 'tpope/vim-characterize' " https://github.com/tpope/vim-characterize
 Plug 'tpope/vim-commentary' " https://github.com/tpope/vim-commentary
-" Plug 'tpope/vim-dotenv' " https://github.com/tpope/vim-dotenv
 Plug 'tpope/vim-eunuch' " https://github.com/tpope/vim-eunuch
 Plug 'tpope/vim-fugitive' " https://github.com/tpope/vim-fugitive
 Plug 'tpope/vim-repeat' " https://github.com/tpope/vim-repeat
@@ -56,8 +40,6 @@ Plug 'tpope/vim-surround' " https://github.com/tpope/vim-surround
 Plug 'tpope/vim-unimpaired' " https://github.com/tpope/vim-unimpaired
 Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'coffee', 'yaml'] } " https://github.com/tweekmonster/braceless.vim
 Plug 'vim-scripts/SyntaxAttr.vim' " https://github.com/vim-scripts/SyntaxAttr.vim
-Plug 'vim-scripts/swap-parameters' " https://github.com/vim-scripts/swap-parameters
-" Plug 'zchee/deoplete-jedi' " https://github.com/zchee/deoplete-jedi
 
 " colorschemes
 Plug 'NLKNguyen/papercolor-theme'
@@ -107,7 +89,7 @@ autocmd BufRead .bash*      set filetype=sh
 autocmd BufRead *.cls       set filetype=apex
 autocmd BufRead *.ejs       set filetype=ejs
 autocmd BufRead *.gs        set filetype=javascript
-autocmd BufRead *.htm*      set filetype=htmldjango omnifunc=htmlcomplete#CompleteTags
+autocmd BufRead *.htm*      set filetype=htmldjango omnifunc=lsp#complete()
 autocmd BufRead *.md        set filetype=markdown comments=n:>
 autocmd BufRead *.page      set filetype=visualforce
 autocmd BufRead *.py        set filetype=python commentstring=#\ %s
@@ -124,8 +106,8 @@ autocmd FileType cfg        set ts=4 sw=4 tw=0 foldmethod=indent commentstring=#
 autocmd FileType css        set ts=2 sw=2 tw=0 foldmethod=indent
 autocmd FileType ejs        set ts=4 sw=4 tw=0 foldmethod=indent
 autocmd FileType htmldjango set ts=2 sw=2 foldmethod=indent
-autocmd FileType javascript set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType javascript.jsx set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType javascript set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=lsp#complete()
+autocmd FileType javascript.jsx set ts=2 sw=2 tw=120 foldmethod=indent omnifunc=lsp#complete()
 autocmd FileType json       set foldmethod=syntax
 autocmd FileType mkd        set tw=79 ts=2 sw=2
 autocmd FileType markdown   set tw=79 ts=2 sw=2
