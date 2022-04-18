@@ -6,6 +6,7 @@ path=(
     ~/go/bin
     ~/google-cloud-sdk/bin
     ~/.pyenv/shims
+    ~/node_modules/.bin
     /usr/local/opt/coreutils/libexec/gnubin
     /usr/local/share/npm/bin
     /usr/local/opt/python/libexec/bin
