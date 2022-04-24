@@ -18,6 +18,7 @@ Plug 'kshenoy/vim-signature' " show marks in the sign column
 Plug 'luochen1990/rainbow' " color-code matching brackets
 Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
 Plug 'sonph/onehalf', {'rtp': 'vim'} " color scheme for light background
@@ -42,6 +43,7 @@ filetype indent on
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
+set cmdheight=2 " more space for displaying messages, recommended by coc
 set completeopt=menu,longest,preview
 " set cursorline " this makes vim slower
 set cursorcolumn " highlight current column
@@ -51,9 +53,10 @@ set foldmethod=indent
 set grepprg=ag
 set ignorecase smartcase
 set iskeyword+=-
+set hidden " recommended for coc
 set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 set mouse=a
-set nobackup dir=~/.tmp/nvim
+set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
 set nofixeol
 set nohlsearch incsearch
@@ -62,13 +65,16 @@ set number
 set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
+set shortmess+=c " recommended by coc
 set showbreak=↪\
+set signcolumn=yes " recommended by coc
 " set synmaxcol=200 " disable syntax highlight after 200 chars for performance
-set termguicolors " probably don't need this since $NVIM_TUI_ENABLE_TRUE_COLOR is set
+set termguicolors " do i need this if $NVIM_TUI_ENABLE_TRUE_COLOR is set?
 set title
 set ts=4 sw=4 ai expandtab
 set ttyfast
 set tw=79 colorcolumn=80,100
+set updatetime=300 " recommended by coc
 set wildignore=.svn,.git,.env,*.bak,*.pyc,*.DS_Store,*.db,venv
 set wildmenu wildmode=list:longest
 
@@ -77,6 +83,7 @@ autocmd BufRead *.md        set filetype=markdown
 autocmd BufRead *.sql       set filetype=sql
 autocmd BufRead *.txt       set filetype=markdown
 autocmd BufRead .zsh*       set filetype=sh
+autocmd BufRead .npmrc      set commentstring=#\ %s
 
 autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
 autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
@@ -122,6 +129,9 @@ hi Normal guibg=NONE ctermbg=NONE
 hi link htmlLink NONE
 hi link htmlItalic NONE
 
+hi lineNr guibg=#282828
+hi SignColumn guibg=NONE ctermbg=NONE
+
 
 " -------------
 " Mappings
@@ -131,8 +141,6 @@ hi link htmlItalic NONE
 
 inoremap jk <Esc>
 inoremap kk <Esc>
-inoremap <TAB><TAB> <C-p>
-" inoremap <C-o> <C-x><C-o>
 
 tnoremap jk <C-\><C-n>
 
@@ -161,10 +169,6 @@ nnoremap ∆ <C-W>J
 nnoremap π :tabnext<CR>
 nnoremap ø :tabprevious<CR>
 
-" popup window - use Ctrl+j/k instead of Ctrl+n/p
-" inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-" inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-
 " select just-pasted lines
 nnoremap gp `[v`]
 
@@ -173,7 +177,6 @@ nnoremap <silent> gj o<Esc>
 nnoremap <silent> gk O<Esc>
 nnoremap <silent> gh i<Space><Esc>
 nnoremap <silent> gl a<Space><Esc>
-nnoremap <silent> gn i<CR><Esc>
 
 " center search result
 nnoremap N Nzz
@@ -203,8 +206,139 @@ nnoremap ,tx :sp term://zsh -f<CR>i
 " folding
 nnoremap <Leader>s :SignifyFold<CR>
 
-" background toggle
-map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+" ---------------------
+" CoC configuration
+" ---------------------
+
+" Use tab for trigger completion with suggested characters ahead. Also use tab
+" for navigating suggestions.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Run the Code Lens action on the current line.
+nmap <leader>cl  <Plug>(coc-codelens-action)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocActionAsync('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 
 " ---------------------
@@ -263,7 +397,6 @@ map ,f :CtrlP<CR>
 map ,m :CtrlPMRU<CR>
 map ,g :CtrlPBuffer<CR>
 map ,r :CtrlPClearCache<CR>
-map ,w :CtrlP<CR><C-\>w
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
 " let g:ctrlp_dotfiles = 0
@@ -312,14 +445,11 @@ let g:NERDTreeExtensionHighlightColor['md'] = '834F79'
 let g:NERDTreeExtensionHighlightColor['yml'] = 'CB6F6F'
 let g:NERDTreeExtensionHighlightColor['ini'] = 'CB6F6F'
 
-" " vim-json
-" let g:vim_json_syntax_conceal = 0
-
 " do <C-w>m in one split, then in another split and they will be swapped
 nnoremap <C-w>m :call WindowSwapping()<CR>
 
 " copilot
-imap <silent><script><expr> <C-p> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-n> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
 
 " -----------
