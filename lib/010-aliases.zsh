@@ -16,11 +16,16 @@ alias ls='lsd -F'
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
 alias edit.kubeconf='nvim ~/.kube/config'
+alias edit.npmrc='nvim ~/.npmrc'
 alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
 alias unstuck='nvim ~/Dropbox/desktop/unstuck.md'
+
+# switch npmrc
+alias npm.coc='cp ~/.npmrc.coc ~/.npmrc'
+alias npm.work='cp ~/.npmrc.work ~/.npmrc'
 
 # things i forget
 alias diff2html='pygmentize -f html -O style=colorful,full -l diff -O encoding=utf-8'
