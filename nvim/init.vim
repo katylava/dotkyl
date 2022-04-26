@@ -177,6 +177,7 @@ nnoremap <silent> gj o<Esc>
 nnoremap <silent> gk O<Esc>
 nnoremap <silent> gh i<Space><Esc>
 nnoremap <silent> gl a<Space><Esc>
+nnoremap <silent> gn i<Cr><Esc>
 
 " center search result
 nnoremap N Nzz
