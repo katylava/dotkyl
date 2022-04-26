@@ -1,6 +1,66 @@
-format = "${custom.pwd} :: "
+# configure --> https://starship.rs/config
+# checkout this powerline-like configuration:
+#   https://github.com/mickimnet/myth-prompt-themes
+#   https://github.com/mickimnet/myth-prompt-themes/blob/main/dark/pointed/starship/starship.toml
+#   (set font to VictorMonoNerdFontComplete-Regular in dev tools to see the characters)
+# find nerdfont unicode points --> https://www.nerdfonts.com/cheat-sheet
+
+add_newline = true
+format = """
+[](bg:#464347 fg:#AFD700)\
+${custom.pwd}\
+$python\
+$nodejs\
+$kubernetes\
+$jobs\
+${custom.mail}\
+$fill\
+    (🦆)\
+    ($fill)\
+$status\
+$cmd_duration\
+$time\
+$git_branch\
+$git_status\
+$line_break\
+➥ 
+"""
+
+[fill]
+    symbol = " "
+    style = "bg:black"
 
 [custom.pwd]
-    command = "~/.dotkyl/bin/mypwd"
+    # from env var set in precmd_functions in 090-prompt.zsh
+    command = "echo $MYPWD"
     description = "Shows current directory's bookmark if there is one, otherwise a middle-truncated path to the current directory."
-    when = "true"
+    when = true
+    format = "[$output](fg:black bg:cyan) "
+
+[custom.mail]
+    symbol = "📧"
+    description = "Shows a mail icon if there is any mail, otherwise nothing."
+    when = "mail -e"
+
+[python]
+    symbol = "\ue606 "
+    style = "fg:black bg:green"
+    format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+
+[nodejs]
+    symbol = "\ue781 "
+    style = "fg:black bg:green"
+    format = "[$symbol($version )]($style)"
+
+[kubernetes]
+    disabled = false
+    symbol = "⎈ "
+
+[status]
+    disabled = false
+
+[time]
+    disabled = false
+
+[cmd_duration]
+    disabled = false
