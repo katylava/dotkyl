@@ -30,7 +30,7 @@ $character
 
 [cmd_duration]
     disabled = false
-    show_notifications = true
+    show_notifications = false
     style = "bg:blue fg:black"
     format = "[](bg:#444444 fg:blue)[ $duration ]($style)[](bg:blue fg:#444444)"
     min_time = 1_000
