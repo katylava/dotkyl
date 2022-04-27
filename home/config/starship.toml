@@ -85,7 +85,7 @@ $character
     behind = "${count}↓"
     diverged = "${ahead_count}⇅ ${behind_count}"
     untracked = "፧ "
-    up_to_date = "✔ "
+    up_to_date = "✓"
     stashed = "ᛋ "
     modified = "✽ "
     staged = "✚ "
