@@ -1,66 +1,125 @@
 # configure --> https://starship.rs/config
-# checkout this powerline-like configuration:
-#   https://github.com/mickimnet/myth-prompt-themes
-#   https://github.com/mickimnet/myth-prompt-themes/blob/main/dark/pointed/starship/starship.toml
-#   (set font to VictorMonoNerdFontComplete-Regular in dev tools to see the characters)
 # find nerdfont unicode points --> https://www.nerdfonts.com/cheat-sheet
+#     
 
 add_newline = true
 format = """
-[](bg:#464347 fg:#AFD700)\
 ${custom.pwd}\
 $python\
 $nodejs\
 $kubernetes\
 $jobs\
 ${custom.mail}\
+${custom.left_end}\
 $fill\
-    (🦆)\
-    ($fill)\
+${custom.fun}\
+$fill\
+${custom.right_start}\
 $status\
 $cmd_duration\
-$time\
 $git_branch\
 $git_status\
+$time\
 $line_break\
-➥ 
+$character
 """
 
-[fill]
-    symbol = " "
-    style = "bg:black"
+[character]
+    success_symbol = " [❧](fg:green)"
+    error_symbol = " [❧](fg:red)"
+
+[cmd_duration]
+    disabled = false
+    show_notifications = true
+    style = "bg:blue fg:black"
+    format = "[](bg:#444444 fg:blue)[ $duration ]($style)[](bg:blue fg:#444444)"
+    min_time = 1_000
+
+[custom.fun]
+    description = "A fun seasonal symbol"
+    symbol = "🦆"
+    style = "bg:cyan"
+    format = "[$symbol]($style)"
+    when = true
+
+[custom.left_end]
+    description = "End of the left side of the prompt"
+    style = "bg:cyan"
+    format = "[](bg:cyan fg:#444444)"
+    when = true
+
+[custom.mail]
+    symbol = "📧"
+    description = "Shows a mail icon if there is any mail, otherwise nothing."
+    when = "mail -e"
+    style = "bg:blue"
+    format = "[](bg:blue fg:#444444)[ $symbol$number ]($style)[](bg:#444444 fg:blue)"
 
 [custom.pwd]
     # from env var set in precmd_functions in 090-prompt.zsh
     command = "echo $MYPWD"
     description = "Shows current directory's bookmark if there is one, otherwise a middle-truncated path to the current directory."
     when = true
-    format = "[$output](fg:black bg:cyan) "
+    format = "[](fg:cyan)[$output ](fg:black bg:cyan)[](bg:#444444 fg:cyan)"
 
-[custom.mail]
-    symbol = "📧"
-    description = "Shows a mail icon if there is any mail, otherwise nothing."
-    when = "mail -e"
+[custom.right_start]
+    description = "Start of the right side of the prompt"
+    style = "bg:cyan"
+    format = "[](bg:cyan fg:#444444)"
+    when = true
 
-[python]
-    symbol = "\ue606 "
-    style = "fg:black bg:green"
-    format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+[fill]
+    symbol = " "
+    style = "bg:cyan"
 
-[nodejs]
-    symbol = "\ue781 "
-    style = "fg:black bg:green"
-    format = "[$symbol($version )]($style)"
+[git_branch]
+    disabled = false
+    style = "bold bg:purple fg:green"
+    format = "[](bg:#444444 fg:purple)[ $symbol$branch(:$remote_branch) ]($style)[](bg:purple fg:#444444)"
+
+[git_status]
+    disabled = false
+    style = "bg:yellow fg:red"
+    format = '[](bg:#444444 fg:yellow)[ $all_status$ahead_behind ]($style)[](bg:yellow fg:#444444)'
+    ahead = "${count}↑"
+    behind = "${count}↓"
+    diverged = "${ahead_count}⇅ ${behind_count}"
+    untracked = "፧ "
+    up_to_date = "✔ "
+    stashed = "ᛋ "
+    modified = "✽ "
+    staged = "✚ "
+    renamed = "⥱ "
+    deleted = "✗ "
+
+[jobs]
+    style = "bg:yellow fg:red"
+    format = "[](bg:yellow fg:#444444)[ $symbol$number ]($style)[](bg:#444444 fg:yellow)"
 
 [kubernetes]
     disabled = false
     symbol = "⎈ "
+    style = "bold bg:purple fg:green"
+    format = '[](bg:purple fg:#444444)[ $symbol$context(:$namespace) ]($style)[](bg:#444444 fg:purple)'
+
+[nodejs]
+    symbol = "\ue781 "
+    style = "fg:black bg:green"
+    format = "[](bg:green fg:#444444)[ $symbol($version) ]($style)[](bg:#444444 fg:green)"
+    version_format = "${raw}"
+
+[python]
+    symbol = "\ue606 "
+    style = "fg:black bg:green"
+    format = '[](bg:green fg:#444444)[ ${symbol}${pyenv_prefix}(${version})([ $virtualenv](fg:red bg:green)) ]($style)[](bg:#444444 fg:green)'
+    version_format = "${raw}"
 
 [status]
     disabled = false
+    style = "bg:red fg:bright-white"
+    format = "[](bg:#444444 fg:red)[ $symbol $status ]($style)[](bg:red fg:#444444)"
 
 [time]
     disabled = false
-
-[cmd_duration]
-    disabled = false
+    style = "bg:cyan fg:black"
+    format = "[](bg:#444444 fg:cyan)[ $time ]($style)[](bg:#444444 fg:cyan)"
