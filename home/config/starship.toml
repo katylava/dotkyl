@@ -31,8 +31,8 @@ $character
 [cmd_duration]
     disabled = false
     show_notifications = false
-    style = "bg:blue fg:black"
-    format = "[](bg:#444444 fg:blue)[ $duration ]($style)[](bg:blue fg:#444444)"
+    style = "fg:red bg:yellow"
+    format = "[](bg:#444444 fg:yellow)[ $duration ]($style)[](bg:yellow fg:#444444)"
     min_time = 1_000
 
 [custom.fun]
@@ -74,13 +74,13 @@ $character
 
 [git_branch]
     disabled = false
-    style = "bold bg:purple fg:green"
-    format = "[](bg:#444444 fg:purple)[ $symbol$branch(:$remote_branch) ]($style)[](bg:purple fg:#444444)"
+    style = "bg:green fg:black"
+    format = "[](bg:#444444 fg:green)[ $symbol$branch(:$remote_branch) ]($style)[](bg:green fg:#444444)"
 
 [git_status]
     disabled = false
-    style = "bg:yellow fg:red"
-    format = '[](bg:#444444 fg:yellow)[ $all_status$ahead_behind ]($style)[](bg:yellow fg:#444444)'
+    style = "bold bg:purple fg:green"
+    format = '[](bg:#444444 fg:purple)[ $all_status$ahead_behind ]($style)[](bg:purple fg:#444444)'
     ahead = "${count}↑"
     behind = "${count}↓"
     diverged = "${ahead_count}⇅ ${behind_count}"
@@ -122,4 +122,4 @@ $character
 [time]
     disabled = false
     style = "bg:cyan fg:black"
-    format = "[](bg:#444444 fg:cyan)[ $time ]($style)[](bg:#444444 fg:cyan)"
+    format = "[](bg:#444444 fg:cyan)[ $time ]($style)[](fg:cyan)"
