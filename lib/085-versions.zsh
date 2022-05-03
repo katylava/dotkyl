@@ -3,10 +3,11 @@ function _set_versions {
         findup .node-version >/dev/null
         [ $? -eq 0 ] && { eval "$(nodenv init -)" }
     }
-    [ -z $PYENV_SHELL ] && {
-        findup .python-version >/dev/null
-        [ $? -eq 0 ] && { eval "$(pyenv init -)" }
-    }
+    # don't need the pyenv version because i'm using it globally
+    # [ -z $PYENV_SHELL ] && {
+    #     findup .python-version >/dev/null
+    #     [ $? -eq 0 ] && { eval "$(pyenv init -)" }
+    # }
 }
 
 precmd_functions+=(_set_versions)
