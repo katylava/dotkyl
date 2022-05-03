@@ -362,7 +362,8 @@ let g:lightline = {
       \ 'colorscheme': 'tender',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'filedir', 'filename' ] ],
+      \             [ 'gitbranch' ],
+      \             ['filedir', 'filename' ] ],
       \   'right': [ [ 'percent', 'lineinfo' ],
       \              [ 'fileformat', 'fileencoding', 'filetype' ],
       \              [ 'time'] ],
@@ -371,7 +372,7 @@ let g:lightline = {
       \   'lineinfo': ' %2v:%-3l',
       \ },
       \ 'component_function': {
-      \   'fugitive': 'LightlineFugitive',
+      \   'gitbranch': 'LightlineFugitive',
       \   'readonly': 'LightlineReadonly',
       \   'modified': 'LightlineModified',
       \   'filedir': 'FileDir',
@@ -497,8 +498,8 @@ function! LightlineReadonly()
 endfunction
 
 function! LightlineFugitive()
-  if exists("*fugitive#head")
-    let branch = fugitive#head()
+  if exists("*FugitiveHead")
+    let branch = FugitiveHead()
     return branch !=# '' ? ' '.branch : ''
   endif
   return ''
