@@ -264,6 +264,9 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
+" Formatting whole file
+nmap ,n  <Plug>(coc-format)
+
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
