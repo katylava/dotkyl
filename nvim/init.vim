@@ -119,7 +119,7 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " ------------------
 
 colorscheme tender
-set background=light
+set background=dark
 hi Normal guibg=NONE ctermbg=NONE
 
 " colorscheme onehalflight
