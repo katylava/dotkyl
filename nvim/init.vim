@@ -368,6 +368,11 @@ let g:lightline = {
       \              [ 'fileformat', 'fileencoding', 'filetype' ],
       \              [ 'time'] ],
       \ },
+      \ 'inactive': {
+      \   'left': [ [ 'mode' ],
+      \             ['filedir', 'filename' ] ],
+      \   'right': [ [ 'percent', 'lineinfo' ]]
+      \ },
       \ 'component': {
       \   'lineinfo': ' %2v:%-3l',
       \ },
@@ -379,6 +384,9 @@ let g:lightline = {
       \   'filename': 'LightlineFilename',
       \   'time': 'LightlineTime',
       \   'devicon': 'LightlineDevicon',
+      \   'fileformat': 'LightlineFileformat',
+      \   'fileencoding': 'LightlineFileencoding',
+      \   'filetype': 'LightlineFiletype',
       \ },
       \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
       \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" },
@@ -520,6 +528,18 @@ function! LightlineDevicon(n)
   let winnr = tabpagewinnr(a:n)
   let fname = expand('#'.buflist[winnr - 1].':t')
   return WebDevIconsGetFileTypeSymbol(fname)
+endfunction
+
+function! LightlineFileformat()
+  return winwidth(0) > 120 ? &fileformat : ''
+endfunction
+
+function! LightlineFiletype()
+  return winwidth(0) > 120 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightlineFileencoding()
+  return winwidth(0) > 120 ? &fileencoding : ''
 endfunction
 
 function! ConflictsHighlight() abort
