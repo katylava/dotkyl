@@ -26,3 +26,7 @@ source /usr/local/share/zsh-history-substring-search/zsh-history-substring-searc
 
 
 eval "$(pyenv init -)"
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+# the following are a little slow
+# eval "$(pyenv virtualenv-init -)"
+# eval "$(pyenv virtualenv-init - | sed s/precmd/chpwd/g)"
