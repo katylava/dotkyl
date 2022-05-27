@@ -92,7 +92,7 @@ autocmd FileType cfg        set ts=4 sw=4 tw=0 commentstring=#\ %s
 autocmd FileType css        set ts=2 sw=2 tw=0
 autocmd FileType javascript set ts=2 sw=2 tw=120
 autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
-autocmd FileType json       set foldmethod=syntax
+autocmd FileType json       set ts=2 sw=2 foldmethod=syntax
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s
 autocmd FileType sql        set commentstring=--\ %s
