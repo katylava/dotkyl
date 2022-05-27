@@ -9,7 +9,6 @@ Plug 'editorconfig/editorconfig-vim' " supoport for .editorconfig files
 Plug 'github/copilot.vim' " AI programmer
 Plug 'godlygeek/tabular' " Align text :help tabular
 Plug 'itchyny/lightline.vim' " cool status line, good performance
-Plug 'jacoborus/tender.vim' " color scheme for dark background
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'kana/vim-textobj-user' " create your own text objects
@@ -20,8 +19,8 @@ Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
+Plug 'sainnhe/everforest' " colorscheme
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
-Plug 'sonph/onehalf', {'rtp': 'vim'} " color scheme for light background
 Plug 'tpope/vim-characterize' " `ga` for unicode name, digraphs, emoji codes, and html entities
 Plug 'tpope/vim-commentary' " `gcc` for comments
 Plug 'tpope/vim-eunuch' " shell commands as vim commands (i only use :Rename)
@@ -119,12 +118,14 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " Theme
 " ------------------
 
-colorscheme tender
 set background=dark
+" set background=light " Still have to do this in command mode for some reason
+let g:everforest_background='hard'
+let g:everforest_enable_italic=1
+let g:everforest_transparent_background=1 " for dark background
+" let g:everforest_transparent_background=0 " for light background
+colorscheme everforest
 hi Normal guibg=NONE ctermbg=NONE
-
-" colorscheme onehalflight
-" set background=light
 
 " disable the annoying HTML link underlining
 hi link htmlLink NONE
@@ -363,7 +364,7 @@ let g:signify_vcs_list = [ 'git' ]
 
 " lightline
 let g:lightline = {
-      \ 'colorscheme': 'tender',
+      \ 'colorscheme': 'everforest',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch' ],
