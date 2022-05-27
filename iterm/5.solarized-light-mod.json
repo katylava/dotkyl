@@ -1,0 +1,123 @@
+{
+  "Profiles": [
+    {
+      "Guid": "5496B8DD-6F8D-4F12-B668-5957DF2C49E3",
+      "Name": "Solarized Light Mod",
+      "Ansi 0 Color": {
+        "Green Component": 0.15575926005840302,
+        "Blue Component": 0.19370138645172119,
+        "Red Component": 0
+      },
+      "Ansi 1 Color": {
+        "Green Component": 0.10840645432472229,
+        "Blue Component": 0.14145712554454803,
+        "Red Component": 0.81926983594894409
+      },
+      "Ansi 10 Color": {
+        "Red Component": 0.71909104529587042,
+        "Blue Component": 0.28282780698054921,
+        "Green Component": 0.78519153594970703
+      },
+      "Ansi 11 Color": {
+        "Red Component": 0.88904190063476562,
+        "Blue Component": 0.32908360208966769,
+        "Green Component": 0.75291944131993516
+      },
+      "Ansi 12 Color": {
+        "Red Component": 0.51464544717055105,
+        "Blue Component": 0.95781230926513672,
+        "Green Component": 0.77230059955112418
+      },
+      "Ansi 13 Color": {
+        "Red Component": 0.8898167610168457,
+        "Blue Component": 0.65881148715345716,
+        "Green Component": 0.43921388113517423
+      },
+      "Ansi 14 Color": {
+        "Red Component": 0.50730937630805784,
+        "Blue Component": 0.80266381404552922,
+        "Green Component": 0.82976055145263672
+      },
+      "Ansi 15 Color": {
+        "Green Component": 0.95794391632080078,
+        "Blue Component": 0.86405980587005615,
+        "Red Component": 0.98943418264389038
+      },
+      "Ansi 2 Color": {
+        "Green Component": 0.54115492105484009,
+        "Blue Component": 0.020208755508065224,
+        "Red Component": 0.44977453351020813
+      },
+      "Ansi 3 Color": {
+        "Green Component": 0.46751424670219421,
+        "Blue Component": 0.023484811186790466,
+        "Red Component": 0.64746475219726562
+      },
+      "Ansi 4 Color": {
+        "Green Component": 0.46265947818756104,
+        "Blue Component": 0.78231418132781982,
+        "Red Component": 0.12754884362220764
+      },
+      "Ansi 5 Color": {
+        "Green Component": 0.10802463442087173,
+        "Blue Component": 0.43516635894775391,
+        "Red Component": 0.77738940715789795
+      },
+      "Ansi 6 Color": {
+        "Green Component": 0.57082360982894897,
+        "Blue Component": 0.52502274513244629,
+        "Red Component": 0.14679534733295441
+      },
+      "Ansi 7 Color": {
+        "Green Component": 0.89001238346099854,
+        "Blue Component": 0.79781103134155273,
+        "Red Component": 0.91611063480377197
+      },
+      "Ansi 8 Color": {
+        "Green Component": 0.11783610284328461,
+        "Blue Component": 0.15170273184776306,
+        "Red Component": 0
+      },
+      "Ansi 9 Color": {
+        "Red Component": 0.97906351089477539,
+        "Blue Component": 0.35132352107694942,
+        "Green Component": 0.36214662434967054
+      },
+      "Background Color": {
+        "Green Component": 0.95794391632080078,
+        "Blue Component": 0.86405980587005615,
+        "Red Component": 0.98943418264389038
+      },
+      "Bold Color": {
+        "Green Component": 0.35665956139564514,
+        "Blue Component": 0.38298487663269043,
+        "Red Component": 0.27671992778778076
+      },
+      "Cursor Color": {
+        "Green Component": 0.40717673301696777,
+        "Blue Component": 0.43850564956665039,
+        "Red Component": 0.32436618208885193
+      },
+      "Cursor Text Color": {
+        "Green Component": 0.89001238346099854,
+        "Blue Component": 0.79781103134155273,
+        "Red Component": 0.91611063480377197
+      },
+      "Foreground Color": {
+        "Green Component": 0.40717673301696777,
+        "Blue Component": 0.43850564956665039,
+        "Red Component": 0.32436618208885193
+      },
+      "Selected Text Color": {
+        "Green Component": 0.35665956139564514,
+        "Blue Component": 0.38298487663269043,
+        "Red Component": 0.27671992778778076
+      },
+      "Selection Color": {
+        "Green Component": 0.89001238346099854,
+        "Blue Component": 0.79781103134155273,
+        "Red Component": 0.91611063480377197
+      }
+    }
+  ]
+}
