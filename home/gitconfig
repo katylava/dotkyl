@@ -54,6 +54,7 @@
 [delta]
     navigate = true
     pager = less -X
+    light = false
 
 
 
