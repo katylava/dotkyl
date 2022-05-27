@@ -2,7 +2,11 @@
   "Profiles": [
     {
       "Guid": "5496B8DD-6F8D-4F12-B668-5957DF2C49E3",
+      "Dynamic Profile Parent Name": "Base",
       "Name": "Solarized Light Mod",
+      "Only The Default BG Color Uses Transparency": true,
+      "Transparency": 0.00,
+      "Shortcut": "L",
       "Ansi 0 Color": {
         "Green Component": 0.15575926005840302,
         "Blue Component": 0.19370138645172119,

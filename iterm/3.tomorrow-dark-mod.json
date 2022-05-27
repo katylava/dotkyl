@@ -3,6 +3,7 @@
     {
       "Guid": "AE5AC02F-6F03-4B82-B72A-1E6838D6E067",
       "Name": "Tomorrow Dark Mod",
+      "Dynamic Profile Parent Name": "Base",
       "Ansi 0 Color": {
           "Blue Component": 0.12941176470588237,
           "Green Component": 0.12156862745098039,
