@@ -104,7 +104,8 @@ $character
 
 [nodejs]
     symbol = "\ue781 "
-    style = "fg:black bg:green"
+    style = "bg:green fg:black"
+    not_capable_style = "bg:green fg:red"
     format = "[](bg:green fg:#444444)[ $symbol($version) ]($style)[](bg:#444444 fg:green)"
     version_format = "${raw}"
 
