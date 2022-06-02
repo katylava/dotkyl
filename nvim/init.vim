@@ -53,7 +53,7 @@ set foldmethod=indent
 set grepprg=ag
 set ignorecase smartcase
 set iskeyword+=-
-set hidden " recommended for coc
+set hidden " recommended by coc
 set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
@@ -117,13 +117,23 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " ------------------
 " Theme
 " ------------------
-
+"
+" DARK
 set background=dark
+let everforest_transparent_background=1
+hi lineNr guibg=#282828
+let g:indent_guides_odd_color='#233046'
+let g:indent_guides_even_color='#2F3648'
+"
+" LIGHT
 " set background=light " Still have to do this in command mode for some reason
+" let g:everforest_transparent_background=0 " for light background
+" hi lineNr guibg=#C8C8A8 guifg=#282828
+" let g:indent_guides_odd_color='#C3D0C6'
+" let g:indent_guides_even_color='#CFD6C8'
+
 let g:everforest_background='hard'
 let g:everforest_enable_italic=1
-let g:everforest_transparent_background=1 " for dark background
-" let g:everforest_transparent_background=0 " for light background
 colorscheme everforest
 hi Normal guibg=NONE ctermbg=NONE
 
@@ -131,7 +141,6 @@ hi Normal guibg=NONE ctermbg=NONE
 hi link htmlLink NONE
 hi link htmlItalic NONE
 
-hi lineNr guibg=#282828
 hi SignColumn guibg=NONE ctermbg=NONE
 
 
@@ -438,8 +447,8 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 let g:indent_guides_auto_colors = 0
-hi IndentGuidesOdd guibg=#233046
-hi IndentGuidesEven guibg=#2F3648
+execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
+execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
 
 " NERDtree
 map ,d :NERDTreeToggle<CR>
