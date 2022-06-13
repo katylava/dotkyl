@@ -12,6 +12,7 @@ alias lgrep='ll | grep'
 alias la='lsd -Fa'
 alias ll='lsd -Fal'
 alias ls='lsd -F'
+alias exa='exa -F --icons'
 
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
