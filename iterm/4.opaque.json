@@ -2,7 +2,7 @@
     "Profiles": [
         {
             "Description": "Base opaque",
-            "Dynamic Profile Parent Name": "Base",
+            "Dynamic Profile Parent Name": "Tomorrow Dark Mod",
             "Guid": "8D631E6B-ED9C-4D10-8D90-ED711CABF0EA",
             "Name": "Opaque",
             "Blur": false,
