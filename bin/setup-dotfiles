@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 cd
-for f in ~/.dotkyl/home/*; [[ "${f}" != "config" ]] && do ln -s "${f}" '.'`basename $f`; done
+for f in ~/.dotkyl/home/*; do [[ "${f}" != "config" ]] && ln -s "${f}" '.'`basename $f`; done
 for f in ~/Dropbox/dotkyl-private/.*; do ln -s "${f}"; done
 
 test -d ~/.config || mkdir ~/.config
