@@ -1,3 +1,5 @@
+brew_prefix=`brew --prefix`
+
 export EDITOR=nvim
 
 # Fixes for some brew/pip installs
@@ -14,15 +16,15 @@ export HH_CONFIG=hicolor
 export LINESCH_AUTHOR=katy
 export LINESCH_PATHS=~/Code/Work/:$GOPATH/src/github.com/oreillymedia/:$GOPATH/src/github.com/safarijv/
 
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # https://github.com/zsh-users/zsh-syntax-highlighting/issues/411#issuecomment-317109904
 zle -N history-substring-search-up; zle -N history-substring-search-down
 
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # must come after zsh-syntax-highlighting
-source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+source $brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 
 eval "$(pyenv init -)"
