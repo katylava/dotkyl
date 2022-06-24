@@ -1,5 +1,4 @@
 \set PROMPT1 '%[%033]0;psql %m:%/:%n%007%]%[%033[2;37;40m%]%`date +"%a %b %d %T"`    %[%033[0m%]%[%033[1;33;40m%]%n@%m:%/%[%033[0m%]\n%R# '
-\set PSQL_EDITOR "/usr/local/bin/nvim -c ':set ft=sql'"
 \setenv PAGER 'pspg -b'
 \pset border 2
 \pset linestyle unicode

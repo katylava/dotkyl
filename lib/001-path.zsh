@@ -11,10 +11,9 @@ path=(
     /usr/local/opt/coreutils/libexec/gnubin
     /usr/local/share/npm/bin
     /usr/local/opt/python/libexec/bin
-    /usr/local/opt/curl/bin
-    /usr/local/sbin
     $path
 )
+
 export PATH
 export GOPATH=~/go
 
