@@ -1,0 +1,11 @@
+{
+  "Profiles": [
+    {
+      "Guid": "F12D33A3-86B4-4F63-B75F-D6659E2C1718",
+      "Name": "Tomorrow Dark Mod Air",
+      "Dynamic Profile Parent Name": "Tomorrow Dark Mod",
+      "Normal Font": "VictorMonoNerdFontComplete-Regular 16",
+      "Non Ascii Font": "VictorMonoNerdFontComplete-Regular 20",
+    }
+  ]
+}
