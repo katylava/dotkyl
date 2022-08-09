@@ -2,9 +2,9 @@ PATH=/Users/kyl/.pyenv/shims:/Users/kyl/.dotkyl/bin:/Users/kyl/go/bin:/Users/kyl
 
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted" | grep -v "No such file or directory"
-30 15 * * * /usr/local/bin/brew update
-55 15 * * * /usr/local/bin/brew outdated
-57 15 * * * /usr/local/bin/brew outdated --cask
+30 15 * * * brew update
+55 15 * * * brew outdated
+57 15 * * * brew outdated --cask
 15 11 */2 * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
