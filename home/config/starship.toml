@@ -3,6 +3,7 @@
 #     
 
 add_newline = true
+command_timeout = 1_000
 format = """
 ${custom.pwd}\
 $python\
