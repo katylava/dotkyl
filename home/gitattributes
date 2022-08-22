@@ -1,3 +1,6 @@
 *.png diff=mdls
 *.jpg diff=mdls
 *.gif diff=mdls
+
+#exclude package-lock from git diff/show
+package-lock.json -diff
