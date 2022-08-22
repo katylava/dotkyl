@@ -16,6 +16,7 @@
     lp = log -p --relative
     ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %ae %Creset%s' -20
     sh = "!git show $1 -- . ':!package-lock.json'"
+    shp = show HEAD^ -- . ':!package-lock.json'
     squash = merge --squash --no-commit
     st = status --short --branch
     track = push -u origin
