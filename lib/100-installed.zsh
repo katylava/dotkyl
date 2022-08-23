@@ -27,8 +27,15 @@ source $brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 
+# would prefer to init pyenv as needed, but it's easier to point to pyenv shims
+# for my neovim python_host_prog, so i always need it.
 eval "$(pyenv init -)"
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # the following are a little slow
 # eval "$(pyenv virtualenv-init -)"
 # eval "$(pyenv virtualenv-init - | sed s/precmd/chpwd/g)"
+
+# would prefer init nodenv as needed, but copilot requires node < 18. i keep
+# the non-nodenv version updated to latest, so need nodenv to set a < 18 global
+# version.
+eval "$(nodenv init -)"
