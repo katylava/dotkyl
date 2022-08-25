@@ -95,6 +95,7 @@ autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
 autocmd FileType json       set ts=2 sw=2 foldmethod=syntax
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s
+autocmd FileType python     BracelessEnable +indent +fold +highlight
 autocmd FileType sql        set commentstring=--\ %s
 autocmd FileType yaml       set sw=2 ts=2
 
