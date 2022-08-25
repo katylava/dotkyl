@@ -95,6 +95,7 @@ autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
 autocmd FileType json       set ts=2 sw=2 foldmethod=syntax
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s
+autocmd FileType python     BracelessEnable +indent +fold +highlight
 autocmd FileType sql        set commentstring=--\ %s
 autocmd FileType yaml       set sw=2 ts=2
 
@@ -225,10 +226,10 @@ nnoremap <Leader>s :SignifyFold<CR>
 " Use tab for trigger completion with suggested characters ahead. Also use tab
 " for navigating suggestions.
 inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? "\<C-n>" :
-      \ CheckBackSpace() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 function! s:CheckBackSpace() abort
   let col = col('.') - 1
