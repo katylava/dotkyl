@@ -42,7 +42,7 @@ alias updatedb="export LC_ALL='C' && sudo gupdatedb"
 
 # things i just hate typing
 alias browse='gh repo view --web'
-alias dc='docker-compose'
+alias dc='docker compose'
 alias dice='rolldice -s'
 alias edocker='eval "$(docker-machine env default)"'
 alias epyenv='eval "$(pyenv init -)"'
