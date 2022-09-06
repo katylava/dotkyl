@@ -3,14 +3,12 @@ PATH=/Users/kyl/.pyenv/shims:/Users/kyl/.dotkyl/bin:/Users/kyl/go/bin:/Users/kyl
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted" | grep -v "No such file or directory"
 30 15 * * * brew update
-55 15 * * * brew outdated
-57 15 * * * brew outdated --cask
 15 11 */2 * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
 05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
 01 13 * * * cp /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava/*.edn /Volumes/GoogleDrive/My\ Drive/Roam\ Backups
-03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete
-05 13 * * * find /Volumes/GoogleDrive/My\ Drive/Roam\ Backups -mtime +30 -type f -delete
+03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete > /dev/null 2>&1
+05 13 * * * find /Volumes/GoogleDrive/My\ Drive/Roam\ Backups -mtime +30 -type f -delete > /dev/null 2>&1
 
 # vim: ft=crontab
