@@ -28,7 +28,7 @@ Plug 'tpope/vim-fugitive' " :Git, :Gvdiffsplit, :GBrowse, etc
 Plug 'tpope/vim-repeat' " makes `.` work better
 Plug 'tpope/vim-rhubarb' " makes :GBrowse actually work
 Plug 'tpope/vim-surround' " add/remove brackets, quotes, and tags
-Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'yaml'] } " better text objects, indentation, folds for indented languages
+" Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'yaml'] } " better text objects, indentation, folds for indented languages
 Plug 'vim-scripts/SyntaxAttr.vim' " get syntax group for highlighting
 
 " These modify other plugins, so have to come last
@@ -94,8 +94,7 @@ autocmd FileType javascript set ts=2 sw=2 tw=120
 autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
 autocmd FileType json       set ts=2 sw=2 foldmethod=syntax
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
-autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s
-autocmd FileType python     BracelessEnable +indent +fold +highlight
+autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s foldmethod=indent
 autocmd FileType sql        set commentstring=--\ %s
 autocmd FileType yaml       set sw=2 ts=2
 
