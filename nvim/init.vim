@@ -28,7 +28,6 @@ Plug 'tpope/vim-fugitive' " :Git, :Gvdiffsplit, :GBrowse, etc
 Plug 'tpope/vim-repeat' " makes `.` work better
 Plug 'tpope/vim-rhubarb' " makes :GBrowse actually work
 Plug 'tpope/vim-surround' " add/remove brackets, quotes, and tags
-" Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'yaml'] } " better text objects, indentation, folds for indented languages
 Plug 'vim-scripts/SyntaxAttr.vim' " get syntax group for highlighting
 
 " These modify other plugins, so have to come last
