@@ -1,17 +1,19 @@
 typeset -U path
 
 # $path is a magical variable from which $PATH is set
+# shims for nodenv an pyenv are added later by their init commands
 path=(
     ~/.dotkyl/bin
+    ~/.fzf/bin
+    ~/node_modules/.bin
     ~/go/bin
     ~/google-cloud-sdk/bin
-    ~/.pyenv/shims
-    ~/node_modules/.bin
     /opt/homebrew/bin
-    /usr/local/opt/coreutils/libexec/gnubin
-    /usr/local/share/npm/bin
-    /usr/local/opt/python/libexec/bin
-    $path
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
 )
 
 export PATH
