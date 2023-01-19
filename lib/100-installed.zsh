@@ -16,6 +16,8 @@ export HH_CONFIG=hicolor
 export LINESCH_AUTHOR=katy
 export LINESCH_PATHS=~/Code/Work/:$GOPATH/src/github.com/oreillymedia/:$GOPATH/src/github.com/safarijv/
 
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
 # fzf-tab:
 # must come before zsh-autosuggestions, zsh-syntax-highlighting, etc.
 # https://github.com/Aloxaf/fzf-tab
