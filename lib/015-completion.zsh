@@ -29,3 +29,4 @@ compinit
 #
 
 source /Users/kyl/google-cloud-sdk/completion.zsh.inc
+eval "$(op completion zsh)"; compdef _op op
