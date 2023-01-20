@@ -1,7 +1,7 @@
 [user]
     name = katy lavallee
     email = klavallee@oreilly.com
-	signingkey = B7BA5359396D04C1
+	signingkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDAXv4QMnXcPRJIYWAu5c8pG+9BDJlKYpuMWviTQX3x+4+XX7vuMi0U4ww+vLTK2d52u1kUBpwCXlX4kjxC3Gt5Gejcd5pvgBJNh2kGPdSOltMk4MGazIx0TsR0KYFUFQWg8se44OVoytQXCsW2IN8p4iG5j20cnpZkf6PkJugLtCvcZ+JMpuuPAQUruDscHlSuCzCiZPRvKJH+KwqZhWc1Kdz82/EouW4kg+pgJ3pSGhwtNo0nsHKvHti6lVGJoHw544SEK69y8QP3MqlIvrVRYl3wnyoSxC/B49IHQ8+JjIOd/AbrOW0uUsR0VywdLbh/y32EuJrHI43TGuDJWmvHicz0TL2Vns7mGc8EORSnRwF7TP2GJoxMmRffPuAPFPlNUuEszabkGnyKn/9HprDJ3KwdDypR9O4ZJuTUS1diO9kio4YkoYuVXLizzYnFUcyiayZjEofgGLZNxjAtWSbYtnjytZiw4nKGLexirQNXw4P9BdGUml1rDtnUeE8pnlDfIHx9Mf5m8xDitKmKeI2AXUKgqTvyuIeqjNV4kcdc9bjaYuOp99ZgNPT/i/amjYQMSJndpzAfPNLrHY00pod0M7DVxCcTK0y4NrrJwFMw1pfWwiqiuIIYDrpdmqK+5ozUrG/Xh6WdbicyNHlcLfVG9DxQishcdIfat/k/1bG7uQ=="
 [github]
     user = katylava
 [alias]
@@ -29,6 +29,8 @@
     merge-wip = merge -s recursive -X theirs --squash --no-commit
 [branch]
     sort = -authordate
+[commit]
+    gpgsign = true
 [core]
     attributesfile = ~/.gitattributes
     autocrlf = false
@@ -39,6 +41,10 @@
     colorMoved = default
 [diff "mdls"]
     textconv = mdls
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
 [interactive]
     diffFilter = delta --color-only
 [push]
