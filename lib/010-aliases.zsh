@@ -59,6 +59,7 @@ alias kl='kubectl logs'
 alias klist="kubectl config view -o jsonpath='{.contexts[*].name}'"
 alias kp='ksc prod-gke'
 alias ql='qlmanage -p 2>/dev/null'
+alias repostats='onefetch -E --no-merges --number-of-authors 5'
 alias sopr='source ~/.zshrc'
 alias t='todolist'
 alias tabview='tabview --width max'
