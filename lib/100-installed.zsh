@@ -36,6 +36,9 @@ source $brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # must come after zsh-syntax-highlighting
 source $brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
+# 1password cli github cli plugin
+source /Users/kyl/.config/op/plugins.sh
+
 
 # would prefer to init pyenv as needed, but it's easier to point to pyenv shims
 # for my neovim python_host_prog, so i always need it.

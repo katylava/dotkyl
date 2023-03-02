@@ -123,10 +123,10 @@ let everforest_transparent_background=1
 hi lineNr guibg=#282828
 let g:indent_guides_odd_color='#233046'
 let g:indent_guides_even_color='#2F3648'
-"
+
 " LIGHT
-" set background=light " Still have to do this in command mode for some reason
-" let g:everforest_transparent_background=0 " for light background
+" set background=light
+" let g:everforest_transparent_background=0
 " hi lineNr guibg=#C8C8A8 guifg=#282828
 " let g:indent_guides_odd_color='#C3D0C6'
 " let g:indent_guides_even_color='#CFD6C8'
