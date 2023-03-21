@@ -10,7 +10,7 @@ PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.pyenv/shims:/Users/kyl/.dotkyl/bin:/Us
 01 13 * * * cp /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava/*.edn /Users/kyl/Documents/RoamBackups
 03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete > /dev/null 2>&1
 05 13 * * * find /Users/kyl/Documents/RoamBackups -mtime +30 -type f -delete > /dev/null 2>&1
-59 11 * * 1-5 say "Don't forget about standup"
+59 11 * * 1-4 say "Don't forget about standup"
 50 8-17 * * 1-5 osascript -e 'display notification "Get up and get steps" with title "Move!" sound name "Frog"'
 
 # vim: ft=crontab
