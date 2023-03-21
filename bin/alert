@@ -1,15 +1,43 @@
 #!/usr/bin/env zsh
 
-title="${1}"
-message="${2}"
-subtitle="${3}"
+echo "Usage: $0 <message> [--title Notification] [--subtitle] [--sound]"
+echo "Available sounds: Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink"
 
-[[ -z "${title}" ]] && title="Notification"
-[[ -z "${message}" ]] && message="(no message)"
+message=$1
+shift
 
-cmd="display notification \""${message}"\" with title \""${title}"\""
-[[ -n "${subtitle}" ]] && cmd="${cmd} subtitle \""${subtitle}"\""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --title)
+            title=$2
+            shift 2
+            ;;
+        --subtitle)
+            subtitle=$2
+            shift 2
+            ;;
+        --sound)
+            sound=$2
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
 
-osascript -e "${cmd}"
+[[ -z "$title" ]] && title="Notification"
 
+# build the command
+cmd="osascript -e 'display notification \"$message\" with title \"$title\""
+if [[ -n "$subtitle" ]]; then
+    cmd="$cmd subtitle \"$subtitle\""
+fi
+if [[ -n "$sound" ]]; then
+    cmd="$cmd sound name \"$sound\""
+fi
+cmd="$cmd'"
 
+# execute the command
+eval $cmd
