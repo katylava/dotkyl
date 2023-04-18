@@ -32,7 +32,6 @@ Plug 'vim-scripts/SyntaxAttr.vim' " get syntax group for highlighting
 
 " These modify other plugins, so have to come last
 Plug 'ryanoasis/vim-devicons' " icons for filetypes
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " highlighting for nerdtree
 
 call plug#end()
 
@@ -459,13 +458,6 @@ let NERDTreeShowHidden = 1
 " https://github.com/ryanoasis/vim-devicons/commit/40040ba86e29595cd8c42c1142313793b25d16d9
 " ... fix by overriding padding before glyph
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
-
-" vim-nerdtree-syntax-highlight
-let g:NERDTreeExtensionHighlightColor = {}
-let g:NERDTreeExtensionHighlightColor['py'] = '8FAA54'
-let g:NERDTreeExtensionHighlightColor['md'] = '834F79'
-let g:NERDTreeExtensionHighlightColor['yml'] = 'CB6F6F'
-let g:NERDTreeExtensionHighlightColor['ini'] = 'CB6F6F'
 
 " do <C-w>m in one split, then in another split and they will be swapped
 nnoremap <C-w>m :call WindowSwapping()<CR>
