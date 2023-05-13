@@ -6,6 +6,9 @@
       "Dynamic Profile Parent Name": "Tomorrow Dark Mod",
       "Normal Font": "VictorMonoNFP-Regular 19",
       "Non Ascii Font": "VictorMonoNFP-Regular 19",
+      "Bound Hosts" : [
+        "hyperion.lan"
+      ]
     }
   ]
 }
