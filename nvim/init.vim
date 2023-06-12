@@ -1,5 +1,4 @@
 let g:python_host_prog='/Users/kyl/.pyenv/shims/python'
-
 let g:python3_host_prog='/Users/kyl/.pyenv/shims/python'
 
 call plug#begin('~/.config/nvim/plugged')
@@ -32,7 +31,6 @@ Plug 'vim-scripts/SyntaxAttr.vim' " get syntax group for highlighting
 
 " These modify other plugins, so have to come last
 Plug 'ryanoasis/vim-devicons' " icons for filetypes
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " highlighting for nerdtree
 
 call plug#end()
 
@@ -57,7 +55,6 @@ set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precede
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
-set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
 set number
@@ -91,7 +88,7 @@ autocmd FileType cfg        set ts=4 sw=4 tw=0 commentstring=#\ %s
 autocmd FileType css        set ts=2 sw=2 tw=0
 autocmd FileType javascript set ts=2 sw=2 tw=120
 autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
-autocmd FileType json       set ts=2 sw=2 foldmethod=syntax
+autocmd FileType json       set ts=2 sw=2 foldmethod=syntax ft=json5
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s foldmethod=indent
 autocmd FileType sql        set commentstring=--\ %s
@@ -229,7 +226,7 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:CheckBackSpace() abort
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
@@ -459,13 +456,6 @@ let NERDTreeShowHidden = 1
 " https://github.com/ryanoasis/vim-devicons/commit/40040ba86e29595cd8c42c1142313793b25d16d9
 " ... fix by overriding padding before glyph
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
-
-" vim-nerdtree-syntax-highlight
-let g:NERDTreeExtensionHighlightColor = {}
-let g:NERDTreeExtensionHighlightColor['py'] = '8FAA54'
-let g:NERDTreeExtensionHighlightColor['md'] = '834F79'
-let g:NERDTreeExtensionHighlightColor['yml'] = 'CB6F6F'
-let g:NERDTreeExtensionHighlightColor['ini'] = 'CB6F6F'
 
 " do <C-w>m in one split, then in another split and they will be swapped
 nnoremap <C-w>m :call WindowSwapping()<CR>
