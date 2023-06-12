@@ -1,5 +1,4 @@
 let g:python_host_prog='/Users/kyl/.pyenv/shims/python'
-
 let g:python3_host_prog='/Users/kyl/.pyenv/shims/python'
 
 call plug#begin('~/.config/nvim/plugged')
@@ -56,7 +55,6 @@ set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precede
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
-set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
 set number
