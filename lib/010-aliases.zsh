@@ -39,6 +39,7 @@ alias locip='ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d " " -f 2 | hea
 alias noderl='env NODE_NO_READLINE=1 rlwrap node'
 alias rpass='</dev/urandom tr -dc A-Za-z0-9 | head -c 10'
 alias updatedb="export LC_ALL='C' && sudo gupdatedb"
+alias yqdebug="yq '.' -o json | yq -I2 -P" # parse and reformat yaml. usage: cat file.yaml | yqpipe
 
 # things i just hate typing
 alias bat='bat --theme="Dracula"'
