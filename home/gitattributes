@@ -3,4 +3,4 @@
 *.gif diff=mdls
 
 #exclude package-lock from git diff/show
-package-lock.json -diff
+#package-lock.json -diff
