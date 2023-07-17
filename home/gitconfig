@@ -10,6 +10,7 @@
     ci = commit
     cm = commit -am
     co = checkout
+    cp = cherry-pick
     df = diff --cached -- ':(exclude)package-lock.json'
     di = diff -- ':(exclude)package-lock.json'
     lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
