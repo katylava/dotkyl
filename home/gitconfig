@@ -16,7 +16,7 @@
     lg = log --relative --abbrev-commit --date=local --since='1 week ago' --pretty=format:'%C(white)%h %C(cyan)%cr %C(green)by %an %Creset%n%C(yellow)%cd%n%s' --stat
     lp = log -p --relative
     ls = log --relative --abbrev-commit --pretty=format:'%C(white)%h %C(cyan)%ar %C(green)by %ae %Creset%s' -20
-    sh = show -- . ':(exclude)package-lock.json'
+    sh = show -- ':(exclude)package-lock.json'
     shp = show HEAD^
     squash = merge --squash --no-commit
     st = status --short --branch
