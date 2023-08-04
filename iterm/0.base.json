@@ -326,6 +326,7 @@
       "Normal Font": "VictorMonoNFP-Regular 21",
       "Only The Default BG Color Uses Transparency": true,
       "Option Key Sends": 0,
+      "Prevent Opening in a Tab" : false,
       "Prompt Before Closing 2": false,
       "Right Option Key Sends": 0,
       "Rows": 25,
