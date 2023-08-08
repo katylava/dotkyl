@@ -18,6 +18,7 @@ $fill\
 ${custom.right_start}\
 $status\
 $cmd_duration\
+${custom.vim_mode}\
 $git_branch\
 $git_status\
 $time\
@@ -68,6 +69,14 @@ $character
     style = "bg:cyan"
     format = "[](bg:cyan fg:#444444)"
     when = true
+
+[custom.vim_mode]
+    # from env var set 020-keybindings.zsh
+    command = "echo $VIM_MODE"
+    description = "Shows the current mode for zsh vi mode."
+    style = "bg:red fg:bright-blue"
+    when = ''' test "$VIM_MODE" = "NORM" '''
+    format = "[](bg:#444444 fg:red)[ $output ]($style)[](bg:red fg:#444444)"
 
 [fill]
     symbol = " "
