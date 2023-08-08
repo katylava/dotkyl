@@ -26,6 +26,7 @@ function zle-line-finish {
 zle -N zle-line-finish
 
 bindkey -v # this is what enables vi-mode
+bindkey -M vicmd '^[' undefined-key # bind escape in normal mode to nothing so it doesn't hang
 
 # I guess `bindkey -v` overwrites the following, so we need to rebind them
 
