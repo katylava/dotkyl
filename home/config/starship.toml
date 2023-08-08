@@ -6,6 +6,7 @@ add_newline = true
 command_timeout = 1_000
 format = """
 ${custom.pwd}\
+${custom.vim_mode}\
 $python\
 $nodejs\
 $kubernetes\
@@ -18,7 +19,6 @@ $fill\
 ${custom.right_start}\
 $status\
 $cmd_duration\
-${custom.vim_mode}\
 $git_branch\
 $git_status\
 $time\
@@ -29,6 +29,7 @@ $character
 [character]
     success_symbol = " [❧](fg:green)"
     error_symbol = " [❧](fg:red)"
+    vimcmd_symbol = " [󰵵](fg:bright-blue)"
 
 [cmd_duration]
     disabled = false
@@ -74,9 +75,9 @@ $character
     # from env var set 020-keybindings.zsh
     command = "echo $VIM_MODE"
     description = "Shows the current mode for zsh vi mode."
-    style = "bg:red fg:bright-blue"
+    style = "bg:yellow fg:black"
     when = ''' test "$VIM_MODE" = "NORM" '''
-    format = "[](bg:#444444 fg:red)[ $output ]($style)[](bg:red fg:#444444)"
+    format = "[](bg:yellow fg:#444444)[ $output ]($style)[](bg:#444444 fg:yellow)"
 
 [fill]
     symbol = " "
