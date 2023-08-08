@@ -1,7 +1,5 @@
 # zstyle :compinstall filename '~/.zshrc'
 
-autoload -Uz compinit
-
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
 setopt auto_menu         # show completion menu on succesive tab press
@@ -18,15 +16,13 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 
-fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
-
-compinit
-
-# Too slow
-# if [ $commands[kubectl] ]; then
-#   source <(kubectl completion zsh)
-# fi
-#
+# there's nothing in these any more
+# fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
 
 source /Users/kyl/google-cloud-sdk/completion.zsh.inc
-eval "$(op completion zsh)"; compdef _op op
+
+# dynamic completion is bad for compinit performance
+# eval "$(op completion zsh)"; compdef _op op # 1password CLI
+
+autoload -Uz compinit
+compinit -C # -C is supposed to speed up compinit, but i can't tell
