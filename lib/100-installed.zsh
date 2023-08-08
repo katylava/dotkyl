@@ -19,6 +19,7 @@ export LINESCH_PATHS=~/Code/Work/:$GOPATH/src/github.com/oreillymedia/:$GOPATH/s
 # fzf-tab:
 # must come before zsh-autosuggestions, zsh-syntax-highlighting, etc.
 # https://github.com/Aloxaf/fzf-tab
+# (note that it must also come after compinit)
 source ~/Code/Vendor/fzf-tab/fzf-tab.plugin.zsh
 zstyle ':completion:*:git-checkout:*' sort false # disable sort when completing `git checkout`
 zstyle ':completion:*:descriptions' format '[%d]' # set descriptions format to enable group support
@@ -42,7 +43,7 @@ source /Users/kyl/.config/op/plugins.sh
 
 # would prefer to init pyenv as needed, but it's easier to point to pyenv shims
 # for my neovim python_host_prog, so i always need it.
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # the following are a little slow
 # eval "$(pyenv virtualenv-init -)"
@@ -51,4 +52,4 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # would prefer init nodenv as needed, but copilot requires node < 18. i keep
 # the non-nodenv version updated to latest, so need nodenv to set a < 18 global
 # version.
-eval "$(nodenv init -)"
+# eval "$(nodenv init -)"
