@@ -1,5 +1,4 @@
-# export ZLE_RPROMPT_INDENT=0 # this makes readline behavior on complete menu weird (-er)
-
+# https://stevenvanbael.com/profiling-zsh-startup
 # zmodload zsh/zprof
 
 export GREP_OPTIONS="-s --color=auto --exclude-dir=node_modules --exclude-dir=.env --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.Trash --exclude-dir=.ropeproject"
@@ -13,3 +12,6 @@ for f in ~/.dotkyl/lib/*.zsh; do . $f; done
 
 # If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# uncomment for profiling startup
+# zprof
