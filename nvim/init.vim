@@ -1,5 +1,5 @@
-let g:python_host_prog='/Users/kyl/.pyenv/shims/python'
-let g:python3_host_prog='/Users/kyl/.pyenv/shims/python'
+let g:python_host_prog='/Users/kyl/.asdf/shims/python'
+let g:python3_host_prog='/Users/kyl/.asdf/shims/python'
 
 call plug#begin('~/.config/nvim/plugged')
 
