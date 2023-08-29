@@ -10,6 +10,7 @@ ${custom.vim_mode}\
 $python\
 $nodejs\
 $kubernetes\
+${custom.etc_host}\
 $jobs\
 ${custom.mail}\
 ${custom.left_end}\
@@ -37,6 +38,14 @@ $character
     style = "fg:red bg:yellow"
     format = "[](bg:#444444 fg:yellow)[ $duration ]($style)[](bg:yellow fg:#444444)"
     min_time = 1_000
+
+[custom.etc_host]
+    description = "Shows if oreilly.[com|review] is in /etc/hosts"
+    command = 'grep -oE "oreilly\.(com|review)" /etc/hosts | uniq | sed s/\n//g | sed s/oreilly//g'
+    when = 'grep -qE "oreilly\.(com|review)" /etc/hosts'
+    symbol = "󰾋"
+    style = "bg:blue fg:bright-white"
+    format = "[](bg:blue fg:#444444)[ $symbol $output ]($style)[](bg:#444444 fg:blue)"
 
 [custom.fun]
     description = "A fun seasonal symbol"
