@@ -40,6 +40,9 @@ source $brew_prefix/share/zsh-history-substring-search/zsh-history-substring-sea
 # 1password cli github cli plugin
 source /Users/kyl/.config/op/plugins.sh
 
+# asdf
+source $brew_prefix/opt/asdf/libexec/asdf.sh
+
 
 # would prefer to init pyenv as needed, but it's easier to point to pyenv shims
 # for my neovim python_host_prog, so i always need it.
