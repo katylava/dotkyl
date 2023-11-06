@@ -3,3 +3,6 @@ url: "http://philcalcado.com/microservices-patterns.html"
 ---
 name: "Phil Calçado"
 url: "http://philcalcado.com/"
+---
+name: "Django 4 asgi database connection bug"
+url: "https://code.djangoproject.com/ticket/33497"
