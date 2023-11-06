@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for f in ~/Code/Work/*; do
+for f in ~/code/Work/*; do
     if [ -d "${f}" -a -d "${f}"/.git ]; then
         echo "${f}" && cd "${f}" && git fetch
     fi

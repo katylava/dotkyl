@@ -472,7 +472,7 @@ let g:copilot_no_tab_map = v:true
 function! FileDir()
     let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
     " Don't show common parent directories
-    let filedir = substitute(l:filedir, 'Code/', '', 'g')
+    let filedir = substitute(l:filedir, 'code/', '', 'g')
     let filedir = substitute(l:filedir, 'Work/', '', 'g')
     " Shorten these a lot
     let filedir = substitute(l:filedir, '.dotkyl/', '…', 'g')
