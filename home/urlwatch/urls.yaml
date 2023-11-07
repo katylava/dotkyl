@@ -6,3 +6,5 @@ url: "http://philcalcado.com/"
 ---
 name: "Django 4 asgi database connection bug"
 url: "https://code.djangoproject.com/ticket/33497"
+filter:
+  - css: div#ticket > div.date > p > a.timeline
