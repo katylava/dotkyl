@@ -40,6 +40,7 @@ filetype indent on
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
+set binary
 set cmdheight=2 " more space for displaying messages, recommended by coc
 set completeopt=menu,longest,preview
 " set cursorline " this makes vim slower
@@ -55,7 +56,7 @@ set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precede
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
-set fixeol
+set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
 set number
