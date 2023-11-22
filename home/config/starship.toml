@@ -118,7 +118,6 @@ $character
 
 [kubernetes]
     disabled = false
-    detect_files = ["env.local"]
     symbol = "⎈ "
     style = "bold bg:purple fg:green"
     format = '[](bg:purple fg:#444444)[ $symbol$context(:$namespace) ]($style)[](bg:#444444 fg:purple)'
