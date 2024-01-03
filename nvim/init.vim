@@ -94,6 +94,7 @@ autocmd FileType json       set ts=2 sw=2 foldmethod=syntax ft=json5
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s foldmethod=indent
 autocmd FileType sql        set commentstring=--\ %s
+autocmd FileType toml       set tw=0
 autocmd FileType yaml       set sw=2 ts=2
 
 " To avoid error 'crontab: temp file must be edited in place'
