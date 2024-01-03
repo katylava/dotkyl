@@ -52,7 +52,7 @@ $character
 [custom.fun]
     description = "A fun seasonal symbol"
     # command = "echo $(jot -b '🦆' -s '' $(jot -r 1 1 5))" # random numebr of ducks
-    command = "echo $(jot -b '-' -s '' $(jot -r 1 1 10)) 🦆 $(jot -b '-' -s '' $(jot -r 1 1 10))" # moving duck
+    command = "echo 🦆 $(jot -b '-' -s '' $(jot -r 1 1 20))" # moving duck (moves left only)
     style = "bg:cyan fg:cyan"
     format = "[$output]($style)"
     when = true
