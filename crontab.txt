@@ -1,4 +1,4 @@
-PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.pyenv/shims:/Users/kyl/.dotkyl/bin:/Users/kyl/.fzf/bin:/Users/kyl/go/bin:/Users/kyl/google-cloud-sdk/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.asdf/shims:/usr/local/opt/asdf/libexec/bin:/Users/kyl/.dotkyl/bin:/Users/kyl/.fzf/bin:/Users/kyl/node_modules/.bin:/Users/kyl/go/bin:/Users/kyl/google-cloud-sdk/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted" | grep -v "No such file or directory"
