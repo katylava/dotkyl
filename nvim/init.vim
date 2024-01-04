@@ -19,7 +19,6 @@ Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
-" Plug 'sainnhe/everforest' " colorscheme
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
 Plug 'tpope/vim-characterize' " `ga` for unicode name, digraphs, emoji codes, and html entities
 Plug 'tpope/vim-commentary' " `gcc` for comments
@@ -132,8 +131,15 @@ let g:indent_guides_even_color='#2F3648'
 " let g:indent_guides_odd_color='#C3D0C6'
 " let g:indent_guides_even_color='#CFD6C8'
 
-let g:everforest_background='hard'
-let g:everforest_enable_italic=1
+lua << EOF
+require("catppuccin").setup({
+    transparent_background = true,
+	dim_inactive = {
+        enabled = false,
+    },
+})
+EOF
+
 colorscheme catppuccin-frappe " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
 hi Normal guibg=NONE ctermbg=NONE
 
