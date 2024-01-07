@@ -3,6 +3,7 @@ let g:python3_host_prog='/Users/kyl/.asdf/shims/python'
 
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' } " colorscheme
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " CSV utilities
 Plug 'editorconfig/editorconfig-vim' " supoport for .editorconfig files
 Plug 'github/copilot.vim' " AI programmer
@@ -18,7 +19,6 @@ Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
-Plug 'sainnhe/everforest' " colorscheme
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
 Plug 'tpope/vim-characterize' " `ga` for unicode name, digraphs, emoji codes, and html entities
 Plug 'tpope/vim-commentary' " `gcc` for comments
@@ -94,6 +94,7 @@ autocmd FileType json       set ts=2 sw=2 foldmethod=syntax ft=json5
 autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
 autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s foldmethod=indent
 autocmd FileType sql        set commentstring=--\ %s
+autocmd FileType toml       set tw=0
 autocmd FileType yaml       set sw=2 ts=2
 
 " To avoid error 'crontab: temp file must be edited in place'
@@ -130,9 +131,16 @@ let g:indent_guides_even_color='#2F3648'
 " let g:indent_guides_odd_color='#C3D0C6'
 " let g:indent_guides_even_color='#CFD6C8'
 
-let g:everforest_background='hard'
-let g:everforest_enable_italic=1
-colorscheme everforest
+lua << EOF
+require("catppuccin").setup({
+    transparent_background = true,
+	dim_inactive = {
+        enabled = false,
+    },
+})
+EOF
+
+colorscheme catppuccin-frappe " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
 hi Normal guibg=NONE ctermbg=NONE
 
 " disable the annoying HTML link underlining
@@ -370,7 +378,7 @@ let g:signify_vcs_list = [ 'git' ]
 
 " lightline
 let g:lightline = {
-      \ 'colorscheme': 'everforest',
+      \ 'colorscheme': 'catppuccin',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch' ],
