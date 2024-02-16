@@ -1,3 +1,5 @@
+; [url "https://<token>@github.com"]
+;     insteadOf = https://github.com
 [user]
     name = katy lavallee
     email = klavallee@oreilly.com
@@ -32,6 +34,7 @@
     sort = -authordate
 [commit]
     gpgsign = true
+	verbose = true
 [core]
     attributesfile = ~/.gitattributes
     autocrlf = false
@@ -95,8 +98,6 @@
     helper = osxkeychain
 [pull]
 	rebase = false
-[commit]
-	verbose = true
 [init]
 	defaultBranch = main
 
