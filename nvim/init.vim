@@ -480,6 +480,7 @@ let g:copilot_no_tab_map = v:true
 
 function! FileDir()
     let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
+    let filedir = substitute(l:filedir, 'Library/Mobile Documents/com\~apple\~CloudDocs', 'icloud', 'g')
     " Don't show common parent directories
     let filedir = substitute(l:filedir, 'Code/', '', 'g')
     let filedir = substitute(l:filedir, 'Work/', '', 'g')
