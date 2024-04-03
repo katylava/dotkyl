@@ -11,7 +11,7 @@ PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.asdf/shims:/usr/local/opt/asdf/libexec
 03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete > /dev/null 2>&1
 05 13 * * * find /Users/kyl/Documents/RoamBackups -mtime +30 -type f -delete > /dev/null 2>&1
 59 11 * * 1-4 say "Don't forget about standup"
-50 8-17 * * 1-5 osascript -e 'display notification "Get up and get steps" with title "Move!" sound name "Frog"'
+# 50 8-17 * * 1-5 osascript -e 'display notification "Get up and get steps" with title "Move!" sound name "Frog"'
 30 12 * * * mv /Users/kyl/Downloads/htu_autobackup_* /Users/kyl/Library/Mobile\ Documents/com~apple~CloudDocs/ChromeFullHistory/Work/
 
 
