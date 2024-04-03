@@ -6,7 +6,7 @@ export EDITOR=nvim
 export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
 
-export DEFAULT_CHEAT_DIR=~/Dropbox/CheatSheets
+export DEFAULT_CHEAT_DIR=~/Library/Mobile\ Documents/com~apple~CloudDocs/CheatSheets
 export CHEATCOLORS=true
 
 export GPG_TTY=$(tty)
