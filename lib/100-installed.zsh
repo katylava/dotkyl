@@ -9,6 +9,8 @@ export CPPFLAGS=-Qunused-arguments
 export DEFAULT_CHEAT_DIR=~/Library/Mobile\ Documents/com~apple~CloudDocs/CheatSheets
 export CHEATCOLORS=true
 
+export DOCKER_CLI_HINTS=false
+
 export GPG_TTY=$(tty)
 
 export HH_CONFIG=hicolor
