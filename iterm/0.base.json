@@ -101,7 +101,7 @@
       "Blink Allowed": true,
       "Blinking Cursor": true,
       "Blur": true,
-      "Blur Radius": 22.46418269230769,
+      "Blur Radius": 9.0,
       "Bold Color": {
         "Blue Component": 1,
         "Green Component": 1,
@@ -350,7 +350,7 @@
       "Tags": [],
       "Terminal Type": "xterm-256color",
       "Thin Strokes": 4,
-      "Transparency": 0.1397512943786983,
+      "Transparency": 0.20,
       "Unicode Version": 9,
       "Unlimited Scrollback": true,
       "Use Bold Font": true,
