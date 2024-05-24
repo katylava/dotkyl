@@ -46,6 +46,7 @@ set completeopt=menu,longest,preview
 " set cursorline " this makes vim slower
 set cursorcolumn " highlight current column
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
+set fixeol
 " set exrc secure " enable per-directory .vimrc files
 set foldmethod=indent
 set grepprg=ag
@@ -56,7 +57,6 @@ set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precede
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
-set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
 set number
