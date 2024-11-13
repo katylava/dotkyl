@@ -7,7 +7,7 @@ PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.asdf/shims:/usr/local/opt/asdf/libexec
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
 05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
-01 13 * * * cp /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava/*.edn /Users/kyl/Documents/RoamBackups
+01 13 * * * cp /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava/* /Users/kyl/Documents/RoamBackups
 03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete > /dev/null 2>&1
 05 13 * * * find /Users/kyl/Documents/RoamBackups -mtime +30 -type f -delete > /dev/null 2>&1
 59 11 * * 1-4 say "Don't forget about standup"
