@@ -1,5 +1,6 @@
 {
     "python.formatting.provider": "black",
+		"python.formatting.blackPath": "/Users/kyl/.asdf/shims/black",
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true,
     "suggest.noselect": true,
