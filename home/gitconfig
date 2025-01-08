@@ -50,8 +50,12 @@
 	format = ssh
 [gpg "ssh"]
 	allowedSignersFile = ~/.ssh/allowed_signers
+[init]
+	defaultBranch = main
 [interactive]
     diffFilter = delta --color-only
+[pull]
+	rebase = false
 [push]
     default = current
 [rerere]
@@ -90,16 +94,5 @@
     untracked = normal reverse
 
 
-
-# Added by tools
-
-[ghi]
-    token = !security find-internet-password -a katylava -s github.com -l 'ghi token' -w
-[credential]
-    helper = osxkeychain
-[pull]
-	rebase = false
-[init]
-	defaultBranch = main
 
 # vim: ft=config
