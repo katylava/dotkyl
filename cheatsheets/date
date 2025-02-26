@@ -1,0 +1,14 @@
+# Printout date in format suitable for affixing to file names
+date +"%Y%m%d_%H%M%S"
+
+# Display unix timestamp
+date +%s
+
+# Relative date (GNU)
+date --date="1 month ago"
+
+# Convert unix timestamp to readable date
+date -d @<timestamp>
+
+# Convert date to unix timestamp
+date -d "2011/11/25 10:00:00" +%s

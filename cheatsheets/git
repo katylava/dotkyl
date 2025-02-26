@@ -1,0 +1,83 @@
+# To removed staged and working directory changes
+git reset --hard
+
+# To unstage a single **new** file
+git rm --cached path/to/file
+
+# To unstage a file **already** in the repo
+git reset HEAD path/to/file
+
+# To remove untracked files
+git clean -f -d
+
+# To remove untracked and ignored files
+git clean -f -d -x
+
+# To push to a specified repository:
+git push git@github.com:username/project.git
+
+# To sync a fork with the master repo:
+git remote add upstream git@github.com:name/repo.git    # Set a new repo
+git remote -v                                           # Confirm new remote repo
+git fetch upstream                                      # Get branches
+git branch -va                                          # List local - remote branches
+git checkout master                                     # Checkout local master branch
+git checkout -b new_branch                              # Create and checkout a new branch
+git merge upstream/master                               # Merge remote into local repo
+git show 83fb499                                        # Show what a commit did.
+git show 83fb499:path/fo/file.ext                       # Shows the file as it appeared at 83fb499.
+git diff branch_1 branch_2                              # Check difference between branches
+git log                                                 # Show all the commits
+git status                                              # Show the changes from last commit
+
+# To search whole history for an expression
+git log -G <regexp>
+git log -S<string>
+git grep <regexp> $(git rev-list --all) # this gave me lots of false positives
+git grep <regexp> $(git rev-list <rev1>..<rev2>)
+git rev-list --all | xargs git grep expression # if you get "argument list too long" error with above
+
+# To search history for a deleted file
+git log --stat --all -- '**/pattern'
+
+# To merge a single file from another branch
+git checkout <other-branch> <file> # this stages the file but does not commit it.
+
+# Diff a file across branches (won't compare uncommitted changes)
+git diff branch1:file branch2:file
+
+# Or compare this file now (with uncommitted changes) to itself on another branch
+git diff other-branch:file file
+
+# Compare a file with what it was in another commit
+git diff <commit>..HEAD -- relative/path/to/file
+
+# To delete a tag
+# (there is no way to delete multiple tags at once)
+git tag -d tagname # locally
+git push origin :refs/tags/tagname # safest way to delete remote tag
+
+# To delete a remote branch
+git push origin --delete <branch>
+# This does **not** work:
+# git branch -dr origin/<branch>
+
+# Show commits for current directory only
+git log -- .
+
+# Overwrite local changes with remote
+git fetch --all
+git reset --hard origin/<branch>
+
+# Merge a wip branch into a feature branch without commit history
+git merge SE-534-wip --no-commit --squash
+git reset HEAD
+
+# Find large files in history
+# https://stackoverflow.com/a/42544963
+git rev-list --objects --all --missing=print |
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' |
+  sed -n 's/^blob //p' |
+  sort --numeric-sort --key=2 |
+  cut -c 1-12,41- |
+  $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest

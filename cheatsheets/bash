@@ -1,0 +1,30 @@
+# Append both stdout and stderr to the file "filename"
+bad_command >>filename 2>&1
+
+# To implement a for loop:
+for file in *;
+do
+    echo $file found;
+done
+
+# To implement a case command:
+case "$1" in
+    0) echo "zero found";;
+    1) echo "one found";;
+    2) echo "two found";;
+    3*) echo "something beginning with 3 found";;
+esac
+
+# Turn on debugging:
+set -x
+
+# Turn off debugging:
+set +x
+
+# double-brackets? quotes? wtf?
+
+[[ $a == z* ]]   # True if $a starts with a "z" (pattern matching).
+[[ $a == "z*" ]] # True if $a is equal to z* (literal matching).
+
+[ $a == z* ]     # File globbing and word splitting take place.
+[ "$a" == "z*" ] # True if $a is equal to z* (literal matching).

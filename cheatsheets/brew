@@ -1,0 +1,11 @@
+# Update brew itself
+brew update
+
+# Upgrade formula(e)
+brew upgrade [formula...]
+
+# List pinned formulae
+brew list --pinned
+
+# List stuff in brew prefix that's not from brew
+brew list --unbrewed

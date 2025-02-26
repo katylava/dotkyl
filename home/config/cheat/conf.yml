@@ -47,14 +47,14 @@ cheatpaths:
   # Once downloaded, ensure that 'path' below points to the location at which
   # you downloaded the community cheatsheets.
   - name: community
-    path: /Users/kyl/Documents/cheatsheets
+    path: ~/Documents/cheatsheets
     tags: [ community ]
     readonly: true
 
   # If you have personalized cheatsheets, list them last. They will take
   # precedence over the more global cheatsheets.
   - name: personal
-    path: /Users/kyl/Library/Mobile Documents/com~apple~CloudDocs/Cheatsheets
+    path: ~/.dotkyl/cheatsheets
     tags: [ personal ]
     readonly: false
 

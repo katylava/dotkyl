@@ -2,7 +2,6 @@
 
 cd
 for f in ~/.dotkyl/home/*; do [[ "${f}" != "config" ]] && ln -s "${f}" '.'`basename $f`; done
-for f in ~/Library/Mobile Documents/com~apple~CloudDocs/dotkyl-private/.*; do ln -s "${f}"; done
 
 test -d ~/.config || mkdir ~/.config
 cd ~/.config

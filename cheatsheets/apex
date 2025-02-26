@@ -1,0 +1,48 @@
+# Allocate line items
+
+List<SCMC__Sales_Order_Line_Item__c> items = [
+    select Id, SCMC__Sales_Order__c from 
+     SCMC__Sales_Order_Line_Item__c 
+    where SCMC__Status__c = 'New' 
+    and Catalog_Offer__c = 'a6ki0000000TO3wAAG'
+];
+
+List<Id> ids = new List<Id>(); 
+for(SCMC__Sales_Order_Line_Item__c item: items) { 
+    ids.add(item.SCMC__Sales_Order__c); 
+}
+
+Set<Id> idSet = new Set<Id>(ids);
+ids.clear();
+ids.addAll(idSet);
+
+System.debug('Processing ' + ids.size() + ' orders');
+
+SCMC.SalesOrderAPI api = new SCMC.SalesOrderAPI(); 
+api.allocate(ids, true);
+
+# Reverse allocate line items
+
+List<SCMC__Sales_Order_Line_Item__c> items = [
+    select Id, SCMC__Sales_Order__c from 
+     SCMC__Sales_Order_Line_Item__c 
+    where SCMC__Status__c = 'Backordered' 
+    and Catalog_Offer__c = 'a6ki0000000TO54'
+];
+
+List<Id> ids = new List<Id>(); 
+for(SCMC__Sales_Order_Line_Item__c item: items) { 
+    ids.add(item.SCMC__Sales_Order__c); 
+}
+
+Set<Id> idSet = new Set<Id>(ids);
+ids.clear();
+ids.addAll(idSet);
+
+System.debug('Processing ' + ids.size() + ' orders');
+SCMC.SalesOrderAPI api = new SCMC.SalesOrderAPI(); 
+
+for (Integer i = 0; i < 3; i++) {
+   System.debug('Reverse allocating ' + ids.get(i));
+   api.reverseAllocate(ids.get(i)); 
+}

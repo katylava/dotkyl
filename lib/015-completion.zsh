@@ -16,10 +16,9 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 
-# there's nothing in these any more
-# fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
+fpath=(~/.dotkyl/completion ${ASDF_DATA_DIR:-$HOME/.asdf}/completions $(brew --prefix)/share/opt/zsh-completions $fpath)
 
-source /Users/kyl/google-cloud-sdk/completion.zsh.inc
+source ~/google-cloud-sdk/completion.zsh.inc
 
 # dynamic completion is bad for compinit performance
 # eval "$(op completion zsh)"; compdef _op op # 1password CLI

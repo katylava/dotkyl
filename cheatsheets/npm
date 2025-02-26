@@ -1,0 +1,2 @@
+# List top-level packages
+npm list --depth=0

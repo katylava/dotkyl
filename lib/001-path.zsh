@@ -8,6 +8,7 @@ path=(
     ~/node_modules/.bin
     ~/go/bin
     ~/google-cloud-sdk/bin
+    ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
     /opt/homebrew/bin
     /usr/local/bin
     /usr/bin
