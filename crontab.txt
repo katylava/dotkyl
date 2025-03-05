@@ -1,4 +1,4 @@
-PATH=/Users/klavallee/.nodenv/shims:/Users/klavallee/.asdf/shims:/usr/local/opt/asdf/libexec/bin:/Users/klavallee/.dotklavallee/bin:/Users/klavallee/.fzf/bin:/Users/klavallee/node_modules/.bin:/Users/klavallee/go/bin:/Users/klavallee/google-cloud-sdk/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH=/Users/klavallee/.dotkyl/bin:/Users/klavallee/.fzf/bin:/Users/klavallee/node_modules/.bin:/Users/klavallee/go/bin:/Users/klavallee/google-cloud-sdk/bin:/Users/klavallee/.asdf/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted" | grep -v "No such file or directory"
@@ -12,7 +12,7 @@ PATH=/Users/klavallee/.nodenv/shims:/Users/klavallee/.asdf/shims:/usr/local/opt/
 05 13 * * * find /Users/klavallee/Documents/RoamBackups -mtime +30 -type f -delete > /dev/null 2>&1
 59 11 * * 1-4 say "Don't forget about standup"
 # 50 8-17 * * 1-5 osascript -e 'display notification "Get up and get steps" with title "Move!" sound name "Frog"'
-30 12 * * * mv /Users/klavallee/Downloads/htu_autobackup_* /Users/klavallee/Documents/ChromeFullHistory/
+30 12 * * * mv /Users/klavallee/Downloads/htu_autobackup_* /Users/klavallee/Documents/ChromeFullHistory
 
 
 # vim: ft=crontab
