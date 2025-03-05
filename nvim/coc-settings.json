@@ -1,8 +1,11 @@
 {
     "python.formatting.provider": "black",
-		"python.formatting.blackPath": "/Users/kyl/.asdf/shims/black",
+    "python.formatting.blackPath": "~/.asdf/shims/black",
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true,
+    "pyright.inlayHints.functionReturnTypes": false,
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
     "suggest.noselect": true,
 	"languageserver": {
 		"terraform": {
