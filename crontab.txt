@@ -1,3 +1,4 @@
+SHELL=/opt/homebrew/bin/zsh
 PATH=/Users/klavallee/.dotkyl/bin:/Users/klavallee/.fzf/bin:/Users/klavallee/node_modules/.bin:/Users/klavallee/go/bin:/Users/klavallee/google-cloud-sdk/bin:/Users/klavallee/.asdf/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
