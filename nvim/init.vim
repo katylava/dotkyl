@@ -54,6 +54,7 @@ set ignorecase smartcase
 set iskeyword+=-
 set hidden " recommended by coc
 set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set modeline
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
