@@ -40,13 +40,11 @@ filetype indent on
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-set binary
 set cmdheight=2 " more space for displaying messages, recommended by coc
 set completeopt=menu,longest,preview
 " set cursorline " this makes vim slower
 set cursorcolumn " highlight current column
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
-set fixeol
 " set exrc secure " enable per-directory .vimrc files
 set foldmethod=indent
 set grepprg=ag
@@ -61,7 +59,6 @@ set noerrorbells visualbell t_vb=
 set nohlsearch incsearch
 set nowrap linebreak
 set number
-set pastetoggle=<F8>
 set ruler laststatus=2 " one of these ensures each window contains a status line
 set scrolloff=3
 set shortmess+=c " recommended by coc
