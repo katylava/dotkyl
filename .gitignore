@@ -5,3 +5,4 @@ nvim/plugged
 home/urlwatch/cache.db
 nvim/autoload/gocomplete.vim
 nvim/ftplugin/go/gocomplete.vim
+cheatsheets/orm
