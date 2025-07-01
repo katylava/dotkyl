@@ -18,8 +18,3 @@ name: "Jenkins frequent re-auth issue 2"
 url: "https://issues.jenkins.io/browse/JENKINS-65103"
 filter:
   - css: time.livestamp
----
-name: "Annotaion Mono NerdFont Homebrew Formula"
-url: "https://github.com/Homebrew/homebrew-cask/tree/master/Casks/font/font-a"
-filter:
-  - grep: "font-annotation"
