@@ -46,6 +46,7 @@ set completeopt=menu,longest,preview
 " set cursorline " this makes vim slower
 set cursorcolumn " highlight current column
 set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
+set fixeol
 " set exrc secure " enable per-directory .vimrc files
 set foldmethod=indent
 set grepprg=ag
@@ -53,10 +54,10 @@ set ignorecase smartcase
 set iskeyword+=-
 set hidden " recommended by coc
 set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set modeline
 set mouse=a
 set nobackup nowritebackup dir=~/.tmp/nvim
 set noerrorbells visualbell t_vb=
-set nofixeol
 set nohlsearch incsearch
 set nowrap linebreak
 set number
@@ -480,6 +481,7 @@ let g:copilot_no_tab_map = v:true
 
 function! FileDir()
     let filedir = substitute(expand("%:p:h"), '/Users/kyl/', '', 'g')
+    let filedir = substitute(l:filedir, 'Library/Mobile Documents/com\~apple\~CloudDocs', 'icloud', 'g')
     " Don't show common parent directories
     let filedir = substitute(l:filedir, 'Code/', '', 'g')
     let filedir = substitute(l:filedir, 'Work/', '', 'g')
