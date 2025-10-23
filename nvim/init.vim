@@ -18,6 +18,7 @@ Plug 'luochen1990/rainbow' " color-code matching brackets
 Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
+Plug 'preservim/vim-markdown' " for me just so i can fold markdown (tabular may need to be installed first)
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
 Plug 'tpope/vim-characterize' " `ga` for unicode name, digraphs, emoji codes, and html entities
@@ -106,7 +107,7 @@ autocmd FileType python match Tabs /^\t+/
 autocmd BufWritePost *.sh silent !chmod +x %
 
 " Open file at last edited location
-au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
+autocmd BufReadPost * if &filetype !~ 'commit' && line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
 " Title string
 autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
