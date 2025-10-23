@@ -62,7 +62,7 @@ alias kgp='kubectl get pods'
 alias kl='kubectl logs'
 alias klist="kubectl config view -o jsonpath='{.contexts[*].name}'"
 alias kp='ksc prod-gke'
-alias opengh='open "https://github.com/$(grep url .git/config | cut -d: -f2 | cut -d. -f1)/tree/$(git rev-parse --abbrev-ref HEAD)"'
+alias ghopen='open "https://github.com/$(grep url .git/config | cut -d: -f2 | cut -d. -f1)/tree/$(git rev-parse --abbrev-ref HEAD)"'
 alias ql='qlmanage -p 2>/dev/null'
 alias repostats='onefetch -E --no-merges --number-of-authors 5'
 alias sopr='source ~/.zshrc'
