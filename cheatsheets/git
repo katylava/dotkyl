@@ -73,6 +73,13 @@ git reset --hard origin/<branch>
 git merge SE-534-wip --no-commit --squash
 git reset HEAD
 
+# Find the oldest commit for a path
+git log --diff-filter=A --reverse -- <path> | head -n 1
+# --diff-filter=A: This option filters the commits to only show those where
+# files were added (A). This is crucial for finding the initial commit for a
+# directory's content
+# --reverse: This option displays the commits in chronological order (oldest first).
+
 # Find large files in history
 # https://stackoverflow.com/a/42544963
 git rev-list --objects --all --missing=print |
