@@ -18,7 +18,7 @@ zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git fo
 
 fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
 
-source /Users/kyl/google-cloud-sdk/completion.zsh.inc
+# source /Users/kyl/google-cloud-sdk/completion.zsh.inc
 
 # dynamic completion is bad for compinit performance
 # eval "$(op completion zsh)"; compdef _op op # 1password CLI
