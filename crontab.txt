@@ -6,7 +6,6 @@ PATH=/Users/kyl/.nodenv/shims:/Users/kyl/.pyenv/shims:/Users/kyl/.dotkyl/bin:/Us
 15 11 */2 * * env LC_ALL=en_US.UTF-8 urlwatch
 */10 * * * * fetchwork > /dev/null 2>&1
 0 14 25 * * brew cleanup --prune=90
-05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
 01 13 * * * cp /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava/*.edn /Users/kyl/GoogleDrive/My\ Drive/Roam\ Backups
 03 13 * * * find /Users/kyl/Library/Application\ Support/Roam\ Research/backups/katylava -mtime +7 -type f -delete > /dev/null 2>&1
 05 13 * * * find /Users/kyl/GoogleDrive/My\ Drive/Roam\ Backups -mtime +30 -type f -delete > /dev/null 2>&1
