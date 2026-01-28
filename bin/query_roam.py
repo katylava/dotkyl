@@ -174,8 +174,91 @@ def cmd_search_tags(tag: str) -> None:
 
     print(json.dumps(results, indent=2))
 
+def build_block_tree(block_uid: str, blocks_by_uid: Dict[str, Dict], children_map: Dict[str, List[str]]) -> List[Dict[str, Any]]:
+    """Build a tree of children for a block using pre-fetched data"""
+    if block_uid not in children_map:
+        return []
+    
+    children = []
+    for child_uid in children_map[block_uid]:
+        if child_uid not in blocks_by_uid:
+            continue
+            
+        child_data = blocks_by_uid[child_uid].copy()
+        
+        # Recursively build children
+        grandchildren = build_block_tree(child_uid, blocks_by_uid, children_map)
+        if grandchildren:
+            child_data['children'] = grandchildren
+        
+        children.append(child_data)
+    
+    # Sort by order
+    children.sort(key=lambda x: x.get('order', 0))
+    return children
+
+def fetch_all_children_relationships(block_uids: List[str]) -> tuple:
+    """Fetch all children relationships for a set of blocks in one query"""
+    if not block_uids:
+        return {}, {}
+    
+    # Get ALL parent-child relationships in the entire graph
+    children_query = '''[:find ?parent-uid ?child-uid ?child-string ?child-order
+        :where
+        [?parent :block/uid ?parent-uid]
+        [?parent :block/children ?child]
+        [?child :block/uid ?child-uid]
+        [?child :block/string ?child-string]
+        [?child :block/order ?child-order]
+    ]'''
+    
+    all_children = query(children_query)
+    
+    # Build complete maps
+    all_children_map = {}  # parent_uid -> [child_uids]
+    all_blocks_by_uid = {}  # uid -> {uid, content, order}
+    
+    for result in all_children:
+        parent_uid = result[0]
+        child_uid = result[1]
+        child_content = result[2]
+        child_order = result[3]
+        
+        if parent_uid not in all_children_map:
+            all_children_map[parent_uid] = []
+        all_children_map[parent_uid].append(child_uid)
+        
+        # Store child block data
+        all_blocks_by_uid[child_uid] = {
+            'uid': child_uid,
+            'content': child_content,
+            'order': child_order
+        }
+    
+    # Now filter to only the relevant subtrees
+    relevant_blocks = {}
+    relevant_children_map = {}
+    
+    def collect_descendants(uid):
+        """Recursively collect all descendants of a block"""
+        if uid in relevant_children_map:
+            return  # Already processed
+        
+        if uid in all_children_map:
+            relevant_children_map[uid] = all_children_map[uid]
+            for child_uid in all_children_map[uid]:
+                if child_uid in all_blocks_by_uid:
+                    relevant_blocks[child_uid] = all_blocks_by_uid[child_uid]
+                collect_descendants(child_uid)
+    
+    # Collect all descendants for each starting block
+    for uid in block_uids:
+        collect_descendants(uid)
+    
+    return relevant_blocks, relevant_children_map
+
 def cmd_daily_notes(start_timestamp: int) -> None:
-    """Get blocks modified in time period"""
+    """Get blocks modified in time period with their nested children"""
 
     # Query for blocks modified since the start timestamp
     query_str = r'''[:find ?uid ?string ?edit-time :where
@@ -187,8 +270,10 @@ def cmd_daily_notes(start_timestamp: int) -> None:
 
     results = query(query_str)
 
-    # Convert results to the expected format
+    # Collect all block UIDs
+    block_uids = set()
     filtered_results = []
+    
     for result in results:
         uid = result[0]
         content = result[1]
@@ -198,40 +283,52 @@ def cmd_daily_notes(start_timestamp: int) -> None:
         try:
             edit_datetime = datetime.fromtimestamp(edit_time / 1000)
 
-            filtered_results.append({
+            block_data = {
                 'uid': uid,
                 'content': content,
                 'edit_time': edit_datetime.strftime("%Y-%m-%d %H:%M:%S")
-            })
+            }
+            
+            filtered_results.append(block_data)
+            block_uids.add(uid)
         except (ValueError, TypeError):
             # Skip if we can't parse the time
             continue
 
+    # Fetch all children relationships in one query
+    blocks_by_uid, children_map = fetch_all_children_relationships(block_uids)
+    
+    # Build tree structure for each top-level block
+    for block_data in filtered_results:
+        children = build_block_tree(block_data['uid'], blocks_by_uid, children_map)
+        if children:
+            block_data['children'] = children
+
     print(json.dumps(filtered_results, indent=2))
 
 def cmd_page_content(title: str) -> None:
-    """Get full content of a specific page"""
+    """Get full content of a specific page with nested block structure"""
     # First, get the page's UID
     page_query = '[:find ?uid :where [?e :node/title "{}"] [?e :block/uid ?uid]]'.format(title)
     page_results = query(page_query)
 
     if not page_results:
-        print(json.dumps([]))
+        print(json.dumps({'error': 'Page not found'}))
         return
 
     page_uid = page_results[0][0]
 
-    # Get all blocks for this page
-    blocks_query = '[:find ?uid ?string ?order :where [?e :node/title "{}"] [?e :block/uid ?uid] [?e :block/string ?string] [?e :block/order ?order]] :order-by [[?order :asc]]'.format(title)
+    # Get top-level blocks on this page (blocks that are direct children of the page)
+    blocks_query = '''[:find ?uid ?string ?order
+        :where
+        [?page :node/title "{}"]
+        [?page :block/children ?block]
+        [?block :block/uid ?uid]
+        [?block :block/string ?string]
+        [?block :block/order ?order]
+    ] :order-by [[?order :asc]]'''.format(title)
+    
     blocks_results = query(blocks_query)
-
-    # Also get any child blocks
-    children_query = '[:find ?uid ?string ?order :where [?e :node/title "{}"] [?e :block/children ?child-uid] [?child-uid :block/uid ?uid] [?child-uid :block/string ?string] [?child-uid :block/order ?order]] :order-by [[?order :asc]]'.format(title)
-    children_results = query(children_query)
-
-    # Combine and sort all blocks
-    all_blocks = blocks_results + children_results
-    all_blocks.sort(key=lambda x: x[2])  # Sort by order
 
     results = {
         'page_title': title,
@@ -239,12 +336,32 @@ def cmd_page_content(title: str) -> None:
         'blocks': []
     }
 
-    for block in all_blocks:
-        results['blocks'].append({
-            'uid': block[0],
-            'content': block[1],
-            'order': block[2]
-        })
+    # Collect all top-level block UIDs
+    block_uids = set()
+    for block in blocks_results:
+        block_uids.add(block[0])
+    
+    # Fetch all children relationships in one query
+    blocks_by_uid, children_map = fetch_all_children_relationships(block_uids)
+
+    # For each top-level block, build its tree
+    for block in blocks_results:
+        block_uid = block[0]
+        block_content = block[1]
+        block_order = block[2]
+        
+        block_data = {
+            'uid': block_uid,
+            'content': block_content,
+            'order': block_order
+        }
+        
+        # Build nested children tree
+        children = build_block_tree(block_uid, blocks_by_uid, children_map)
+        if children:
+            block_data['children'] = children
+        
+        results['blocks'].append(block_data)
 
     print(json.dumps(results, indent=2))
 
