@@ -1,6 +1,9 @@
 # https://stevenvanbael.com/profiling-zsh-startup
 # zmodload zsh/zprof
 
+# uncomment for profiling startup
+# zprof
+
 export GREP_OPTIONS="-s --color=auto --exclude-dir=node_modules --exclude-dir=.env --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.Trash --exclude-dir=.ropeproject"
 
 export LESS="-R"
@@ -13,5 +16,5 @@ for f in ~/.dotkyl/lib/*.zsh; do . $f; done
 # If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# uncomment for profiling startup
-# zprof
+# Mise activation
+[[ -f $HOME/.miserc-zsh ]] && source $HOME/.miserc-zsh
