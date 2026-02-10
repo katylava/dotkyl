@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+set -e
+
+CHASSIS_DIR="${HOME}/code/Work/chassis"
+BRANCH="django-52"
+BASE_BRANCH="develop"
+
+cd "${CHASSIS_DIR}"
+
+echo "==> Fetching latest changes..."
+git fetch origin
+
+echo "==> Checking out ${BRANCH}..."
+git checkout "${BRANCH}"
+
+echo "==> Pulling latest ${BRANCH}..."
+git pull
+
+echo "==> Merging ${BASE_BRANCH} into ${BRANCH}..."
+# Check if we're already up to date or if merge is in progress
+if git merge-base --is-ancestor "origin/${BASE_BRANCH}" HEAD; then
+    echo "✓ Already up to date with ${BASE_BRANCH}"
+elif git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+    echo "✗ Merge in progress. Please resolve conflicts and commit, then run this script again."
+    exit 1
+elif git merge "origin/${BASE_BRANCH}" --no-edit; then
+    echo "✓ Merge successful"
+else
+    echo "✗ Merge conflict detected. Please resolve conflicts manually, commit, then run this script again."
+    exit 1
+fi
+
+echo "==> Checking Django version in pyproject.toml..."
+
+# Extract current Django version (e.g., "5.2.10" from "django==5.2.10")
+current_version=$(grep -iE '^\s*"django==' pyproject.toml | sed -E 's/.*django==([0-9.]+).*/\1/')
+
+if [ -z "$current_version" ]; then
+    echo "✗ Django dependency not found in pyproject.toml"
+    exit 1
+fi
+
+echo "Current Django version: ${current_version}"
+
+# Extract major.minor version (e.g., "5.2" from "5.2.10")
+if [[ ! $current_version =~ ([0-9]+\.[0-9]+) ]]; then
+    echo "✗ Could not parse version: ${current_version}"
+    exit 1
+fi
+
+major_minor="${BASH_REMATCH[1]}"
+echo "Looking for latest patch version of Django ${major_minor}..."
+
+# Get latest patch version from PyPI
+latest_patch=$(curl -s "https://pypi.org/pypi/django/json" | \
+    python3 -c "import sys, json; from packaging import version; releases = json.load(sys.stdin)['releases']; matching = [v for v in releases.keys() if v.startswith('${major_minor}.')]; print(max(matching, key=version.parse) if matching else '')")
+
+if [ -z "$latest_patch" ]; then
+    echo "✗ Could not determine latest patch version"
+    exit 1
+fi
+
+echo "Latest Django ${major_minor} patch version: ${latest_patch}"
+
+if [ "$current_version" = "$latest_patch" ]; then
+    echo "✓ Django is already at the latest patch version"
+    django_updated=false
+else
+    echo "Updating Django to ${latest_patch}..."
+    sed -i.bak -E "s/\"django==[0-9.]+\"/\"django==${latest_patch}\"/" pyproject.toml
+    rm -f pyproject.toml.bak
+    echo "✓ Updated Django version in pyproject.toml"
+    
+    # Show the change
+    git diff pyproject.toml
+    django_updated=true
+fi
+
+echo ""
+echo "==> Current status:"
+git status
+
+# If Django was updated, ask about committing it
+if [ "$django_updated" = true ]; then
+    echo ""
+    read -p "Commit Django version update? [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        echo "==> Committing Django version update..."
+        git add pyproject.toml
+        git commit -m "Update Django to ${latest_patch}"
+    else
+        echo "Skipping Django version commit"
+    fi
+fi
+
+# Push if there are commits to push
+if git log origin/"${BRANCH}"..HEAD --oneline | grep -q .; then
+    echo ""
+    echo "==> Pushing to origin..."
+    git push
+    echo "✓ Pushed to origin"
+fi
