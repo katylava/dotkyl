@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-CHASSIS_DIR="${HOME}/code/Work/chassis"
+CHASSIS_DIR="${HOME}/code/Work/chassis-tmp"
 BRANCH="django-52"
 BASE_BRANCH="develop"
 
+echo "==> cd to chassis directory: ${CHASSIS_DIR}"
 cd "${CHASSIS_DIR}"
 
 echo "==> Fetching latest changes..."
