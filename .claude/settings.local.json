@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(gh repo:*)",
+      "Bash(gh api:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(echo $CLAUDE_CONFIG_DIR)",
+      "Read(//Users/klavallee/**)"
     ]
   }
 }
