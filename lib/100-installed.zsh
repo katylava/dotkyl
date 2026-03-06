@@ -18,6 +18,8 @@ export HH_CONFIG=hicolor
 export LINESCH_AUTHOR=katy
 export LINESCH_PATHS=~/code/Work/:$GOPATH/src/github.com/oreillymedia/:$GOPATH/src/github.com/safarijv/
 
+export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+
 # export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 # fzf-tab:
