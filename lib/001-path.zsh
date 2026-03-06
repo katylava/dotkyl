@@ -4,6 +4,7 @@ typeset -U path
 # shims for nodenv an pyenv are added later by their init commands
 path=(
     ~/.dotkyl/bin
+    ~/.local/bin
     ~/.fzf/bin
     ~/node_modules/.bin
     ~/go/bin
