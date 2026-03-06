@@ -5,7 +5,10 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' } " colorscheme
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " CSV utilities
+Plug 'coder/claudecode.nvim' " Claude Code integration
+Plug 'dlyongemallo/diffview.nvim' " diff/merge tool (maintained fork of sindrets/diffview.nvim)
 Plug 'editorconfig/editorconfig-vim' " supoport for .editorconfig files
+Plug 'folke/snacks.nvim' " utility library (required by claudecode)
 Plug 'github/copilot.vim' " AI programmer
 Plug 'godlygeek/tabular' " Align text :help tabular
 Plug 'itchyny/lightline.vim' " cool status line, good performance
@@ -18,6 +21,7 @@ Plug 'luochen1990/rainbow' " color-code matching brackets
 Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
+Plug 'nvim-tree/nvim-web-devicons' " lua devicons (required by diffview)
 Plug 'preservim/vim-markdown' " for me just so i can fold markdown (tabular may need to be installed first)
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
@@ -160,26 +164,37 @@ inoremap kk <Esc>
 
 tnoremap jk <C-\><C-n>
 
+" move between visible buffers
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-h> :wincmd h<CR>
 nnoremap <C-l> :wincmd l<CR>
-tnoremap <C-j> <C-\><C-n><C-w>h
-tnoremap <C-k> <C-\><C-n><C-w>j
-tnoremap <C-h> <C-\><C-n><C-w>k
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-l> <C-\><C-n><C-w>l
 
- " <opt> = - . ,
+" resize current buffer
+" <opt> = - . ,
 nnoremap ≠ 10<C-W>+
 nnoremap – 10<C-W>-
 nnoremap ≥ 10<C-W>>
 nnoremap ≤ 10<C-W><
+tnoremap ≠ <C-\><C-n>10<C-W>+i
+tnoremap – <C-\><C-n>10<C-W>-i
+tnoremap ≥ <C-\><C-n>10<C-W>>i
+tnoremap ≤ <C-\><C-n>10<C-W><i
 
+" swap buffer positions
 " <opt> b f k j
 nnoremap ∫ <C-W>H
 nnoremap ƒ <C-W>L
 nnoremap ˚ <C-W>K
 nnoremap ∆ <C-W>J
+tnoremap ∫ <C-\><C-n><C-w>H
+tnoremap ƒ <C-\><C-n><C-w>L
+tnoremap ˚ <C-\><C-n><C-w>K
+tnoremap ∆ <C-\><C-n><C-w>J
 
 " <opt> p o
 nnoremap π :tabnext<CR>
@@ -290,13 +305,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
 
@@ -597,7 +605,50 @@ endfunction
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * if &buftype != 'terminal' | match ExtraWhitespace /\s\+$/ | endif
+autocmd InsertEnter * if &buftype != 'terminal' | match ExtraWhitespace /\s\+\%#\@<!$/ | endif
+autocmd InsertLeave * if &buftype != 'terminal' | match ExtraWhitespace /\s\+$/ | endif
 autocmd BufWinLeave * call clearmatches()
+
+
+" ---------------------
+" diffview
+" ---------------------
+
+lua << EOF
+require("diffview").setup({
+  enhanced_diff_hl = true,
+  diffopt = { algorithm = "histogram" },
+})
+EOF
+
+nnoremap <silent> <leader>dv :DiffviewOpen<CR>
+nnoremap <silent> <leader>dh :DiffviewFileHistory %<CR>
+nnoremap <silent> <leader>dc :DiffviewClose<CR>
+
+
+" ---------------------
+" claudecode
+" ---------------------
+
+lua << EOF
+require("snacks").setup({
+  terminal = { enabled = true },
+})
+
+require("claudecode").setup({
+  terminal = {
+    provider = "snacks",
+  },
+})
+EOF
+
+nnoremap <silent> <leader>cc :ClaudeCode<CR>
+nnoremap <silent> <leader>cf :ClaudeCodeFocus<CR>
+nnoremap <silent> <leader>cr :ClaudeCode --resume<CR>
+nnoremap <silent> <leader>co :ClaudeCode --continue<CR>
+nnoremap <silent> <leader>cm :ClaudeCodeSelectModel<CR>
+nnoremap <silent> <leader>cb :ClaudeCodeAdd %<CR>
+xnoremap <silent> <leader>cs :ClaudeCodeSend<CR>
+nnoremap <silent> <leader>ca :ClaudeCodeDiffAccept<CR>
+nnoremap <silent> <leader>cd :ClaudeCodeDiffDeny<CR>
