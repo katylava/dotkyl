@@ -44,7 +44,7 @@ alias updatedb="export LC_ALL='C' && sudo gupdatedb"
 alias yqdebug="yq '.' -o json | yq -I2 -P" # parse and reformat yaml. usage: cat file.yaml | yqpipe
 
 # things i just hate typing
-alias bat='bat --theme="Dracula"'
+alias bat='bat --theme="${BAT_THEME:-Dracula}"'
 alias browse='gh repo view --web'
 alias dc='docker compose'
 alias dice='rolldice -s'

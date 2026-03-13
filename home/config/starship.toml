@@ -2,6 +2,7 @@
 # find nerdfont unicode points --> https://www.nerdfonts.com/cheat-sheet
 #     
 
+palette = "dark"
 add_newline = true
 command_timeout = 1_000
 format = """
@@ -35,8 +36,8 @@ $character
 [cmd_duration]
     disabled = false
     show_notifications = false
-    style = "fg:red bg:yellow"
-    format = "[](bg:#444444 fg:yellow)[ $duration ]($style)[](bg:yellow fg:#444444)"
+    style = "fg:red bg:alert"
+    format = "[](bg:separator fg:alert)[ $duration ]($style)[](bg:alert fg:separator)"
     min_time = 1_000
 
 [custom.etc_host]
@@ -44,64 +45,64 @@ $character
     command = 'grep -oE "oreilly\.(com|review)" /etc/hosts | uniq | sed s/\n//g | sed s/oreilly//g'
     when = 'grep -qE "oreilly\.(com|review)" /etc/hosts'
     symbol = "󰾋"
-    style = "bg:blue fg:bright-white"
-    format = "[](bg:blue fg:#444444)[ $symbol $output ]($style)[](bg:#444444 fg:blue)"
+    style = "bg:note fg:bright-white"
+    format = "[](bg:note fg:separator)[ $symbol $output ]($style)[](bg:separator fg:note)"
 
 [custom.fun]
     description = "A fun seasonal symbol"
     # command = "echo $(jot -b '🦆' -s '' $(jot -r 1 1 5))" # random numebr of ducks
     command = "echo 🦆 $(jot -b '-' -s '' $(jot -r 1 1 20))" # moving duck (moves left only)
-    style = "bg:cyan fg:cyan"
+    style = "bg:frame fg:frame"
     format = "[$output]($style)"
     when = true
 
 [custom.left_end]
     description = "End of the left side of the prompt"
-    style = "bg:cyan"
-    format = "[](bg:cyan fg:#444444)"
+    style = "bg:frame"
+    format = "[](bg:frame fg:separator)"
     when = true
 
 [custom.mail]
     symbol = "📧"
     description = "Shows a mail icon if there is any mail, otherwise nothing."
     when = "mail -e"
-    style = "bg:blue"
-    format = "[](bg:blue fg:#444444)[ $symbol$number ]($style)[](bg:#444444 fg:blue)"
+    style = "bg:note"
+    format = "[](bg:note fg:separator)[ $symbol$number ]($style)[](bg:separator fg:note)"
 
 [custom.pwd]
     # from env var set in precmd_functions in 090-prompt.zsh
     command = "echo $MYPWD"
     description = "Shows current directory's bookmark if there is one, otherwise a middle-truncated path to the current directory."
     when = true
-    format = "[](fg:cyan)[$output ](fg:black bg:cyan)[](bg:#444444 fg:cyan)"
+    format = "[](fg:frame)[$output ](fg:black bg:frame)[](bg:separator fg:frame)"
 
 [custom.right_start]
     description = "Start of the right side of the prompt"
-    style = "bg:cyan"
-    format = "[](bg:cyan fg:#444444)"
+    style = "bg:frame"
+    format = "[](bg:frame fg:separator)"
     when = true
 
 [custom.vim_mode]
     # from env var set 020-keybindings.zsh
     command = "echo $VIM_MODE"
     description = "Shows the current mode for zsh vi mode."
-    style = "bg:yellow fg:black"
+    style = "bg:alert fg:black"
     when = ''' test "$VIM_MODE" = "NORM" '''
-    format = "[](bg:yellow fg:#444444)[ $output ]($style)[](bg:#444444 fg:yellow)"
+    format = "[](bg:alert fg:separator)[ $output ]($style)[](bg:separator fg:alert)"
 
 [fill]
     symbol = " "
-    style = "bg:cyan"
+    style = "bg:frame"
 
 [git_branch]
     disabled = false
-    style = "bg:green fg:black"
-    format = "[](bg:#444444 fg:green)[ $symbol$branch(:$remote_branch) ]($style)[](bg:green fg:#444444)"
+    style = "bg:lang fg:black"
+    format = "[](bg:separator fg:lang)[ $symbol$branch(:$remote_branch) ]($style)[](bg:lang fg:separator)"
 
 [git_status]
     disabled = false
-    style = "bold bg:purple fg:green"
-    format = '[](bg:#444444 fg:purple)[ $all_status$ahead_behind ]($style)[](bg:purple fg:#444444)'
+    style = "bold bg:ctx fg:ctx_fg"
+    format = '[](bg:separator fg:ctx)[ $all_status$ahead_behind ]($style)[](bg:ctx fg:separator)'
     ahead = "${count}↑"
     behind = "${count}↓"
     diverged = "${ahead_count}⇅ ${behind_count}"
@@ -114,34 +115,54 @@ $character
     deleted = "✗ "
 
 [jobs]
-    style = "bg:yellow fg:red"
-    format = "[](bg:yellow fg:#444444)[ $symbol$number ]($style)[](bg:#444444 fg:yellow)"
+    style = "bg:alert fg:red"
+    format = "[](bg:alert fg:separator)[ $symbol$number ]($style)[](bg:separator fg:alert)"
 
 [kubernetes]
     disabled = false
     symbol = "⎈ "
-    style = "bold bg:purple fg:green"
-    format = '[](bg:purple fg:#444444)[ $symbol$context(:$namespace) ]($style)[](bg:#444444 fg:purple)'
+    style = "bold bg:ctx fg:ctx_fg"
+    format = '[](bg:ctx fg:separator)[ $symbol$context(:$namespace) ]($style)[](bg:separator fg:ctx)'
 
 [nodejs]
     symbol = "\ue781 "
-    style = "bg:green fg:black"
-    not_capable_style = "bg:green fg:red"
-    format = "[](bg:green fg:#444444)[ $symbol($version) ]($style)[](bg:#444444 fg:green)"
+    style = "bg:lang fg:black"
+    not_capable_style = "bg:lang fg:red"
+    format = "[](bg:lang fg:separator)[ $symbol($version) ]($style)[](bg:separator fg:lang)"
     version_format = "${raw}"
 
 [python]
     symbol = "\ue606 "
-    style = "fg:black bg:green"
-    format = '[](bg:green fg:#444444)[ ${symbol}${pyenv_prefix}(${version})([ $virtualenv](fg:red bg:green)) ]($style)[](bg:#444444 fg:green)'
+    style = "fg:black bg:lang"
+    format = '[](bg:lang fg:separator)[ ${symbol}${pyenv_prefix}(${version})([ $virtualenv](fg:red bg:lang)) ]($style)[](bg:separator fg:lang)'
     version_format = "${raw}"
 
 [status]
     disabled = false
-    style = "bg:red fg:bright-white"
-    format = "[](bg:#444444 fg:red)[ $symbol $status ]($style)[](bg:red fg:#444444)"
+    style = "bg:err fg:bright-white"
+    format = "[](bg:separator fg:err)[ $symbol $status ]($style)[](bg:err fg:separator)"
 
 [time]
     disabled = false
-    style = "bg:cyan fg:black"
-    format = "[](bg:#444444 fg:cyan)[ $time ]($style)[](fg:cyan)"
+    style = "bg:frame fg:black"
+    format = "[](bg:separator fg:frame)[ $time ]($style)[](fg:frame)"
+
+[palettes.dark]
+separator = "#444444"
+frame = "cyan"
+lang = "green"
+ctx = "purple"
+alert = "yellow"
+note = "blue"
+err = "red"
+ctx_fg = "green"
+
+[palettes.light]
+separator = "#c8c8c8"
+frame = "bright-cyan"
+lang = "bright-green"
+ctx = "bright-purple"
+alert = "bright-yellow"
+note = "bright-blue"
+err = "bright-red"
+ctx_fg = "white"

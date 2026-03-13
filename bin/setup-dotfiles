@@ -8,6 +8,10 @@ cd ~/.config
 ln -s ../.dotkyl/nvim
 for f in ~/.dotkyl/home/config/*; do ln -s "${f}"; done
 
+iterm_profiles=~/Library/Application\ Support/iTerm2/DynamicProfiles
+test -d "$iterm_profiles" || mkdir -p "$iterm_profiles"
+for f in ~/.dotkyl/iterm/*.json; do ln -sf "${f}" "$iterm_profiles/$(basename $f)"; done
+
 cd ~/.dotkyl
 crontab crontab.txt
 
