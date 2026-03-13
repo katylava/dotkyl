@@ -67,7 +67,13 @@ Before committing, show:
 1. The files that will be staged
 2. The full commit message
 
-Wait for the user to approve or request changes.
+Then use the `AskUserQuestion` tool to confirm:
+- Question: "Commit these changes?"
+- Header: "Commit"
+- Options:
+  - **Yes** — commit only
+  - **Yes and push** — commit and push to remote
+  - **No** — abort
 
 ## Step 6: Commit
 
