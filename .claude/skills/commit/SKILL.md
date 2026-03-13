@@ -50,7 +50,7 @@ Rules:
 - **Subject length**: aim for ~50 characters. This is a soft target — clarity wins over brevity, but don't be wordy. Trim filler words, use short verbs (add, fix, rm, use, set, update).
 - **Lowercase** after the prefix (no capital letter after the colon)
 - **Body** (optional): only include when the *why* behind the change isn't obvious from the subject and diff. When used, separate from subject with a blank line. Explain motivation, not mechanics.
-- **Co-Authored-By trailer**: add `Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>` if Claude helped write the changes being committed. Always separated from body/subject by a blank line.
+- **Co-Authored-By trailer**: if Claude helped write the changes being committed, include the Co-Authored-By trailer. Use whatever model name is current (check system prompt for the model ID). Always separated from body/subject by a blank line.
 
 Examples of good subjects from this repo:
 ```
@@ -79,7 +79,7 @@ Wait for the user to approve or request changes.
 
   <optional body>
 
-  Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+  Co-Authored-By: <current model> <noreply@anthropic.com>
   EOF
   )"
   ```
