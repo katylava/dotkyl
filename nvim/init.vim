@@ -120,28 +120,44 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " Theme
 " ------------------
 
+lua << EOF
+require("catppuccin").setup({
+    flavour = "auto",
+    background = { light = "latte", dark = "frappe" },
+    transparent_background = false,
+    dim_inactive = { enabled = false },
+})
+EOF
+colorscheme catppuccin
+
 function! ApplyDark()
     set background=dark
-    lua require("catppuccin").setup({ transparent_background = true, dim_inactive = { enabled = false } })
-    colorscheme catppuccin-frappe
-    hi Normal guibg=NONE ctermbg=NONE
-    hi SignColumn guibg=NONE ctermbg=NONE
     hi lineNr guibg=#282828
     let g:indent_guides_odd_color='#233046'
     let g:indent_guides_even_color='#2F3648'
     execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
     execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+    if exists('g:lightline')
+        runtime autoload/lightline/colorscheme/catppuccin.vim
+        call lightline#init()
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
 endfunction
 
 function! ApplyLight()
     set background=light
-    lua require("catppuccin").setup({ transparent_background = false, dim_inactive = { enabled = false } })
-    colorscheme catppuccin-latte
     hi lineNr guibg=#C8C8A8 guifg=#282828
     let g:indent_guides_odd_color='#C3D0C6'
     let g:indent_guides_even_color='#CFD6C8'
     execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
     execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+    if exists('g:lightline')
+        runtime autoload/lightline/colorscheme/catppuccin.vim
+        call lightline#init()
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
 endfunction
 
 autocmd ColorScheme * hi link htmlLink NONE | hi link htmlItalic NONE
