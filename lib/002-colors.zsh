@@ -55,6 +55,5 @@ fi
 # Other colors
 # ---------------------
 
-export GREP_COLORS="ms=43:mc=43:sl=:cx=:fn=35:ln=32:bn=32:se=36" # for default $ man grep
 
 autoload -U colors && colors
