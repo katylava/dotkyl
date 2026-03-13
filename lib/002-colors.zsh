@@ -3,6 +3,7 @@
 # ---------------------
 
 _PALETTE_STATE="$HOME/.local/state/terminal-palette"
+_STARSHIP_LIGHT="$HOME/.local/state/starship-light.toml"
 
 function _apply_palette {
     local mode="${1:-dark}"
@@ -11,13 +12,15 @@ function _apply_palette {
         export BAT_THEME="OneHalfLight"
         export VIVID_THEME="catppuccin-latte"
         export DELTA_FEATURES="light-mode"
-        sed -i '' 's/^palette = "dark"/palette = "light"/' ~/.dotkyl/home/config/starship.toml
+        cp ~/.dotkyl/home/config/starship.toml "$_STARSHIP_LIGHT"
+        STARSHIP_CONFIG="$_STARSHIP_LIGHT" starship config palette light
+        export STARSHIP_CONFIG="$_STARSHIP_LIGHT"
     else
         export TERM_PALETTE=dark
         export BAT_THEME="Dracula"
         export VIVID_THEME="jellybeans"
         unset DELTA_FEATURES
-        sed -i '' 's/^palette = "light"/palette = "dark"/' ~/.dotkyl/home/config/starship.toml
+        unset STARSHIP_CONFIG
     fi
     export LS_COLORS="$(vivid generate $VIVID_THEME)"
     if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
@@ -30,9 +33,18 @@ function _apply_palette {
 }
 
 function palette {
+    if [[ "$1" == "status" ]]; then
+        echo "TERM_PALETTE:    ${TERM_PALETTE:-default}"
+        echo "BAT_THEME:       ${BAT_THEME:-default}"
+        echo "VIVID_THEME:     ${VIVID_THEME:-default}"
+        echo "DELTA_FEATURES:  ${DELTA_FEATURES:-default}"
+        echo "STARSHIP_CONFIG: ${STARSHIP_CONFIG:-default}"
+        echo "State file:      $(test -f $_PALETTE_STATE && echo 'present (light)' || echo 'absent (dark)')"
+        return 0
+    fi
     local mode="${1:-dark}"
     if [[ "$mode" != "light" && "$mode" != "dark" ]]; then
-        echo "Usage: palette [light|dark]"
+        echo "Usage: palette [light|dark|status]"
         return 1
     fi
     _apply_palette "$mode"
