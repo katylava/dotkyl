@@ -11,13 +11,13 @@ function _apply_palette {
         export BAT_THEME="OneHalfLight"
         export VIVID_THEME="catppuccin-latte"
         export DELTA_FEATURES="light-mode"
-        gsed -i 's/^palette = "dark"/palette = "light"/' ~/.config/starship.toml
+        sed -i '' 's/^palette = "dark"/palette = "light"/' ~/.dotkyl/home/config/starship.toml
     else
         export TERM_PALETTE=dark
         export BAT_THEME="Dracula"
         export VIVID_THEME="jellybeans"
         unset DELTA_FEATURES
-        gsed -i 's/^palette = "light"/palette = "dark"/' ~/.config/starship.toml
+        sed -i '' 's/^palette = "light"/palette = "dark"/' ~/.dotkyl/home/config/starship.toml
     fi
     export LS_COLORS="$(vivid generate $VIVID_THEME)"
     if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
