@@ -71,6 +71,9 @@
     navigate = true
     pager = less -X
     light = false
+[delta "light-mode"]
+    light = true
+    syntax-theme = "OneHalfLight"
 
 
 

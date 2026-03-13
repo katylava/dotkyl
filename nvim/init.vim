@@ -119,38 +119,41 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " ------------------
 " Theme
 " ------------------
-"
-" DARK
-set background=dark
-let everforest_transparent_background=1
-hi lineNr guibg=#282828
-let g:indent_guides_odd_color='#233046'
-let g:indent_guides_even_color='#2F3648'
 
-" LIGHT
-" set background=light
-" let g:everforest_transparent_background=0
-" hi lineNr guibg=#C8C8A8 guifg=#282828
-" let g:indent_guides_odd_color='#C3D0C6'
-" let g:indent_guides_even_color='#CFD6C8'
+function! ApplyDark()
+    set background=dark
+    lua require("catppuccin").setup({ transparent_background = true, dim_inactive = { enabled = false } })
+    colorscheme catppuccin-frappe
+    hi Normal guibg=NONE ctermbg=NONE
+    hi SignColumn guibg=NONE ctermbg=NONE
+    hi lineNr guibg=#282828
+    let g:indent_guides_odd_color='#233046'
+    let g:indent_guides_even_color='#2F3648'
+    execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
+    execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+endfunction
 
-lua << EOF
-require("catppuccin").setup({
-    transparent_background = true,
-	dim_inactive = {
-        enabled = false,
-    },
-})
-EOF
+function! ApplyLight()
+    set background=light
+    lua require("catppuccin").setup({ transparent_background = false, dim_inactive = { enabled = false } })
+    colorscheme catppuccin-latte
+    hi lineNr guibg=#C8C8A8 guifg=#282828
+    let g:indent_guides_odd_color='#C3D0C6'
+    let g:indent_guides_even_color='#CFD6C8'
+    execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
+    execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+endfunction
 
-colorscheme catppuccin-frappe " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-hi Normal guibg=NONE ctermbg=NONE
+autocmd ColorScheme * hi link htmlLink NONE | hi link htmlItalic NONE
 
-" disable the annoying HTML link underlining
-hi link htmlLink NONE
-hi link htmlItalic NONE
+command! Dark call ApplyDark()
+command! Light call ApplyLight()
 
-hi SignColumn guibg=NONE ctermbg=NONE
+if $TERM_PALETTE == "light"
+    call ApplyLight()
+else
+    call ApplyDark()
+endif
 
 
 " -------------

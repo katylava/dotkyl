@@ -1,8 +1,60 @@
-# my old custom colors
-# export LS_COLORS="no=00:fi=37:di=1;33:ex=1;31:ln=7:or=1;30;41:su=32;40:sg=36;40:tw=33;40:ow=35;40:st=34;40:pi=7;30:so=7;30:do=7;30:bd=7;30:cd=7;30:*.jpg=36:*.png=36:*.gif=36:*.txt=35:*.md=35:*.rst=35:*.sql=35:*.py=32:*.php=32:*.rb=32:*.git=33:*.svn=33:*.html=34:*.ejs=34:*.js=38;5;137:*.scss=38;5;204:*.css=38;5;204:*.less=38;5;204:*.pyc=30:*.pyo=30:*.DS_Store=00:*.Trash=00:*.localized=00:*.html~=30:*.html#=30:*.dmg=7;33:*.csv=1;32:*.xlsx=1;32:*.xls=1;32:*.docx=1;36:*.doc=1;36:*.pptx=1;36:*.ppt=1;36:*.pdf=1;36:*.webloc=1;34:*.taskpaper=1;37:*.psd=1;37:*.pxm=1;37:*.acorn=1;37:*.json=38;5;101:Dockerfile=38;5;103"
+# ---------------------
+# Palette switching
+# ---------------------
 
-# from vivid (https://github.com/sharkdp/vivid/tree/master/themes)
-export LS_COLORS="$(vivid generate jellybeans)"
+_PALETTE_STATE="$HOME/.local/state/terminal-palette"
+
+function _apply_palette {
+    local mode="${1:-dark}"
+    if [[ "$mode" == "light" ]]; then
+        export TERM_PALETTE=light
+        export BAT_THEME="OneHalfLight"
+        export VIVID_THEME="catppuccin-latte"
+        export DELTA_FEATURES="light-mode"
+        gsed -i 's/^palette = "dark"/palette = "light"/' ~/.config/starship.toml
+    else
+        export TERM_PALETTE=dark
+        export BAT_THEME="Dracula"
+        export VIVID_THEME="jellybeans"
+        unset DELTA_FEATURES
+        gsed -i 's/^palette = "light"/palette = "dark"/' ~/.config/starship.toml
+    fi
+    export LS_COLORS="$(vivid generate $VIVID_THEME)"
+    if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+        if [[ "$mode" == "light" ]]; then
+            set-iterm-profile "Tomorrow Light Mod"
+        else
+            set-iterm-profile "Tomorrow Dark Mod"
+        fi
+    fi
+}
+
+function palette {
+    local mode="${1:-dark}"
+    if [[ "$mode" != "light" && "$mode" != "dark" ]]; then
+        echo "Usage: palette [light|dark]"
+        return 1
+    fi
+    _apply_palette "$mode"
+    mkdir -p "$(dirname $_PALETTE_STATE)"
+    if [[ "$mode" == "light" ]]; then
+        touch "$_PALETTE_STATE"
+    else
+        rm -f "$_PALETTE_STATE"
+    fi
+}
+
+# Apply palette from state file on shell init
+if [[ -f "$_PALETTE_STATE" ]]; then
+    _apply_palette light
+else
+    _apply_palette dark
+fi
+
+# ---------------------
+# Other colors
+# ---------------------
+
 export GREP_COLORS="ms=43:mc=43:sl=:cx=:fn=35:ln=32:bn=32:se=36" # for default $ man grep
 
 autoload -U colors && colors
