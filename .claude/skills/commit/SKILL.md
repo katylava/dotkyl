@@ -30,7 +30,7 @@ Common area prefixes derived from this repo's history:
 - `zsh` — anything in lib/*.zsh, shell config
 - `nvim` — neovim config
 - `bin` — scripts in bin/
-- `git` / `gitconfig` / `gitignore` — git-related config
+- `git` — git-related config (includes gitconfig, gitignore, etc.)
 - `alias` — alias changes (in lib/010-aliases.zsh)
 - `crontab` / `cron` — cron jobs
 - `claude` — .claude/ config, CLAUDE.md
