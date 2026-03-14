@@ -1,0 +1,4 @@
+# Save output to a log
+watch -n1 'cmd | tee -a <logfile>'
+# Ex:
+watch -n1 'redis-cli -h mediocre.redis.cache.windows.net -p 6379 -a <password> GET semaphore:a6k310000008QHYAA2:-1 | tee -a ~/Desktop/tmp.log'
