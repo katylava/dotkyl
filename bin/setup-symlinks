@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+#
+# Symlink dotfiles into ~/, ~/.config/, and iTerm2 DynamicProfiles.
+# Handles both the main repo and the private repo.
+# Idempotent — safe to run repeatedly.
+#
+
+local dotkyl="${0:A:h:h}"  # ${0:A:h:h} = absolute path to this script's grandparent dir
+
+# ln -sf follows existing symlinks to directories, creating a nested link
+# inside. This helper removes an existing symlink first to avoid that.
+link() {
+    local target=$1 link=$2
+    [[ -L "$link" ]] && rm "$link"
+    ln -sf "$target" "$link"
+}
+
+# Symlink home/* into ~/ as dotfiles (prefixed with .)
+for f in $dotkyl/home/*(N); do
+    [[ "$(basename $f)" == "config" ]] && continue
+    link "$f" ~/."$(basename $f)"
+done
+
+# Symlink private/home/* into ~/ as dotfiles
+for f in $dotkyl/private/home/*(N); do
+    [[ "$(basename $f)" == "config" ]] && continue
+    link "$f" ~/."$(basename $f)"
+done
+
+# Symlink home/config/* into ~/.config/
+mkdir -p ~/.config
+for f in $dotkyl/home/config/*(N); do
+    link "$f" ~/.config/"$(basename $f)"
+done
+
+# Symlink private/home/config/* into ~/.config/
+for f in $dotkyl/private/home/config/*(N); do
+    link "$f" ~/.config/"$(basename $f)"
+done
+
+# Symlink nvim/ into ~/.config/
+link $dotkyl/nvim ~/.config/nvim
+
+# Symlink iTerm2 dynamic profiles
+local iterm_profiles=~/Library/Application\ Support/iTerm2/DynamicProfiles
+mkdir -p "$iterm_profiles"
+for f in $dotkyl/iterm/*.json(N); do
+    link "$f" "$iterm_profiles/$(basename $f)"
+done
+
+# Install crontab
+[[ -f $dotkyl/crontab.txt ]] && crontab $dotkyl/crontab.txt

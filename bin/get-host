@@ -4,7 +4,7 @@
 # Looks up $(hostname) in tasks.toml [hosts].
 #
 
-local manifest="${0:A:h}/../tasks.toml"  # ${0:A:h} = absolute path to this script's directory
+local manifest="${0:A:h:h}/tasks.toml"  # ${0:A:h:h} = absolute path to this script's grandparent dir
 local host
 
 host=$(yq -p toml ".hosts.\"$(hostname)\"" "$manifest" 2>/dev/null)
