@@ -1,0 +1,15 @@
+[hosts]
+"hyperion.lan" = "personal"
+# "WORK-HOSTNAME.local" = "work"
+
+# --- Infrastructure ---
+
+[[task]]
+name = "Dotfile symlinks"
+check = "bin/check-dotkyl-symlinks"
+run = "bin/setup-dotkyl-symlinks"
+
+[[task]]
+name = "Crontab"
+check = "crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null"
+run = "crontab crontab.txt"

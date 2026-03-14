@@ -1,0 +1,105 @@
+#!/usr/bin/env zsh
+#
+# Apply the manifest.toml configuration for the current host.
+#
+# Task behavior matrix:
+#   check passes       → skip silently
+#   run only           → auto-execute
+#   run + notes        → print notes, confirm, then run
+#   notes only         → print notes (manual action needed)
+#
+
+local dotkyl="${0:A:h:h}"  # ${0:A:h:h} = absolute path to this script's grandparent dir
+local manifest="$dotkyl/manifest.toml"
+
+if [[ ! -f "$manifest" ]]; then
+    print "error: $manifest not found" >&2
+    exit 1
+fi
+
+# Helper: read a field from task $1, field path $2
+_tf() { yq -p toml -oy ".task[$1].$2" "$manifest" }
+
+# Get semantic host name for this machine
+local host
+host=$("$dotkyl/bin/get-host") || exit 1
+
+local count=$(yq -p toml -oy '.task | length' "$manifest")
+
+if [[ "$count" -eq 0 ]]; then
+    print "No tasks defined in manifest.toml"
+    exit 0
+fi
+
+local skipped=0 ran=0 noted=0 failed=0
+
+for (( i = 0; i < count; i++ )); do
+    local t_name=$(_tf $i 'name')
+    local t_check=$(_tf $i 'check // ""')
+    local t_run=$(_tf $i 'run // ""')
+    local t_notes=$(_tf $i 'notes // ""')
+
+    # Skip tasks not for this host
+    local t_host_count=$(_tf $i 'hosts | length')
+    if [[ "$t_host_count" -gt 0 ]]; then
+        local t_match=$(_tf $i "hosts[] | select(. == \"$host\")")
+        if [[ -z "$t_match" ]]; then
+            (( skipped++ ))
+            continue
+        fi
+    fi
+
+    # Run check — if it passes, skip silently
+    if [[ -n "$t_check" ]] && eval "$t_check" &>/dev/null; then
+        (( skipped++ ))
+        continue
+    fi
+
+    # notes only → print notes, nothing to run
+    if [[ -n "$t_notes" && -z "$t_run" ]]; then
+        print "\n→ $t_name"
+        print "  $t_notes"
+        (( noted++ ))
+        continue
+    fi
+
+    # run + notes → print notes, confirm, then run
+    if [[ -n "$t_run" && -n "$t_notes" ]]; then
+        print "\n→ $t_name"
+        print "  $t_notes"
+        printf "  Run now? [y/N] "
+        read -q reply || true
+        print  # newline after read -q
+        if [[ "$reply" == "y" ]]; then
+            if eval "$t_run"; then
+                (( ran++ ))
+            else
+                print "  ✗ failed" >&2
+                (( failed++ ))
+            fi
+        else
+            (( noted++ ))
+        fi
+        continue
+    fi
+
+    # run only → auto-execute
+    if [[ -n "$t_run" ]]; then
+        print "\n→ $t_name"
+        if eval "$t_run"; then
+            print "  ✓ done"
+            (( ran++ ))
+        else
+            print "  ✗ failed" >&2
+            (( failed++ ))
+        fi
+        continue
+    fi
+done
+
+# Summary
+print "\n${ran} ran, ${noted} noted, ${skipped} skipped, ${failed} failed"
+
+if [[ "$failed" -gt 0 ]]; then
+    exit 1
+fi
