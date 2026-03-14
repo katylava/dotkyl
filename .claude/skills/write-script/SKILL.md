@@ -47,8 +47,8 @@ Single-use variables belong near where they're used, not grouped with globals at
 ### Let the tool do the work
 Push logic like filtering, defaulting, and transforming into tools like `yq` instead of reimplementing it in shell.
 
-### Format consistently
-If most functions in the script are multi-line blocks, don't cram one onto a single line just because it's short.
+### No single-line functions
+Always use multi-line format for functions, even short ones.
 
 ### Constants are UPPER_CASE
 Variables that are set once and never modified should be `UPPER_CASE`. Avoid names that shadow common environment variables (e.g., use `DOTKYL_HOST` not `HOST`).
