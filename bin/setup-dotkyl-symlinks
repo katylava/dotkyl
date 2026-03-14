@@ -40,5 +40,3 @@ for f in $dotkyl/iterm/*.json(N); do
     ln -sfn "$f" "$iterm_profiles/$(basename $f)"
 done
 
-# Install crontab
-[[ -f $dotkyl/crontab.txt ]] && crontab $dotkyl/crontab.txt

@@ -1,16 +1,16 @@
 #!/usr/bin/env zsh
 #
 # Print the semantic host name (e.g. "personal", "work") for this machine.
-# Looks up $(hostname) in tasks.toml [hosts].
+# Looks up $(hostname) in manifest.toml [hosts].
 #
 
-local manifest="${0:A:h:h}/tasks.toml"  # ${0:A:h:h} = absolute path to this script's grandparent dir
+local manifest="${0:A:h:h}/manifest.toml"  # ${0:A:h:h} = absolute path to this script's grandparent dir
 local host
 
-host=$(yq -p toml ".hosts.\"$(hostname)\"" "$manifest" 2>/dev/null)
+host=$(yq -p toml -oy ".hosts.\"$(hostname)\"" "$manifest" 2>/dev/null)
 
 if [[ -z "$host" || "$host" == "null" ]]; then
-    print "⚠ Hostname '$(hostname)' not in tasks.toml [hosts]" >&2
+    print "⚠ Hostname '$(hostname)' not in manifest.toml [hosts]" >&2
     return 1
 fi
 
