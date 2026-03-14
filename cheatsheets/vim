@@ -1,0 +1,35 @@
+# write new file
+:w {file}
+# write file and exit
+:x
+
+# insert from file
+:r {file}
+
+# convert tabs to spaces
+:retab
+
+# send selected range to clipboard
+:w ! pbcopy
+
+# send selected range to psql and replace with tab-delimited output
+:w !lkkjk psql -d <dbname> -A -F '^V^I'
+
+# put grep results in quickfix list
+:grep! -R --color=never <search-term> .
+:cw to show list
+:cn and :cp to navigate list
+
+# insert output of command c below cursor
+:r! command
+
+# paste in visual block mode:
+1. yank
+2. Ctrl-V - select range
+3. Shift-I as normal
+4. Ctrl-R 0 - inserts current register
+5. ESC as normal -- if there are a lot of lines, might take a few seconds to show up
+# to paste a block yanked from a C-V selection, you can use p|P as usual
+
+# send selected range to shell command
+:w ! <cmd>  # THE SPACE IS VERY IMPORTANT

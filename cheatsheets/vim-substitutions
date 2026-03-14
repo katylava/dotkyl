@@ -1,0 +1,21 @@
+# remove blank lines
+:g/^\s*$/d
+
+# replace dates like m/d/yyyy with yyyy-m-d
+# can't pad months and dates, but sql understands them anyway
+
+:%s/\(\d\{1,2}\)\/\(\d\{1,2}\)\/\(\d\{4}\)/\3-\1-\2/g
+
+# find rows in a csv file where the second column is more than 35 characters:
+/^[^,]\ ,[^,]\{35,}
+
+# find rows in a csv file where second or third column starts with a quote char:
+/^\([^,]\ ,\)\{1,2}"
+
+# add comma at end of every line that doesn't end with a comma:
+:%s/\([^,]\)$/\1,/g
+
+# remove invisible ^M chars
+:%s/<Ctrl v><Ctrl m>/<Ctrl v><Enter>/g
+# which looks like the following when you type it, but it does work
+:%s/^M/^M/g
