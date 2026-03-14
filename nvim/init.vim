@@ -116,38 +116,57 @@ autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
 " ------------------
 " Theme
 " ------------------
-"
-" DARK
-set background=dark
-let everforest_transparent_background=1
-hi lineNr guibg=#282828
-let g:indent_guides_odd_color='#233046'
-let g:indent_guides_even_color='#2F3648'
-
-" LIGHT
-" set background=light
-" let g:everforest_transparent_background=0
-" hi lineNr guibg=#C8C8A8 guifg=#282828
-" let g:indent_guides_odd_color='#C3D0C6'
-" let g:indent_guides_even_color='#CFD6C8'
 
 lua << EOF
 require("catppuccin").setup({
-    transparent_background = true,
-	dim_inactive = {
-        enabled = false,
-    },
+    flavour = "auto",
+    background = { light = "latte", dark = "frappe" },
+    transparent_background = false,
+    dim_inactive = { enabled = false },
 })
 EOF
+colorscheme catppuccin
 
-colorscheme catppuccin-frappe " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-hi Normal guibg=NONE ctermbg=NONE
+function! ApplyDark()
+    set background=dark
+    hi lineNr guibg=#282828
+    let g:indent_guides_odd_color='#233046'
+    let g:indent_guides_even_color='#2F3648'
+    execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
+    execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+    if exists('g:lightline')
+        runtime autoload/lightline/colorscheme/catppuccin.vim
+        call lightline#init()
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
+endfunction
 
-" disable the annoying HTML link underlining
-hi link htmlLink NONE
-hi link htmlItalic NONE
+function! ApplyLight()
+    set background=light
+    hi lineNr guibg=#C8C8A8 guifg=#282828
+    let g:indent_guides_odd_color='#C3D0C6'
+    let g:indent_guides_even_color='#CFD6C8'
+    execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
+    execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
+    if exists('g:lightline')
+        runtime autoload/lightline/colorscheme/catppuccin.vim
+        call lightline#init()
+        call lightline#colorscheme()
+        call lightline#update()
+    endif
+endfunction
 
-hi SignColumn guibg=NONE ctermbg=NONE
+autocmd ColorScheme * hi link htmlLink NONE | hi link htmlItalic NONE
+
+command! Dark call ApplyDark()
+command! Light call ApplyLight()
+
+if $TERM_PALETTE == "light"
+    call ApplyLight()
+else
+    call ApplyDark()
+endif
 
 
 " -------------
