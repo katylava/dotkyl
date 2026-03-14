@@ -171,3 +171,6 @@ in `palettes.toml`.
   set env vars so bat, vivid, delta, and starship adapt.
 - `palette dark` and `palette light` with no prior palette selection should default to a
   reasonable palette (e.g., "tomorrow-dark" / "tomorrow-light").
+- Replace `lsd` with `eza` — eza reads `EZA_COLORS` for UI colors (user, size, date,
+  permissions) and `LS_COLORS` for filetypes. Both can be set in `_apply_palette` / the palette
+  script without symlink swapping. lsd has no env var or flag for theme switching.
