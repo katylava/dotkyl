@@ -4,6 +4,8 @@
 
 _PALETTE_STATE="$HOME/.local/state/terminal-palette"
 _STARSHIP_LIGHT="$HOME/.local/state/starship-light.toml"
+ITERM_DARK_PROFILE="Tomorrow Dark Mod Air"
+ITERM_LIGHT_PROFILE="Tomorrow Light Mod Air"
 
 function _apply_palette {
     local mode="${1:-dark}"
@@ -25,9 +27,9 @@ function _apply_palette {
     export LS_COLORS="$(vivid generate $VIVID_THEME)"
     if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
         if [[ "$mode" == "light" ]]; then
-            set-iterm-profile "Tomorrow Light Mod"
+            set-iterm-profile "$ITERM_LIGHT_PROFILE"
         else
-            set-iterm-profile "Tomorrow Dark Mod"
+            set-iterm-profile "$ITERM_DARK_PROFILE"
         fi
     fi
 }
