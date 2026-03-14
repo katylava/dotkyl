@@ -41,6 +41,8 @@ Common area prefixes derived from this repo's history:
 
 Multiple areas can be comma-separated: `zsh, iterm: ...`
 
+The area prefix should reflect what the change is **about**, not just which files were touched. For example, a `.gitignore` change in service of the zsh lib loader is `zsh:`, not `zsh, git:`. Ask "what is this change in service of?" to pick the right prefix.
+
 **If the area isn't obvious, ask the user.** Don't guess.
 
 ## Step 4: Draft the commit message
