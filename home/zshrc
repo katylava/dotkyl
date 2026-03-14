@@ -1,6 +1,8 @@
 # https://stevenvanbael.com/profiling-zsh-startup
 # zmodload zsh/zprof
 
+DOTKYL=~/.dotkyl
+
 export GREP_OPTIONS="-s --color=auto --exclude-dir=node_modules --exclude-dir=.env --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.Trash --exclude-dir=.ropeproject"
 
 export LESS="-R"
@@ -8,7 +10,15 @@ export LESSCHARSET="utf-8"
 
 setopt autocd
 
-for f in ~/.dotkyl/lib/*.zsh; do . $f; done
+local _host=$($DOTKYL/bin/get-host 2>/dev/null)
+for f in $DOTKYL/lib/*.zsh; do
+    # skip host-specific files (name--host.zsh) not for this host
+    if [[ "$f" == *--*.zsh && "$f" != *--$_host.zsh ]]; then
+        continue
+    fi
+    . $f
+done
+unset _host
 
 # If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

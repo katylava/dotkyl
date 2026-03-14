@@ -33,7 +33,7 @@ A `[hosts]` section in `tasks.toml` maps real hostnames to semantic names:
 "Kyls-MacBook-Air.local" = "personal"
 ```
 
-`bin/run-tasks` calls `socket.gethostname()` and looks it up here. If the hostname isn't found,
+`bin/run-tasks` calls `hostname` and looks it up here. If the hostname isn't found,
 the script exits with a clear error telling you to add it. No file to create on each machine —
 fresh clone + `mise run install` just works.
 
@@ -53,8 +53,8 @@ Mirrors the main repo — `lib/` and `home/` only. No `tasks.toml`.
 dotkyl-private/
 ├── lib/
 │   ├── 000-private.zsh           # secrets, env vars (both machines)
-│   ├── 011-aliases.work.zsh      # private work-specific aliases
-│   └── 011-aliases.personal.zsh  # private personal aliases
+│   ├── 011-aliases--work.zsh      # private work-specific aliases
+│   └── 011-aliases--personal.zsh  # private personal aliases
 └── home/                         # private dotfiles to symlink into ~/
 ```
 
@@ -71,20 +71,18 @@ The zshrc loader and `bin/setup-symlinks` check both locations. The private repo
 treated identically to the main repo's files — same host-suffix convention, same numbering, same
 symlink logic.
 
-**zshrc loading** — globs both `lib/` directories, sorts together so numbering controls order:
+**zshrc loading** — iterates both `lib/` directories, skipping host-specific files not for this host:
 
 ```zsh
-local _host=$(~/.dotkyl/bin/get-host 2>/dev/null)
-local -a _lib_files
-_lib_files=(
-    ~/.dotkyl/lib/*.zsh(N)
-    ~/.dotkyl/lib/*.$_host.zsh(N)
-    ~/.dotkyl/private/lib/*.zsh(N)
-    ~/.dotkyl/private/lib/*.$_host.zsh(N)
-)
-_lib_files=(${(o)_lib_files})  # sort by filename
-for _f in $_lib_files; do source $_f; done
-unset _host _lib_files _f
+local _host=$($DOTKYL/bin/get-host 2>/dev/null)
+for f in $DOTKYL/lib/*.zsh $DOTKYL/private/lib/*.zsh; do
+    # skip host-specific files (name--host.zsh) not for this host
+    if [[ "$f" == *--*.zsh && "$f" != *--$_host.zsh ]]; then
+        continue
+    fi
+    . $f
+done
+unset _host
 ```
 
 **`bin/setup-symlinks`** — processes `home/` from both repos.
@@ -105,12 +103,12 @@ This task runs as part of `mise run install`. The SSH key must be set up before 
 
 ## File Naming Convention
 
-Host-specific lib files use a `.<host>.zsh` suffix. The number prefix controls load order:
+Host-specific lib files use a `--<host>` suffix before `.zsh`. The number prefix controls load order:
 
 ```
 lib/010-aliases.zsh              # both machines
-lib/070-kubernetes.work.zsh      # work only
-lib/080-icloud.personal.zsh      # personal only
+lib/070-kubernetes--work.zsh     # work only
+lib/080-icloud--personal.zsh     # personal only
 ```
 
 ## tasks.toml
@@ -209,21 +207,8 @@ Brewfile.personal   # personal only
 
 ### bin/get-host
 
-Prints the semantic host name. Used by shell commands in `tasks.toml`:
-
-```python
-#!/usr/bin/env python3
-import tomllib, socket, os, sys
-manifest = os.path.dirname(__file__) + "/../tasks.toml"
-with open(manifest, "rb") as f:
-    data = tomllib.load(f)
-hostname = socket.gethostname()
-host = data.get("hosts", {}).get(hostname)
-if not host:
-    print(f"⚠ Hostname '{hostname}' not in tasks.toml [hosts]", file=sys.stderr)
-    sys.exit(1)
-print(host)
-```
+Prints the semantic host name. Used by shell commands in `tasks.toml`. Implemented as a zsh
+script using `yq -p toml` to read `tasks.toml`.
 
 ### bin/setup-symlinks
 
@@ -236,55 +221,9 @@ Returns exit 0 if all expected symlinks from both repos exist and point to the r
 
 ## Task Runner Script
 
-`bin/run-tasks` — reads `tasks.toml`, processes each entry for the current host.
-
-```python
-#!/usr/bin/env python3
-import tomllib, subprocess, os, sys, socket
-
-manifest = os.path.dirname(__file__) + "/../tasks.toml"
-
-with open(manifest, "rb") as f:
-    data = tomllib.load(f)
-
-hostname = socket.gethostname()
-host = data.get("hosts", {}).get(hostname)
-if not host:
-    print(f"⚠ Hostname '{hostname}' not found in tasks.toml [hosts] — add it and commit.")
-    sys.exit(1)
-
-any_pending = False
-for task in data.get("task", []):
-    if "hosts" in task and host not in task["hosts"]:
-        continue
-
-    check = subprocess.run(task["check"], shell=True, capture_output=True)
-    if check.returncode == 0:
-        continue  # already in desired state
-
-    any_pending = True
-    name = task["name"]
-    run = task.get("run")
-    notes = task.get("notes")
-
-    print(f"\n● {name}")
-
-    if notes:
-        print(f"  {notes.strip()}")
-
-    if run:
-        if notes:
-            answer = input("  Run automated steps? [y/N] ").strip().lower()
-            if answer != "y":
-                print("  Skipped.")
-                continue
-        subprocess.run(run, shell=True)
-
-if not any_pending:
-    print("✓ All tasks complete")
-```
-
-Requires Python 3.11+ (for `tomllib`). Available via mise or system Python on recent macOS.
+`bin/run-tasks` — reads `tasks.toml` via `yq -p toml`, processes each entry for the current host.
+Implemented as a zsh script. Same core logic: skip tasks not for this host, run check, print
+notes, prompt if both run and notes are present.
 
 ## mise Tasks
 
@@ -333,7 +272,7 @@ git pull
 `Brewfile.shared`, etc.).
 
 **Change applies to one machine only** — edit or create a host-specific file
-(`lib/070-k8s.work.zsh`, `Brewfile.work`, etc.) or add a `tasks.toml` entry with `hosts = [...]`.
+(`lib/070-k8s--work.zsh`, `Brewfile.work`, etc.) or add a `tasks.toml` entry with `hosts = [...]`.
 
 **Private change (sensitive content)** — edit files in `~/.dotkyl/private/`, commit and push
 to `dotkyl-private`. Pull on other machine: `cd ~/.dotkyl/private && git pull`.
@@ -442,8 +381,8 @@ mise run install
    git diff orm..main -- lib/
    ```
 
-3. **Move personal-specific config** into `lib/*.personal.zsh` files.
-   Move work-specific config into `lib/*.work.zsh` files.
+3. **Move personal-specific config** into `lib/*--personal.zsh` files.
+   Move work-specific config into `lib/*--work.zsh` files.
    Move private config (internal aliases, secrets) into `dotkyl-private/lib/`.
 
 4. **Create Brewfiles:**
