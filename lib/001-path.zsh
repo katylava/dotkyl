@@ -3,6 +3,7 @@ typeset -U path
 # $path is a magical variable from which $PATH is set
 path=(
     ~/.dotkyl/bin
+    ~/.local/bin
     ~/.fzf/bin
     ~/node_modules/.bin
     ~/go/bin
