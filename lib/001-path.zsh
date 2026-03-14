@@ -1,7 +1,6 @@
 typeset -U path
 
 # $path is a magical variable from which $PATH is set
-# shims for nodenv an pyenv are added later by their init commands
 path=(
     ~/.dotkyl/bin
     ~/.fzf/bin

@@ -45,7 +45,6 @@ Files in `lib/` are numbered to control load order:
 - `030-history.zsh` — history settings
 - `040-titles.zsh` — terminal title config
 - `080-bookmarks.zsh` — named directory bookmark system
-- `085-versions.zsh` — lazy-init nodenv on `chpwd` when `.node-version` is found
 - `090-prompt.zsh` — starship prompt + custom `MYPWD` variable
 - `100-installed.zsh` — config for installed tools (fzf-tab, zsh-autosuggestions, zsh-syntax-highlighting, etc.)
 
@@ -90,7 +89,7 @@ All scripts in `bin/` are on `$PATH`. Notable ones:
 
 ### Runtime Version Management
 
-This machine has mise, asdf, and nodenv installed. `085-versions.zsh` lazy-inits nodenv. Remaining asdf/nodenv/pyenv references are being phased out in favor of mise (see plans).
+This machine uses mise as its sole version manager.
 
 ## Future Work
 
