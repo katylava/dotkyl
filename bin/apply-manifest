@@ -5,100 +5,85 @@
 # Task behavior matrix:
 #   check passes       → skip silently
 #   run only           → auto-execute
-#   run + notes        → print notes, confirm, then run
-#   notes only         → print notes (manual action needed)
+#   run + prompt       → print prompt, confirm, then run
+#   prompt only        → print prompt (manual action needed)
 #
 
-local dotkyl="${0:A:h:h}"  # ${0:A:h:h} = absolute path to this script's grandparent dir
-local manifest="$dotkyl/manifest.toml"
+local DOTKYL="${0:A:h:h}"  # ${0:A:h:h} = absolute path to this script's grandparent dir
+local MANIFEST="$DOTKYL/manifest.toml"
+local DOTKYL_HOST=$("$DOTKYL/bin/get-host")
 
-if [[ ! -f "$manifest" ]]; then
-    print "error: $manifest not found" >&2
+if [[ ! -f "$MANIFEST" ]]; then
+    print "error: $MANIFEST not found" >&2
     exit 1
 fi
 
-# Helper: read a field from task $1, field path $2
-_tf() { yq -p toml -oy ".task[$1].$2" "$manifest" }
+local failed=0
+local summary=""
 
-# Get semantic host name for this machine
-local host
-host=$("$dotkyl/bin/get-host") || exit 1
+# Single yq call: filter tasks for this host, drop the hosts field
+local tasks=$(yq -p toml -oy \
+    "[.task[] | select(.hosts == null or .hosts[] == \"$DOTKYL_HOST\") | del(.hosts)]" \
+    "$MANIFEST")
 
-local count=$(yq -p toml -oy '.task | length' "$manifest")
+# --- Task handlers ---
 
-if [[ "$count" -eq 0 ]]; then
-    print "No tasks defined in manifest.toml"
-    exit 0
-fi
+check_ok() {
+    local name=$1 cmd=$2
+    [[ -n "$cmd" ]] && eval "$cmd" &>/dev/null && summary+="  ☑ ❬$name❭\n"
+}
 
-local skipped=0 ran=0 noted=0 failed=0
+note() {
+    local name=$1 prompt=$2
+    summary+="  → ❬$name❭ $prompt\n"
+}
 
+run_task() {
+    local name=$1 cmd=$2
+    if eval "$cmd" &>/dev/null; then
+        summary+="  ✓ ❬$name❭\n"
+    else
+        summary+="  ✗ ❬$name❭\n"
+        (( failed++ ))
+    fi
+}
+
+confirm_run() {
+    local name=$1 cmd=$2 prompt=$3
+    print "  $prompt"
+    printf "  Run now? [y/N] "
+    read -q reply || true
+    print  # newline after read -q
+    if [[ "$reply" == "y" ]]; then
+        run_task "$name" "$cmd"
+    else
+        summary+="  - ❬$name❭ (skipped)\n"
+    fi
+}
+
+process_task() {
+    local idx=$1
+    # Load task fields as shell variables in one yq call:
+    #   name, check, run, prompt — missing fields default to ""
+    local name check run prompt
+    eval "$(echo "$tasks" | yq -o shell \
+        ".[$idx] | .check = (.check // \"\") | .run = (.run // \"\") | .prompt = (.prompt // \"\")")"
+
+    if check_ok "$name" "$check"; then return; fi
+    if [[ -n "$prompt" && -z "$run" ]]; then note "$name" "$prompt"; return; fi
+    if [[ -n "$run" && -n "$prompt" ]]; then confirm_run "$name" "$run" "$prompt"; return; fi
+    if [[ -n "$run" ]]; then run_task "$name" "$run"; return; fi
+}
+
+# --- Process tasks ---
+
+local count=$(echo "$tasks" | yq '. | length')
 for (( i = 0; i < count; i++ )); do
-    local t_name=$(_tf $i 'name')
-    local t_check=$(_tf $i 'check // ""')
-    local t_run=$(_tf $i 'run // ""')
-    local t_notes=$(_tf $i 'notes // ""')
-
-    # Skip tasks not for this host
-    local t_host_count=$(_tf $i 'hosts | length')
-    if [[ "$t_host_count" -gt 0 ]]; then
-        local t_match=$(_tf $i "hosts[] | select(. == \"$host\")")
-        if [[ -z "$t_match" ]]; then
-            (( skipped++ ))
-            continue
-        fi
-    fi
-
-    # Run check — if it passes, skip silently
-    if [[ -n "$t_check" ]] && eval "$t_check" &>/dev/null; then
-        (( skipped++ ))
-        continue
-    fi
-
-    # notes only → print notes, nothing to run
-    if [[ -n "$t_notes" && -z "$t_run" ]]; then
-        print "\n→ $t_name"
-        print "  $t_notes"
-        (( noted++ ))
-        continue
-    fi
-
-    # run + notes → print notes, confirm, then run
-    if [[ -n "$t_run" && -n "$t_notes" ]]; then
-        print "\n→ $t_name"
-        print "  $t_notes"
-        printf "  Run now? [y/N] "
-        read -q reply || true
-        print  # newline after read -q
-        if [[ "$reply" == "y" ]]; then
-            if eval "$t_run"; then
-                (( ran++ ))
-            else
-                print "  ✗ failed" >&2
-                (( failed++ ))
-            fi
-        else
-            (( noted++ ))
-        fi
-        continue
-    fi
-
-    # run only → auto-execute
-    if [[ -n "$t_run" ]]; then
-        print "\n→ $t_name"
-        if eval "$t_run"; then
-            print "  ✓ done"
-            (( ran++ ))
-        else
-            print "  ✗ failed" >&2
-            (( failed++ ))
-        fi
-        continue
-    fi
+    process_task $i
 done
 
-# Summary
-print "\n${ran} ran, ${noted} noted, ${skipped} skipped, ${failed} failed"
+print "\n==> Summary"
+print "$summary"
 
 if [[ "$failed" -gt 0 ]]; then
     exit 1
