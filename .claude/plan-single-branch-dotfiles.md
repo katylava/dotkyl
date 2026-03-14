@@ -67,7 +67,7 @@ private/
 
 ### How the main repo uses it
 
-The zshrc loader and `bin/setup-symlinks` check both locations. The private repo's files are
+The zshrc loader and `bin/setup-dotkyl` check both locations. The private repo's files are
 treated identically to the main repo's files — same host-suffix convention, same numbering, same
 symlink logic.
 
@@ -85,7 +85,7 @@ done
 unset _host
 ```
 
-**`bin/setup-symlinks`** — processes `home/` from both repos.
+**`bin/setup-dotkyl`** — processes `home/` from both repos.
 
 ### tasks.toml entry
 
@@ -134,8 +134,8 @@ chmod +x ~/.dotkyl/.git/hooks/post-merge
 
 [[task]]
 name = "Dotfile symlinks"
-check = "bin/check-symlinks"
-run = "bin/setup-symlinks"
+check = "bin/check-dotkyl-symlinks"
+run = "bin/setup-dotkyl"
 
 [[task]]
 name = "Private dotfiles repo"
@@ -210,12 +210,12 @@ Brewfile.personal   # personal only
 Prints the semantic host name. Used by shell commands in `tasks.toml`. Implemented as a zsh
 script using `yq -p toml` to read `tasks.toml`.
 
-### bin/setup-symlinks
+### bin/setup-dotkyl
 
 Replaces `bin/setup-dotfiles`. Symlinks `home/*` into `~/` and `home/config/*` into `~/.config/`
 from both the main repo and `private/`. Idempotent (`ln -sf`).
 
-### bin/check-symlinks
+### bin/check-dotkyl-symlinks
 
 Returns exit 0 if all expected symlinks from both repos exist and point to the right place.
 
@@ -396,7 +396,7 @@ mise run install
    software, migrations, and macOS defaults.
 
 6. **Write `bin/bootstrap`**, **`bin/run-tasks`**, **`bin/get-host`**,
-   **`bin/setup-symlinks`**, **`bin/check-symlinks`**.
+   **`bin/setup-dotkyl`**, **`bin/check-dotkyl-symlinks`**.
 
 7. **Add `mise.toml`** with the `install` task.
 

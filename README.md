@@ -22,7 +22,7 @@ many.
 
 ### /home
 
-Actual dot files, without the dot. `bin/setup-dotfiles` symlinks them to home
+Actual dot files, without the dot. `bin/setup-dotkyl` symlinks them to home
 dir (with the dot).
 
 ### /iterm
@@ -39,7 +39,7 @@ Files that are sourced by `~/.zshrc`. Coolest thing in here is
 Neovim configuration -- init.vim plus some custom syntax and colors. Also
 vim-plug.
 
-`bin/setup-dotfiles` symlinks this directory to `~/.config/nvim`.
+`bin/setup-dotkyl` symlinks this directory to `~/.config/nvim`.
 
 If you looked at my init.vim, yeah I know, I have too many plugins. Half of
 them I don't even use. I'm a plugin hoarder. We could make a TV show about
@@ -59,9 +59,9 @@ These installation instructions are for my future self. But I guess they could
 be useful if you decided to set up your dotfiles like mine.
 
 ```
-cd ~  # this is important or setup-dotfiles won't work
+cd ~  # this is important or setup-dotkyl won't work
 git clone git@github.com:katylava/dotkyl.git .dotkyl
-.dotkyl/bin/setup-dotfiles
+.dotkyl/bin/setup-dotkyl
 cp path/to/000-private.zsh .dotkyl/lib/
 ```
 
