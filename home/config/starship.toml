@@ -135,7 +135,7 @@ $character
 [python]
     symbol = "\ue606 "
     style = "fg:black bg:lang"
-    format = '[](bg:lang fg:separator)[ ${symbol}${pyenv_prefix}(${version})([ $virtualenv](fg:red bg:lang)) ]($style)[](bg:separator fg:lang)'
+    format = '[](bg:lang fg:separator)[ ${symbol}(${version})([ $virtualenv](fg:red bg:lang)) ]($style)[](bg:separator fg:lang)'
     version_format = "${raw}"
 
 [status]

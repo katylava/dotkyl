@@ -1,5 +1,4 @@
-let g:python_host_prog='/Users/kyl/.asdf/shims/python'
-let g:python3_host_prog='/Users/kyl/.asdf/shims/python'
+let g:python3_host_prog = exepath('python')
 
 call plug#begin('~/.config/nvim/plugged')
 
