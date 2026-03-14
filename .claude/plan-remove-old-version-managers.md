@@ -59,7 +59,7 @@ shims PATH entry in `lib/001-path.zsh` and the nodenv lazy-init hook in `lib/085
 - **neovim Python host is the highest-risk change.** Run `:checkhealth provider` before and after.
 - **Branch strategy:** All changes go on the single branch (see plan-single-branch-dotfiles.md).
   Most changes affect shared files (both machines). The `crontab.txt` change is work-only — add
-  it to a `crontab.work.txt` or handle via a `tasks.toml` entry with `hosts = ["work"]`.
+  it to a `crontab.work.txt` or handle via a `manifest.toml` entry with `hosts = ["work"]`.
 
 ## Suggested Order
 

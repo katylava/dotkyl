@@ -4,7 +4,7 @@
 
 Replace the two-branch (`main`/`orm`) model with a single branch. Per-host differences are handled
 by file naming conventions. Everything that needs to reach a desired state — symlinks, brew
-packages, software installs, migrations, macOS defaults — is a `[[task]]` in `tasks.toml`.
+packages, software installs, migrations, macOS defaults — is a `[[task]]` in `manifest.toml`.
 `mise run install` is idempotent and runs automatically on every `git pull` via a post-merge hook.
 
 Private config (secrets, internal aliases, org-specific details) lives in a separate private git
@@ -25,7 +25,7 @@ Every task follows the same pattern:
 
 ## Host Identity
 
-A `[hosts]` section in `tasks.toml` maps real hostnames to semantic names:
+A `[hosts]` section in `manifest.toml` maps real hostnames to semantic names:
 
 ```toml
 [hosts]
@@ -37,7 +37,7 @@ A `[hosts]` section in `tasks.toml` maps real hostnames to semantic names:
 the script exits with a clear error telling you to add it. No file to create on each machine —
 fresh clone + `mise run install` just works.
 
-When you get a new machine, add its hostname to `tasks.toml` and commit.
+When you get a new machine, add its hostname to `manifest.toml` and commit.
 
 ## Private Config
 
@@ -47,7 +47,7 @@ org-specific URLs, VPN config, etc.
 
 ### Private repo structure
 
-Mirrors the main repo — `lib/` and `home/` only. No `tasks.toml`.
+Mirrors the main repo — `lib/` and `home/` only. No `manifest.toml`.
 
 ```
 dotkyl-private/
@@ -87,7 +87,7 @@ unset _host
 
 **`bin/setup-dotkyl`** — processes `home/` from both repos.
 
-### tasks.toml entry
+### manifest.toml entry
 
 The private repo is cloned by a task:
 
@@ -111,12 +111,12 @@ lib/070-kubernetes--work.zsh     # work only
 lib/080-icloud--personal.zsh     # personal only
 ```
 
-## tasks.toml
+## manifest.toml
 
 One file, one format, everything that needs to reach a desired state.
 
 ```toml
-# tasks.toml
+# manifest.toml
 
 [hosts]
 "MacBook-Pro-3.local" = "work"
@@ -207,8 +207,8 @@ Brewfile.personal   # personal only
 
 ### bin/get-host
 
-Prints the semantic host name. Used by shell commands in `tasks.toml`. Implemented as a zsh
-script using `yq -p toml` to read `tasks.toml`.
+Prints the semantic host name. Used by shell commands in `manifest.toml`. Implemented as a zsh
+script using `yq -p toml` to read `manifest.toml`.
 
 ### bin/setup-dotkyl
 
@@ -221,7 +221,7 @@ Returns exit 0 if all expected symlinks from both repos exist and point to the r
 
 ## Task Runner Script
 
-`bin/run-tasks` — reads `tasks.toml` via `yq -p toml`, processes each entry for the current host.
+`bin/run-tasks` — reads `manifest.toml` via `yq -p toml`, processes each entry for the current host.
 Implemented as a zsh script. Same core logic: skip tasks not for this host, run check, print
 notes, prompt if both run and notes are present.
 
@@ -272,13 +272,13 @@ git pull
 `Brewfile.shared`, etc.).
 
 **Change applies to one machine only** — edit or create a host-specific file
-(`lib/070-k8s--work.zsh`, `Brewfile.work`, etc.) or add a `tasks.toml` entry with `hosts = [...]`.
+(`lib/070-k8s--work.zsh`, `Brewfile.work`, etc.) or add a `manifest.toml` entry with `hosts = [...]`.
 
 **Private change (sensitive content)** — edit files in `~/.dotkyl/private/`, commit and push
 to `dotkyl-private`. Pull on other machine: `cd ~/.dotkyl/private && git pull`.
 
 **Change you want on both machines but only have on one yet** — commit as shared. On the machine
-where it's not ready, `tasks.toml` surfaces the reminder until you act on it.
+where it's not ready, `manifest.toml` surfaces the reminder until you act on it.
 
 ### Specific scenarios
 
@@ -291,7 +291,7 @@ git add Brewfile.shared && git commit -m "brew: add ripgrep" && git push
 
 **Adding a task (software install, migration, macOS default, etc.):**
 ```zsh
-git add tasks.toml && git commit -m "tasks: add espanso" && git push
+git add manifest.toml && git commit -m "tasks: add espanso" && git push
 # other machine: git pull → task runs automatically or prints reminder
 ```
 
@@ -361,13 +361,13 @@ mise run install
 
 ### After bootstrap
 
-Add the new machine's hostname to `[hosts]` in `tasks.toml`, commit and push, then re-run
+Add the new machine's hostname to `[hosts]` in `manifest.toml`, commit and push, then re-run
 `mise run install`:
 
 ```zsh
 hostname  # note this value
-# edit tasks.toml: add "new-machine.local" = "work"
-git add tasks.toml && git commit -m "hosts: add new machine" && git push
+# edit manifest.toml: add "new-machine.local" = "work"
+git add manifest.toml && git commit -m "hosts: add new machine" && git push
 mise run install
 ```
 
@@ -392,7 +392,7 @@ mise run install
    ```
    Split shared packages into `Brewfile.shared`.
 
-5. **Create `tasks.toml`** — add `[hosts]` mapping, all infrastructure tasks, and entries for
+5. **Create `manifest.toml`** — add `[hosts]` mapping, all infrastructure tasks, and entries for
    software, migrations, and macOS defaults.
 
 6. **Write `bin/bootstrap`**, **`bin/run-tasks`**, **`bin/get-host`**,
