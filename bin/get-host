@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+#
+# Print the semantic host name (e.g. "personal", "work") for this machine.
+# Looks up $(hostname) in tasks.toml [hosts].
+#
+
+local manifest="${0:A:h}/../tasks.toml"  # ${0:A:h} = absolute path to this script's directory
+local host
+
+host=$(yq -p toml ".hosts.\"$(hostname)\"" "$manifest" 2>/dev/null)
+
+if [[ -z "$host" || "$host" == "null" ]]; then
+    print "⚠ Hostname '$(hostname)' not in tasks.toml [hosts]" >&2
+    return 1
+fi
+
+print "$host"
