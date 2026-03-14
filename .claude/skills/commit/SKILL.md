@@ -65,12 +65,9 @@ git: Ignore .claude/settings.local.json
 
 ## Step 5: Confirm with the user
 
-Before committing, show:
-1. The files that will be staged
-2. The full commit message
+Before committing, confirm with the user using `AskUserQuestion`. Include the files and commit message directly in the question text so they're visible inside the prompt UI (text output above the prompt gets cut off).
 
-Then use the `AskUserQuestion` tool to confirm:
-- Question: "Commit these changes?"
+- Question: Include the file list and full commit message in the question string, e.g. "Commit `lib/001-path.zsh`?\n\n`zsh: Add ~/.local/bin to PATH`"
 - Header: "Commit"
 - Options:
   - **Yes** — commit only
