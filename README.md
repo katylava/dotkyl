@@ -31,8 +31,8 @@ by `mise run install`.
 
 ### /iterm
 
-iTerm2 dynamic profiles. Symlinked to where iTerm2 looks for such things by
-`mise run install`.
+iTerm2 themes (dynamic profiles). Symlinked to where iTerm2 looks for such
+things by `mise run install`.
 
 ### /lib
 
@@ -131,3 +131,55 @@ host. Brew packages follow the same pattern with `setup/Brewfile.shared`,
 Secrets and org-specific config live in a separate private repo, cloned to
 `~/.dotkyl/private/`. Its `lib/` and `home/` directories are loaded and
 symlinked alongside those from the main repo.
+
+
+## Claude
+
+*This section was also written by Claude.*
+
+A lot of the recent work in this repo was done collaboratively with
+[Claude Code](https://claude.ai/code) (Anthropic's CLI agent). Commits with
+a `Co-Authored-By: Claude` trailer were pair-programmed in this way — Claude
+proposes changes, the repo owner reviews and approves each commit.
+
+Claude has project-level context via `CLAUDE.md` (repo conventions, architecture,
+file layout) and persistent memory across sessions (user preferences, project
+state, feedback). It also has two custom skills for this repo:
+
+- **commit** — creates commits following the repo's `<area>: <description>`
+  format, stages files explicitly, and confirms the message before committing.
+- **write-script** — writes or refactors shell scripts in `bin/`, applying the
+  repo's style conventions.
+
+Renovation plans live in `.claude/plan-*.md`. These are living documents that
+Claude and the repo owner work through together — Claude updates them as work
+is completed and decisions change.
+
+*A note from the human.*
+
+I don't let Claude run wild here. I use it to help me brainstorm and write and
+refine plans. Lot's of refining. Almost every action and every change requires
+my approval (by which I mean I haven't auto-approved much). I don't commit
+anything I don't understand (though sometimes it has to explain things to me).
+
+Oh, I guess that's not entirely true. There a few things I just let Claude do
+without thinking much:
+
+* The query_roam.py script was like 80% vibe coded. I needed results fast. I
+  hope to refactor someday.
+* The palette switching in lib/002-colors.zsh was 100% written by Claude. I was
+  in a hurry to work outside to protect a feral kitten from a mean old tomcat
+  (!), and I needed light mode to work reliably for that. As part of that it
+  also wrote the iTerm tomorrow-light profiles. Happy to let it write iTerm
+  profiles for me in the future because it's so much easier than doing it
+  through the iTerm settings and exporting them.
+* When I'm ready to do the neovim vimscript->lua conversion, I think Claude
+  will be doing a lot work that I don't understand.
+
+There's other stuff in here that I didn't write and don't fully understand, but
+it was written by other humans in the pre-LLM era.
+
+_(!) The kitten has since since been trapped and as I'm writing this on March
+15, 2026, she is scheduled to be spayed tomorrow, so don't worry for her!_
+
+<img src="https://lh3.googleusercontent.com/pw/AP1GczMKU0sKJuuHlJ4EVSJt9RUlVATfn4QRRsROqlSA_nsVzPGZQePXqw8IYYsBIVet6E3X229Adz8NwH4GopE-mWNaQ2HbrfdJQRfQR0kDPZZjSyF9eR29mp78bBTvu3z3MwZgO2ZS0W_eDfEv7_A0Bttc=w1186-h1576-s-no-gm" alt="Tempo" width="400">
