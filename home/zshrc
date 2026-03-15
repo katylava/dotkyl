@@ -10,15 +10,14 @@ export LESSCHARSET="utf-8"
 
 setopt autocd
 
-local _host=$($DOTKYL/setup/get-host 2>/dev/null)
+export DOTKYL_HOST=$($DOTKYL/bin/get-host 2>/dev/null)
 for f in $DOTKYL/lib/*.zsh $DOTKYL/private/lib/*.zsh; do
     # skip host-specific files (name--host.zsh) not for this host
-    if [[ "$f" == *--*.zsh && "$f" != *--$_host.zsh ]]; then
+    if [[ "$f" == *--*.zsh && "$f" != *--$DOTKYL_HOST.zsh ]]; then
         continue
     fi
     . $f
 done
-unset _host
 
 # If I move this to lib/installed, it will reappear here on upgrade
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

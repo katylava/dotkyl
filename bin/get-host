@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#
+# Print the semantic host name (e.g. "personal", "work") for this machine.
+#
+
+case "$(hostname)" in
+    hyperion.lan)    print personal ;;
+    # WORK-HOSTNAME.*) print work ;;
+    *) print "unknown host: $(hostname)" >&2; return 1 ;;
+esac
