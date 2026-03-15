@@ -4,7 +4,7 @@ Execute plans in this order. Each plan notes what it depends on and what it affe
 
 ## 1. plan-single-branch-dotfiles.md
 **Foundation — do this first.**
-Establishes the single-branch model, `manifest.toml`, `dotkyl-private` repo, bootstrap script, and
+Establishes the single-branch model, `mise.toml`, `dotkyl-private` repo, bootstrap script, and
 host-aware zshrc loader. Everything else assumes this is in place.
 
 ## 2. plan-audit-dotfiles.md
