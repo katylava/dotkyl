@@ -1,3 +1,3 @@
 [tasks.install]
 description = "Idempotent: run all tasks (symlinks, brew, software, defaults)"
-run = "bin/apply-manifest"
+run = "setup/apply-manifest"

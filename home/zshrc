@@ -10,7 +10,7 @@ export LESSCHARSET="utf-8"
 
 setopt autocd
 
-local _host=$($DOTKYL/bin/get-host 2>/dev/null)
+local _host=$($DOTKYL/setup/get-host 2>/dev/null)
 for f in $DOTKYL/lib/*.zsh $DOTKYL/private/lib/*.zsh; do
     # skip host-specific files (name--host.zsh) not for this host
     if [[ "$f" == *--*.zsh && "$f" != *--$_host.zsh ]]; then
