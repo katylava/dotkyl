@@ -7,3 +7,4 @@ home/urlwatch/cache.db
 nvim/autoload/gocomplete.vim
 nvim/ftplugin/go/gocomplete.vim
 .claude/settings.local.json
+.claude/plans/
