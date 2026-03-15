@@ -110,7 +110,7 @@ personal = "Tomorrow Dark Mod Air"
 work = "Tomorrow Dark Mod"
 ```
 
-This depends on `bin/get-host` from plan-single-branch-dotfiles.md. Until that plan is done,
+This depends on `setup/get-host` from plan-single-branch-dotfiles.md. Until that plan is done,
 the current `ITERM_DARK_PROFILE` / `ITERM_LIGHT_PROFILE` approach works as a bridge.
 
 ## Commands
