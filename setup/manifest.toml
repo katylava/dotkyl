@@ -19,37 +19,37 @@ name = "Crontab"
 check = "crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null"
 run = "crontab crontab.txt"
 
-# --- Test tasks (remove these) ---
-
-[[task]]
-name = "Test: check passes (should skip)"
-check = "true"
-run = "echo 'you should not see this'"
-
-[[task]]
-name = "Test: run only (auto-execute)"
-run = "echo 'auto-ran successfully'"
-
-[[task]]
-name = "Test: prompt only"
-prompt = "This is a manual reminder, no run command"
-
-[[task]]
-name = "Test: run + prompt (confirm prompt)"
-run = "echo 'ran after confirmation'"
-prompt = "This task has context you should read first"
-
-[[task]]
-name = "Test: run fails"
-run = "false"
-
-[[task]]
-name = "Test: work-only (should skip on personal)"
-hosts = ["work"]
-run = "echo 'work task ran'"
-prompt = "This should only appear on work machines"
-
-[[task]]
-name = "Test: personal-only"
-hosts = ["personal"]
-run = "echo 'personal task ran'"
+# --- Test tasks (uncomment to test apply-manifest) ---
+#
+# [[task]]
+# name = "Test: check passes (should skip)"
+# check = "true"
+# run = "echo 'you should not see this'"
+#
+# [[task]]
+# name = "Test: run only (auto-execute)"
+# run = "echo 'auto-ran successfully'"
+#
+# [[task]]
+# name = "Test: prompt only"
+# prompt = "This is a manual reminder, no run command"
+#
+# [[task]]
+# name = "Test: run + prompt (confirm prompt)"
+# run = "echo 'ran after confirmation'"
+# prompt = "This task has context you should read first"
+#
+# [[task]]
+# name = "Test: run fails"
+# run = "false"
+#
+# [[task]]
+# name = "Test: work-only (should skip on personal)"
+# hosts = ["work"]
+# run = "echo 'work task ran'"
+# prompt = "This should only appear on work machines"
+#
+# [[task]]
+# name = "Test: personal-only"
+# hosts = ["personal"]
+# run = "echo 'personal task ran'"
