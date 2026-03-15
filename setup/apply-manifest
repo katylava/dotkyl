@@ -10,8 +10,8 @@
 #
 
 local DOTKYL="${0:A:h:h}"  # ${0:A:h:h} = absolute path to this script's grandparent dir
-local MANIFEST="$DOTKYL/manifest.toml"
-local DOTKYL_HOST=$("$DOTKYL/bin/get-host")
+local MANIFEST="$DOTKYL/setup/manifest.toml"
+local DOTKYL_HOST=$("$DOTKYL/setup/get-host")
 
 if [[ ! -f "$MANIFEST" ]]; then
     print "error: $MANIFEST not found" >&2

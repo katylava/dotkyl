@@ -6,13 +6,13 @@
 
 [[task]]
 name = "Git post-merge hook"
-check = "test -x .git/hooks/post-merge && diff -q hooks/post-merge .git/hooks/post-merge >/dev/null"
-run = "cp hooks/post-merge .git/hooks/post-merge && chmod +x .git/hooks/post-merge"
+check = "test -x .git/hooks/post-merge && diff -q setup/hooks/post-merge .git/hooks/post-merge >/dev/null"
+run = "cp setup/hooks/post-merge .git/hooks/post-merge && chmod +x .git/hooks/post-merge"
 
 [[task]]
 name = "Dotfile symlinks"
-check = "bin/check-dotkyl-symlinks"
-run = "bin/setup-dotkyl-symlinks"
+check = "setup/check-symlinks"
+run = "setup/setup-symlinks"
 
 [[task]]
 name = "Crontab"
