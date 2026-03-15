@@ -18,8 +18,8 @@ Every task follows the same pattern:
 |---|---|
 | `check` passes | skip silently |
 | `run` only | auto-execute |
-| `run` + `notes` | print notes, confirm, then run |
-| `notes` only | print notes, nothing to run |
+| `run` + `prompt` | print notes, confirm, then run |
+| `prompt` only | print notes, nothing to run |
 
 `hosts` is optional — omit it and the task runs on all hosts. Specify it to restrict.
 
@@ -33,7 +33,7 @@ A `[hosts]` section in `manifest.toml` maps real hostnames to semantic names:
 "Kyls-MacBook-Air.local" = "personal"
 ```
 
-`bin/run-tasks` calls `hostname` and looks it up here. If the hostname isn't found,
+`setup/apply-manifest` calls `hostname` and looks it up here. If the hostname isn't found,
 the script exits with a clear error telling you to add it. No file to create on each machine —
 fresh clone + `mise run install` just works.
 
@@ -67,14 +67,14 @@ private/
 
 ### How the main repo uses it
 
-The zshrc loader and `bin/setup-dotkyl` check both locations. The private repo's files are
+The zshrc loader and `setup/setup-symlinks` check both locations. The private repo's files are
 treated identically to the main repo's files — same host-suffix convention, same numbering, same
 symlink logic.
 
 **zshrc loading** — iterates both `lib/` directories, skipping host-specific files not for this host:
 
 ```zsh
-local _host=$($DOTKYL/bin/get-host 2>/dev/null)
+local _host=$($DOTKYL/setup/get-host 2>/dev/null)
 for f in $DOTKYL/lib/*.zsh $DOTKYL/private/lib/*.zsh; do
     # skip host-specific files (name--host.zsh) not for this host
     if [[ "$f" == *--*.zsh && "$f" != *--$_host.zsh ]]; then
@@ -85,7 +85,7 @@ done
 unset _host
 ```
 
-**`bin/setup-dotkyl`** — processes `home/` from both repos.
+**`setup/setup-symlinks`** — processes `home/` from both repos.
 
 ### manifest.toml entry
 
@@ -126,16 +126,18 @@ One file, one format, everything that needs to reach a desired state.
 
 [[task]]
 name = "Git post-merge hook"
-check = "test -x ~/.dotkyl/.git/hooks/post-merge"
-run = """
-cp ~/.dotkyl/hooks/post-merge ~/.dotkyl/.git/hooks/post-merge
-chmod +x ~/.dotkyl/.git/hooks/post-merge
-"""
+check = "test -x .git/hooks/post-merge && diff -q setup/hooks/post-merge .git/hooks/post-merge >/dev/null"
+run = "cp setup/hooks/post-merge .git/hooks/post-merge && chmod +x .git/hooks/post-merge"
 
 [[task]]
 name = "Dotfile symlinks"
-check = "bin/check-dotkyl-symlinks"
-run = "bin/setup-dotkyl"
+check = "setup/check-symlinks"
+run = "setup/setup-symlinks"
+
+[[task]]
+name = "Crontab"
+check = "crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null"
+run = "crontab crontab.txt"
 
 [[task]]
 name = "Private dotfiles repo"
@@ -146,11 +148,11 @@ run = "git clone git@github.com:<user>/dotkyl-private.git ~/.dotkyl/private"
 name = "Brew packages"
 check = """
 brew bundle check --file Brewfile.shared &&
-brew bundle check --file Brewfile.$(bin/get-host)
+brew bundle check --file Brewfile.$(setup/get-host)
 """
 run = """
 brew bundle --file Brewfile.shared
-brew bundle --file Brewfile.$(bin/get-host)
+brew bundle --file Brewfile.$(setup/get-host)
 """
 
 # --- Software (auto-install) ---
@@ -205,23 +207,23 @@ Brewfile.work       # work only
 Brewfile.personal   # personal only
 ```
 
-### bin/get-host
+### setup/get-host
 
 Prints the semantic host name. Used by shell commands in `manifest.toml`. Implemented as a zsh
 script using `yq -p toml` to read `manifest.toml`.
 
-### bin/setup-dotkyl
+### setup/setup-symlinks
 
-Replaces `bin/setup-dotfiles`. Symlinks `home/*` into `~/` and `home/config/*` into `~/.config/`
+Replaces the old `bin/setup-dotfiles`. Symlinks `home/*` into `~/` and `home/config/*` into `~/.config/`
 from both the main repo and `private/`. Idempotent (`ln -sf`).
 
-### bin/check-dotkyl-symlinks
+### setup/check-symlinks
 
 Returns exit 0 if all expected symlinks from both repos exist and point to the right place.
 
 ## Task Runner Script
 
-`bin/run-tasks` — reads `manifest.toml` via `yq -p toml`, processes each entry for the current host.
+`setup/apply-manifest` — reads `manifest.toml` via `yq -p toml`, processes each entry for the current host.
 Implemented as a zsh script. Same core logic: skip tasks not for this host, run check, print
 notes, prompt if both run and notes are present.
 
@@ -230,16 +232,16 @@ notes, prompt if both run and notes are present.
 ```toml
 [tasks.install]
 description = "Idempotent: run all tasks (symlinks, brew, software, defaults)"
-run = "bin/run-tasks"
+run = "setup/apply-manifest"
 ```
 
 ## Git Hook
 
-Git hooks are not cloned with the repo. The hook script is stored in `hooks/post-merge` and
+Git hooks are not cloned with the repo. The hook script is stored in `setup/hooks/post-merge` and
 installed by a task on first `mise run install`. All subsequent `git pull`s trigger it
 automatically.
 
-### hooks/post-merge (tracked by git)
+### setup/hooks/post-merge (tracked by git)
 
 ```zsh
 #!/usr/bin/env zsh
@@ -395,12 +397,12 @@ mise run install
 5. **Create `manifest.toml`** — add `[hosts]` mapping, all infrastructure tasks, and entries for
    software, migrations, and macOS defaults.
 
-6. **Write `bin/bootstrap`**, **`bin/run-tasks`**, **`bin/get-host`**,
-   **`bin/setup-dotkyl`**, **`bin/check-dotkyl-symlinks`**.
+6. **Write `bin/bootstrap`**, **`setup/apply-manifest`**, **`setup/get-host`**,
+   **`setup/setup-symlinks`**, **`setup/check-symlinks`**.
 
 7. **Add `mise.toml`** with the `install` task.
 
-8. **Add `hooks/post-merge`**.
+8. **Add `setup/hooks/post-merge`**.
 
 9. **Update `home/zshrc`** to use the host-aware loader (both repos).
 
