@@ -1,0 +1,3 @@
+brew "stern"
+cask "gcloud-cli"
+cask "jordanbaird-ice"
