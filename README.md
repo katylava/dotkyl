@@ -69,13 +69,48 @@ re-figure out on clean install.
 
 ## Install
 
-These installation instructions are for my future self. But I guess they could
-be useful if you decided to set up your dotfiles like mine... unfortunately, I
-have revamped this repo recently and haven't yet created the bootstrapping
-script, so I don't even know the installation steps right now. Need to
-implement the plan in .claude/plan-bootstrap.md first.
+These installation instructions are for my future self.
 
-Neovim plugins: open nvim and do `:PlugInstall`.
+### Prerequisites (manual, in order)
+
+1. **Xcode Command Line Tools** — provides `git`, `make`, etc.:
+   ```zsh
+   xcode-select --install
+   ```
+2. **Homebrew**:
+   ```zsh
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+3. **1Password app** — install from https://1password.com and sign in.
+4. **mise and 1Password CLI**:
+   ```zsh
+   brew install mise 1password-cli
+   ```
+
+### Bootstrap
+
+Run the bootstrap script (fetches via curl before the repo is cloned):
+
+```zsh
+curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/bin/bootstrap | zsh
+```
+
+Or if you've already cloned the repo:
+
+```zsh
+cd ~/.dotkyl
+bin/bootstrap
+```
+
+This will generate an SSH key, register it with GitHub via 1Password, clone the
+repos, and run `mise run install`.
+
+### After bootstrap
+
+1. Add your machine's hostname to `bin/get-host`
+2. Commit and push
+3. Re-run `mise run install`
+4. Open nvim and run `:PlugInstall`
 
 
 ## How It Works

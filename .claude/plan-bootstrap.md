@@ -1,6 +1,6 @@
-# Plan: Fresh Machine Bootstrap
+# Plan: Fresh Machine Bootstrap — ✅ DONE
 
-Low priority — not needed until a new computer is acquired.
+Implemented: `bin/bootstrap` script, install instructions in README.
 
 ## Goal
 
