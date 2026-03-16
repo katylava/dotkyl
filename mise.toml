@@ -9,9 +9,9 @@ test -x .git/hooks/post-merge && diff -q setup/hooks/post-merge .git/hooks/post-
 [tasks.symlinks]
 description = "Symlink dotfiles into ~/"
 run = """
-setup/check-symlinks \
+setup/manage-symlinks --dry-run >/dev/null 2>&1 \
   && echo "⏭️ already ok" \
-  || { setup/setup-symlinks && echo "✅ set up"; }
+  || { setup/manage-symlinks && echo "✅ set up"; }
 """
 
 [tasks.crontab]

@@ -1,0 +1,13 @@
+- source_glob: home/*
+  target_dir: "~"
+  prefix: .
+  excludes: [config]
+
+- source_glob: home/config/*
+  target_dir: ~/.config
+
+- source_glob: nvim
+  target_dir: ~/.config
+
+- source_glob: iterm/*.json
+  target_dir: ~/Library/Application Support/iTerm2/DynamicProfiles
