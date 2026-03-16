@@ -31,43 +31,6 @@ Plug 'ryanoasis/vim-devicons' " icons for filetypes
 
 call plug#end()
 
-autocmd BufRead *.gs        set filetype=javascript
-autocmd BufRead *.md        set filetype=markdown
-autocmd BufRead *.sql       set filetype=sql
-autocmd BufRead *.txt       set filetype=markdown
-autocmd BufRead .zsh*       set filetype=sh
-autocmd BufRead .npmrc      set commentstring=#\ %s
-
-autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
-autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
-
-autocmd FileType cfg        set ts=4 sw=4 tw=0 commentstring=#\ %s
-autocmd FileType css        set ts=2 sw=2 tw=0
-autocmd FileType javascript set ts=2 sw=2 tw=120
-autocmd FileType javascript.jsx set ts=2 sw=2 tw=120
-autocmd FileType json       set ts=2 sw=2 foldmethod=syntax ft=json5
-autocmd FileType markdown   set tw=79 ts=2 sw=2 comments=n:>
-autocmd FileType python     set ts=4 sw=4 commentstring=#\ %s foldmethod=indent
-autocmd FileType sql        set commentstring=--\ %s
-autocmd FileType toml       set tw=0
-autocmd FileType yaml       set sw=2 ts=2
-
-" To avoid error 'crontab: temp file must be edited in place'
-autocmd filetype crontab setlocal nobackup nowritebackup
-
-" tabs in python are bad!
-autocmd FileType python	highlight Tabs ctermbg=red guibg=red
-autocmd FileType python match Tabs /^\t+/
-
-" Automatically chmod +x Shell scripts
-autocmd BufWritePost *.sh silent !chmod +x %
-
-" Open file at last edited location
-au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
-
-" Title string
-autocmd BufEnter * let &titlestring = expand("%:t") . ' ∈ ' . FileDir()
-
 " ------------------
 " Theme
 " ------------------
@@ -111,8 +74,6 @@ function! ApplyLight()
         call lightline#update()
     endif
 endfunction
-
-autocmd ColorScheme * hi link htmlLink NONE | hi link htmlItalic NONE
 
 command! Dark call ApplyDark()
 command! Light call ApplyLight()
@@ -242,9 +203,6 @@ function! ShowDocumentation()
   endif
 endfunction
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
@@ -254,14 +212,6 @@ nmap <leader>f  <Plug>(coc-format-selected)
 
 " Formatting whole file
 nmap ,n  <Plug>(coc-format)
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -562,15 +512,3 @@ function! WindowSwapping()
         let s:markedWinNum = -1
     endif
 endfunction
-
-
-" ------------------------------
-" Highlight trailing whitespace
-" ------------------------------
-
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
