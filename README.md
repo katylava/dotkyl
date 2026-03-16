@@ -82,7 +82,10 @@ These installation instructions are for my future self.
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 3. **1Password app** — install from https://1password.com and sign in.
-4. **mise and 1Password CLI**:
+4. **GitHub personal access token** stored in 1Password at
+   `Personal/GitHub Token/credential`, with the `admin:public_key` scope
+   (needed to register SSH keys).
+5. **mise and 1Password CLI**:
    ```zsh
    brew install mise 1password-cli
    ```
