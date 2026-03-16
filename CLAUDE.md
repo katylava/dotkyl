@@ -50,13 +50,13 @@ Files in `lib/` are numbered to control load order:
 
 ### Dotfile Symlinking
 
-Files under `home/` are symlinked into `~/` by `setup/setup-symlinks`. For example, `home/zshrc` becomes `~/.zshrc`, `home/gitignore` becomes `~/.gitignore`.
+Files under `home/` are symlinked into `~/` by `setup/manage-symlinks`. For example, `home/zshrc` becomes `~/.zshrc`, `home/gitignore` becomes `~/.gitignore`.
 
 Subdirectory `home/config/` items are symlinked into `~/.config/`. The nvim config (`nvim/`) is symlinked to `~/.config/nvim`.
 
 ### iTerm2 Dynamic Profiles
 
-iTerm profiles live in `iterm/*.json` and are symlinked into `~/Library/Application Support/iTerm2/DynamicProfiles/` by `setup/setup-symlinks`. Profiles use inheritance via `Dynamic Profile Parent Name`. Host-specific profiles (e.g., `*-air.json`) override font sizes for different screens.
+iTerm profiles live in `iterm/*.json` and are symlinked into `~/Library/Application Support/iTerm2/DynamicProfiles/` by `setup/manage-symlinks`. Profiles use inheritance via `Dynamic Profile Parent Name`. Host-specific profiles (e.g., `*-air.json`) override font sizes for different screens.
 
 ### Palette Switching (`lib/002-colors.zsh`)
 
