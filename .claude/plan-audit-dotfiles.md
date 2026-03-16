@@ -68,15 +68,15 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 **To main repo:**
 1. Confirm no secrets: `grep -i 'token\|secret\|password\|key\|auth' <file>`
 2. Confirm no internal hostnames or org-specific details
-3. Copy to `home/` or `home/config/`, delete original, run `setup/setup-symlinks`, verify, commit
+3. Copy to `home/` or `home/config/`, delete original, run `setup/manage-symlinks`, verify, commit
 
 **To private repo:**
 1. Copy to `~/.dotkyl/private/home/` or `~/.dotkyl/private/lib/`
-2. Delete original, `setup/setup-symlinks` handles it (processes both repos), verify, commit to `dotkyl-private`
+2. Delete original, `setup/manage-symlinks` handles it (processes both repos), verify, commit to `dotkyl-private`
 
-**Partial-directory case** (e.g. `gh/config.yml` without `hosts.yml`): `setup/setup-symlinks`
+**Partial-directory case** (e.g. `gh/config.yml` without `hosts.yml`): `setup/manage-symlinks`
 symlinks whole directories by default. For partial cases, add explicit per-file symlink logic
-to `setup/setup-symlinks`.
+to `setup/manage-symlinks`.
 
 ## Decision Rule
 
