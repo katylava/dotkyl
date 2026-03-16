@@ -31,6 +31,8 @@ function _apply_palette {
         else
             set-iterm-profile "$ITERM_DARK_PROFILE"
         fi
+        # Re-assert tab title after profile switch, since iTerm resets it to the profile name
+        title $ZSH_THEME_TERM_TAB_TITLE_IDLE $ZSH_THEME_TERM_TITLE_IDLE 2>/dev/null
     fi
 }
 
