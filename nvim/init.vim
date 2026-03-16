@@ -1,5 +1,3 @@
-let g:python3_host_prog = exepath('python')
-
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' } " colorscheme
@@ -32,48 +30,6 @@ Plug 'vim-scripts/SyntaxAttr.vim' " get syntax group for highlighting
 Plug 'ryanoasis/vim-devicons' " icons for filetypes
 
 call plug#end()
-
-filetype on
-filetype plugin on
-filetype indent on
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-set binary
-set cmdheight=2 " more space for displaying messages, recommended by coc
-set completeopt=menu,longest,preview
-" set cursorline " this makes vim slower
-set cursorcolumn " highlight current column
-set fileencoding=utf-8 ff=unix " don't set encoding=utf-8... nvim sets it by default
-set fixeol
-" set exrc secure " enable per-directory .vimrc files
-set foldmethod=indent
-set grepprg=ag
-set ignorecase smartcase
-set iskeyword+=-
-set hidden " recommended by coc
-set listchars=space:⋅,tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
-set modeline
-set mouse=a
-set nobackup nowritebackup dir=~/.tmp/nvim
-set noerrorbells visualbell t_vb=
-set nohlsearch incsearch
-set nowrap linebreak
-set number
-set ruler laststatus=2 " one of these ensures each window contains a status line
-set scrolloff=3
-set shortmess+=c " recommended by coc
-set showbreak=↪\
-set signcolumn=yes " recommended by coc
-" set synmaxcol=200 " disable syntax highlight after 200 chars for performance
-set termguicolors " do i need this if $NVIM_TUI_ENABLE_TRUE_COLOR is set?
-set title
-set ts=4 sw=4 ai expandtab
-set ttyfast
-set tw=79 colorcolumn=80,100
-set updatetime=300 " recommended by coc
-set wildignore=.svn,.git,.env,*.bak,*.pyc,*.DS_Store,*.db,venv
-set wildmenu wildmode=list:longest
 
 autocmd BufRead *.gs        set filetype=javascript
 autocmd BufRead *.md        set filetype=markdown
@@ -171,8 +127,6 @@ endif
 " -------------
 " Mappings
 " -------------
-
-:let mapleader='\'
 
 inoremap jk <Esc>
 inoremap kk <Esc>
