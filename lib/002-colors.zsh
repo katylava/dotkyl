@@ -25,15 +25,6 @@ function _apply_palette {
         unset STARSHIP_CONFIG
     fi
     export LS_COLORS="$(vivid generate $VIVID_THEME)"
-    if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-        if [[ "$mode" == "light" ]]; then
-            set-iterm-profile "$ITERM_LIGHT_PROFILE"
-        else
-            set-iterm-profile "$ITERM_DARK_PROFILE"
-        fi
-        # Re-assert tab title after profile switch, since iTerm resets it to the profile name
-        title $ZSH_THEME_TERM_TAB_TITLE_IDLE $ZSH_THEME_TERM_TITLE_IDLE 2>/dev/null
-    fi
 }
 
 function palette {
@@ -52,6 +43,15 @@ function palette {
         return 1
     fi
     _apply_palette "$mode"
+    if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+        if [[ "$mode" == "light" ]]; then
+            set-iterm-profile "$ITERM_LIGHT_PROFILE"
+        else
+            set-iterm-profile "$ITERM_DARK_PROFILE"
+        fi
+        # Re-assert tab title after profile switch, since iTerm resets it to the profile name
+        title $ZSH_THEME_TERM_TAB_TITLE_IDLE $ZSH_THEME_TERM_TITLE_IDLE
+    fi
     mkdir -p "$(dirname $_PALETTE_STATE)"
     if [[ "$mode" == "light" ]]; then
         touch "$_PALETTE_STATE"
