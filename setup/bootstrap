@@ -1,0 +1,76 @@
+#!/usr/bin/env zsh
+#
+# Bootstrap a fresh Mac with dotkyl.
+#
+# Prerequisites (install manually first):
+#   1. Xcode Command Line Tools:  xcode-select --install
+#   2. Homebrew:  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#   3. 1Password app — install from https://1password.com and sign in
+#   4. GitHub token in 1Password at "Personal/GitHub Token/credential"
+#      with the `admin:public_key` scope (needed to register SSH keys)
+#   5. mise + 1Password CLI:  brew install mise 1password-cli
+#
+# Usage (after cloning):
+#   setup/bootstrap
+#
+# Or fetch and run before cloning:
+#   curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bootstrap | zsh
+#
+
+set -e
+
+DOTKYL_DIR="${HOME}/.dotkyl"
+
+# --- SSH key ---
+
+if [[ -f "${HOME}/.ssh/id_ed25519" ]]; then
+    echo "⏭️ SSH key already exists"
+else
+    ssh-keygen -t ed25519 -f "${HOME}/.ssh/id_ed25519" -N ""
+    echo "✅ SSH key generated"
+fi
+
+# --- Register key with GitHub via 1Password ---
+
+GITHUB_TOKEN="$(op read 'op://Personal/GitHub Token/credential')"
+KEY_CONTENT="$(cat "${HOME}/.ssh/id_ed25519.pub")"
+HOSTNAME="$(hostname)"
+
+# Check if key is already registered (by title)
+EXISTING="$(curl -sf \
+    -H "Authorization: token ${GITHUB_TOKEN}" \
+    https://api.github.com/user/keys \
+    | python3 -c "import sys,json; keys=json.load(sys.stdin); print(any(k['title']=='${HOSTNAME}' for k in keys))" 2>/dev/null || echo "False")"
+
+if [[ "${EXISTING}" == "True" ]]; then
+    echo "⏭️ SSH key already registered with GitHub"
+else
+    curl -sf -X POST \
+        -H "Authorization: token ${GITHUB_TOKEN}" \
+        https://api.github.com/user/keys \
+        -d "{\"title\":\"${HOSTNAME}\",\"key\":\"${KEY_CONTENT}\"}"
+    echo "✅ SSH key registered with GitHub"
+fi
+
+# --- Clone repos ---
+
+if [[ -d "${DOTKYL_DIR}/.git" ]]; then
+    echo "⏭️ dotkyl already cloned"
+else
+    git clone git@github.com:katylava/dotkyl.git "${DOTKYL_DIR}"
+    echo "✅ dotkyl cloned"
+fi
+
+# --- Run install ---
+
+cd "${DOTKYL_DIR}"
+mise run install
+
+echo ""
+echo "🎉 Bootstrap complete!"
+echo ""
+echo "👉 Next steps:"
+echo "   1. Add $(hostname) to bin/get-host"
+echo "   2. Commit and push"
+echo "   3. Run: mise run install"
+echo "   4. Open nvim and run :PlugInstall"
