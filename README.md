@@ -92,14 +92,14 @@ These installation instructions are for my future self.
 Run the bootstrap script (fetches via curl before the repo is cloned):
 
 ```zsh
-curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/bin/bootstrap | zsh
+curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bootstrap | zsh
 ```
 
 Or if you've already cloned the repo:
 
 ```zsh
 cd ~/.dotkyl
-bin/bootstrap
+setup/bootstrap
 ```
 
 This will generate an SSH key, register it with GitHub via 1Password, clone the
@@ -109,7 +109,7 @@ repos, and run `mise run install`.
 
 1. Add your machine's hostname to `bin/get-host`
 2. Commit and push
-3. Re-run `mise run install`
+3. Run `mise run install` again (so host-specific tasks pick up the new hostname)
 4. Open nvim and run `:PlugInstall`
 
 
