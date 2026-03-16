@@ -1,0 +1,68 @@
+#!/usr/bin/env zsh
+#
+# Create or check symlinks defined in setup/symlinks.yml.
+# Usage: manage-symlinks [--dry-run]
+#   --dry-run  Show what would change; exit 1 if anything needs updating.
+#   (default)  Create/update symlinks.
+#
+
+local DOTKYL="${0:A:h:h}"    # ${0:A:h:h} = this script's grandparent dir
+local MANIFEST="$DOTKYL/setup/symlinks.yml"
+local HANDLER=apply_link
+
+local ok=true
+
+[[ "$1" == "--dry-run" ]] && HANDLER=dry_run_link
+
+# --- Functions ---
+
+dry_run_link() {
+    local source=$1 target=$2
+    if [[ -L "$target" && "$(readlink "$target")" == "$source" ]]; then
+        return  # already correct
+    elif [[ ! -e "$target" && ! -L "$target" ]]; then
+        print "would link: $target -> $source"
+    elif [[ -L "$target" ]]; then
+        print "would relink: $target (currently $(readlink "$target")) -> $source"
+    else
+        print "would overwrite: $target (currently a file) -> $source"
+    fi
+    ok=false
+}
+
+apply_link() {
+    local source=$1 target=$2
+    mkdir -p "${target:h}"  # ${target:h} = parent directory
+    ln -sfn "$source" "$target"
+}
+
+process_glob() {
+    local glob=$1 target=$2 excludes=$3
+    # (N) = nullglob — expands to nothing if no matches
+    for source in ${~glob}(N); do
+        local name="${source:t}"  # ${source:t} = basename
+        # Wrap both sides in commas for exact match within comma-separated list
+        [[ ",$excludes," == *",$name,"* ]] && continue
+        $HANDLER "$source" "$target$name"
+    done
+}
+
+# --- Main ---
+
+# yq produces {source_glob, target, excludes} as shell vars per entry
+local YQ_EXPR='{"source_glob": .source_glob,
+    "target": .target_dir + "/" + (.prefix // ""),
+    "excludes": ((.excludes // []) | join(","))}'
+
+while IFS= read -r -d '' entry; do
+    eval "$(echo "$entry" | yq -o shell "$YQ_EXPR")"
+
+    target=$~=target  # $~= expands globs and tildes in the variable value
+    process_glob "$DOTKYL/$source_glob" "$target" "$excludes"
+
+    # Auto-mirror private/ for home/ sources
+    [[ "$source_glob" == home/* ]] && \
+        process_glob "$DOTKYL/private/$source_glob" "$target" "$excludes"
+done < <(yq -o=j -I=0 --nul-output '.[]' "$MANIFEST")
+
+$ok || return 1
