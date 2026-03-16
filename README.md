@@ -109,7 +109,7 @@ repos, and run `mise run install`.
 
 1. Add your machine's hostname to `bin/get-host`
 2. Commit and push
-3. Run `mise run install` again (so host-specific tasks pick up the new hostname)
+3. Run `mise run install` (so host-specific tasks pick up the new hostname)
 4. Open nvim and run `:PlugInstall`
 
 
