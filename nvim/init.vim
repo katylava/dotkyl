@@ -85,204 +85,6 @@ else
 endif
 
 
-" -------------
-" Mappings
-" -------------
-
-inoremap jk <Esc>
-inoremap kk <Esc>
-
-tnoremap jk <C-\><C-n>
-
-nnoremap <C-j> :wincmd j<CR>
-nnoremap <C-k> :wincmd k<CR>
-nnoremap <C-h> :wincmd h<CR>
-nnoremap <C-l> :wincmd l<CR>
-tnoremap <C-j> <C-\><C-n><C-w>h
-tnoremap <C-k> <C-\><C-n><C-w>j
-tnoremap <C-h> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
-
- " <opt> = - . ,
-nnoremap ≠ 10<C-W>+
-nnoremap – 10<C-W>-
-nnoremap ≥ 10<C-W>>
-nnoremap ≤ 10<C-W><
-
-" <opt> b f k j
-nnoremap ∫ <C-W>H
-nnoremap ƒ <C-W>L
-nnoremap ˚ <C-W>K
-nnoremap ∆ <C-W>J
-
-" <opt> p o
-nnoremap π :tabnext<CR>
-nnoremap ø :tabprevious<CR>
-
-" select just-pasted lines
-nnoremap gp `[v`]
-
-" insert space or newline and get back to normal mode
-nnoremap <silent> gj o<Esc>
-nnoremap <silent> gk O<Esc>
-nnoremap <silent> gh i<Space><Esc>
-nnoremap <silent> gl a<Space><Esc>
-nnoremap <silent> gn i<Cr><Esc>
-
-" center search result
-nnoremap N Nzz
-nnoremap n nzz
-
-" easier system clipboard access
-noremap ,y "+y
-noremap ,p "+p
-
-" Common Command Typos
-command! Q  quit    " converts ... :Q  => :q
-command! W  write   " converts ... :W  => :w
-command! Wq wq      " converts ... :Wq => :wq
-command! Wn wn      " converts ... :Wn => :wn
-command! WN wN      " converts ... :WN => :wN
-
-" don't show help when F1 is pressed
-map <F1> <ESC>
-
-" Remove trailing space without overwriting current search
-nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-
-" getting into terminal mode
-nnoremap ,tv :vsp term://zsh -f<CR>i
-nnoremap ,tx :sp term://zsh -f<CR>i
-
-" folding
-nnoremap <Leader>s :SignifyFold<CR>
-
-" ---------------------
-" CoC configuration
-" ---------------------
-
-" Use tab for trigger completion with suggested characters ahead. Also use tab
-" for navigating suggestions.
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-" Formatting whole file
-nmap ,n  <Plug>(coc-format)
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Run the Code Lens action on the current line.
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocActionAsync('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-
 " ---------------------
 " Plugin configuration
 " ---------------------
@@ -344,10 +146,6 @@ let g:lightline = {
       \ }
 
 " CtrlP
-map ,f :CtrlP<CR>
-map ,m :CtrlPMRU<CR>
-map ,g :CtrlPBuffer<CR>
-map ,r :CtrlPClearCache<CR>
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
 " let g:ctrlp_dotfiles = 0
@@ -378,8 +176,6 @@ execute 'hi IndentGuidesOdd guibg=' . g:indent_guides_odd_color
 execute 'hi IndentGuidesEven guibg=' . g:indent_guides_even_color
 
 " NERDtree
-map ,d :NERDTreeToggle<CR>
-map ,e :NERDTreeFind<CR>
 let NERDTreeIgnore = ['\.pyc$']
 let NERDTreeWinSize = 45
 let NERDTreeShowHidden = 1
@@ -389,11 +185,7 @@ let NERDTreeShowHidden = 1
 " ... fix by overriding padding before glyph
 let g:WebDevIconsNerdTreeBeforeGlyphPadding = ''
 
-" do <C-w>m in one split, then in another split and they will be swapped
-nnoremap <C-w>m :call WindowSwapping()<CR>
-
 " copilot
-imap <silent><script><expr> <C-n> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
 
 " -----------
