@@ -50,9 +50,17 @@ bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
 
+[tasks.brew-reminder]
+description = "Remind if Brewfile changed in last merge"
+run = """
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
+  && echo '👉 Brewfile changed — run: mise run brew' \
+  || echo '⏭️ no Brewfile changes'
+"""
+
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab"]
+depends = ["hook", "symlinks", "crontab", "brew-reminder"]
 
 [tasks.install]
 description = "All tasks including brew"
