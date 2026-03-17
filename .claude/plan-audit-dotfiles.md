@@ -25,10 +25,16 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 **Tool-generated state** (`.cache/`, `.nvm/`, `.fzf/`, `.histfile`, `.viminfo`, etc.)
 → leave untracked
 
-**Contain plaintext secrets or auth tokens — never commit anywhere:**
+**Contain secrets or auth tokens — need special handling:**
 - `.npmrc` (has live GCP OAuth tokens)
 - `.gnupg/`, `.kube/`, `.terraform.d/`, `.pypirc`, `.vpn/`
 - `~/.config/gh/hosts.yml`
+
+These can be committed if secrets are obfuscated (e.g., placeholder values like `<token>`)
+with a post-merge hook or mise task that replaces them with real values via `op` (1Password
+CLI). This is preferable to leaving them untracked entirely, since it means a new machine
+can be set up from the repo. A pre-push hook should guard against accidentally pushing
+real secrets.
 
 **Contains sensitive but not secret org info (internal hostnames, internal tool config)**
 → `dotkyl-private`
@@ -58,10 +64,12 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 | `~/.config/iterm2/` | `home/config/iterm2/` | Check for scripts with internal URLs |
 | Work tool configs | `home/<toolname>rc` | Review per tool |
 
-### Leave untracked (secrets or auto-generated)
+### Leave untracked (auto-generated state only)
 
-`.npmrc`, `.edgerc`, `.ssh/`, `.gnupg/`, `.kube/`, `.terraform.d/`, `.pypirc`, `.vpn/`,
-`~/.config/gh/hosts.yml`, `~/.claude.json`
+`~/.claude.json` and similar tool-generated state files.
+
+Files with secrets (`.npmrc`, `.ssh/`, `.gnupg/`, `.kube/`, etc.) can be committed with
+placeholder values and hydrated via `op` — see "Contain secrets" section above.
 
 ## Audit Tasks
 
