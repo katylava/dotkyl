@@ -1,0 +1,20 @@
+# Schedule a command (opens editor, type command, ctrl-d)
+at now + 1 minute
+at now + 5 minutes
+at 3:00 PM
+
+# Schedule from a file
+at -f script.sh now + 1 minute
+
+# List pending jobs
+at -l
+atq
+
+# Show a job's commands
+at -c <job-number>
+
+# Remove a pending job
+atrm <job-number>
+
+# Note: `say` commands can be given directly:
+echo 'say "meeting in 5"' | at now + 25 minutes

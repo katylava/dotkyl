@@ -1,0 +1,27 @@
+# Follow logs for pods matching a pattern
+stern <pod-pattern>
+
+# Only show logs from the last hour
+stern <pod-pattern> -s 1h
+
+# Filter by container name
+stern <pod-pattern> -c <container>
+
+# Only show logs matching a regex
+stern <pod-pattern> -i "error|exception"
+
+# Exclude lines matching a regex
+stern <pod-pattern> -e "health_?check"
+
+# Show logs from terminated containers
+stern <pod-pattern> --container-state=terminated
+
+# Specify namespace
+stern <pod-pattern> -n <namespace>
+
+# Show timestamps
+stern <pod-pattern> -t
+
+# Pipe to ag/grep for highlighting
+stern http | ag '"status": "500"'
+stern celery | ag -v "failed to send traces"
