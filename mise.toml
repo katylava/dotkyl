@@ -48,11 +48,13 @@ true
 """
 
 [tasks.private-repo]
-description = "Clone private dotfiles repo"
+description = "Clone or pull private dotfiles repo"
 run = """
-test -d private/.git \
-  && echo "⏭️ already cloned" \
-  || { git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"; }
+if test -d private/.git; then
+  git -C private pull --quiet && echo "⏭️ private up to date"
+else
+  git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"
+fi
 """
 
 [tasks.check-host]
@@ -123,8 +125,8 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab", "brew-reminder", "pip-reminder"]
+depends = ["hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder"]
 
 [tasks.install]
-description = "All tasks including brew"
+description = "Full machine setup (run manually)"
 depends = ["hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host", "rename-code-dir-reminder"]
