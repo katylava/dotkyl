@@ -119,6 +119,8 @@ run = """
   || true
 """
 
+# NOTE: sync and install share some deps (hook, symlinks, crontab).
+# When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
 depends = ["hook", "symlinks", "crontab", "brew-reminder", "pip-reminder"]
