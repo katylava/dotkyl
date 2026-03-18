@@ -125,4 +125,4 @@ depends = ["hook", "symlinks", "crontab", "brew-reminder", "pip-reminder"]
 
 [tasks.install]
 description = "All tasks including brew"
-depends = ["sync", "brew", "pip", "private-repo", "check-host", "rename-code-dir-reminder"]
+depends = ["hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host", "rename-code-dir-reminder"]
