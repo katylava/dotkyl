@@ -68,3 +68,7 @@ function omz_termsupport_preexec {
 
 precmd_functions+=(omz_termsupport_precmd)
 preexec_functions+=(omz_termsupport_preexec)
+
+# Set tab title to PWD before launching claude, so the tab shows "dir (claude)"
+# instead of "claude (claude)"
+function claude { print -Pn "\e]1;%15<..<%~%<<\a"; command claude "$@"; }
