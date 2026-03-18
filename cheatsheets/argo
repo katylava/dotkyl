@@ -1,0 +1,36 @@
+# Submit a workflow
+argo submit workflow.yaml
+argo submit workflow.yaml -p key=value    # with parameter
+argo submit workflow.yaml --from=cronwf/name
+
+# Submit from a template
+argo template create template.yaml
+argo submit --from=wftmpl/<template-name>
+
+# Lint a workflow
+argo lint workflow.yaml
+
+# List workflows
+argo list
+argo list -n <namespace>
+argo list --status Running
+
+# Get workflow details
+argo get <workflow>
+
+# Watch a running workflow
+argo watch <workflow>
+
+# View logs
+argo logs <workflow>
+argo logs <workflow> -f               # follow
+argo logs <workflow> <step-name>      # specific step
+
+# Delete a workflow
+argo delete <workflow>
+
+# List templates
+argo template list
+
+# Auth
+argo auth token

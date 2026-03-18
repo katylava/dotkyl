@@ -1,0 +1,21 @@
+# Read all settings for an app
+defaults read com.apple.finder
+
+# Read a specific key
+defaults read com.apple.dock autohide
+
+# Write a setting
+defaults write com.apple.dock autohide -bool true
+
+# Delete a setting (restore default)
+defaults delete com.apple.dock autohide
+
+# List all domains
+defaults domains | tr ',' '\n'
+
+# Filter domains
+defaults domains | tr ',' '\n' | grep apple
+
+# After changing defaults, restart the affected app:
+killall Finder
+killall Dock

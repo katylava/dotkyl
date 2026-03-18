@@ -1,0 +1,55 @@
+# Given: {"name": "alice", "age": 30, "tags": ["admin", "user"]}
+
+# Get a field
+jq '.name' file.json                          # "alice"
+
+# Raw string output (no quotes)
+jq -r '.name' file.json                       # alice
+
+# Get array element
+jq '.tags[0]' file.json                       # "admin"
+
+# ---
+# Given: {"items": [{"name": "a", "status": "active"}, {"name": "b", "status": "inactive"}]}
+
+# Iterate array
+jq '.items[]' file.json                       # {"name":"a",...} {"name":"b",...}
+
+# Pluck a field from each
+jq '.items[].name' file.json                  # "a" "b"
+
+# Filter by condition
+jq '.items[] | select(.status == "active")'   # {"name":"a","status":"active"}
+
+# Map to new shape
+jq '.items | map({n: .name})'                 # [{"n":"a"},{"n":"b"}]
+
+# Count
+jq '.items | length'                          # 2
+
+# Sort by field
+jq '.items | sort_by(.name)'
+
+# Unique values
+jq '[.items[].status] | unique'               # ["active","inactive"]
+
+# ---
+# Construct new object
+# in:  {"first": "alice", "years": 30}
+jq '{name: .first, age: .years}'              # {"name":"alice","age":30}
+
+# String interpolation
+jq -r '"\(.first) is \(.years)"'              # alice is 30
+
+# ---
+# Multiple files / streaming
+
+# Slurp separate JSON objects into one array
+jq -s '.' a.json b.json                       # [{...}, {...}]
+
+# To CSV
+# in: [{"name":"a","count":1},{"name":"b","count":2}]
+jq -r '.[] | [.name, .count] | @csv'          # "a",1\n"b",2
+
+# Combine with shell variable or pbpaste
+jq ".query.filter = $(pbpaste)" file.json

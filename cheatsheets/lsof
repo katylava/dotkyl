@@ -1,0 +1,11 @@
+# What's listening on a port
+lsof -i :8000
+
+# All network connections for a process
+lsof -i -a -p <pid>
+
+# All files open by a process
+lsof -p <pid>
+
+# Who has a file open
+lsof /path/to/file

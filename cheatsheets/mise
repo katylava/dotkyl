@@ -1,0 +1,47 @@
+# List installed tools and active versions
+mise ls
+
+# List remote versions available for a tool
+mise ls-remote python
+
+# Install a tool version
+mise install python@3.13
+mise install node@20
+
+# Use a version globally (writes to ~/.config/mise/config.toml)
+mise use -g python@3.13
+
+# Use a version in current project (writes to .mise.toml)
+mise use python@3.13
+
+# Show which version is active and why
+mise where python
+
+# Run a command with a specific tool version
+mise exec python@3.12 -- python script.py
+mise exec python -- pip install <package>
+
+# Recreate shims after installing packages with pip/npm
+mise reshim
+
+# Run a task defined in mise.toml
+mise run <task>
+mise run install
+
+# List available tasks
+mise task ls
+
+# Check for problems
+mise doctor
+
+# Show outdated tools
+mise outdated
+
+# Update mise itself
+mise self-update
+
+# Search registry for tools
+mise search <query>
+
+# Format mise.toml
+mise fmt

@@ -1,0 +1,61 @@
+# Given:
+#   metadata:
+#     name: myapp
+#   items:
+#     - name: a
+#       status: active
+#     - name: b
+#       status: inactive
+
+# Pretty print (reformat)
+yq '.' file.yaml
+
+# Set indent level
+yq -I2 '.' file.yaml
+
+# Get a field
+yq '.metadata.name' file.yaml                 # myapp
+
+# Get array element
+yq '.items[0].name' file.yaml                 # a
+
+# Select from array by condition
+yq '.items[] | select(.name == "a")'          # name: a\nstatus: active
+
+# Count array elements
+yq '.items | length' file.yaml                # 2
+
+# ---
+# YAML anchors: given
+#   defaults: &defaults
+#     timeout: 30
+#   server:
+#     <<: *defaults
+#     port: 8080
+
+# Resolve anchors/aliases
+yq '.server | explode(.)'                     # timeout: 30\nport: 8080
+
+# ---
+# Format conversion
+
+# YAML to JSON
+yq -o json '.' file.yaml                      # {"metadata":{"name":"myapp"},...}
+
+# JSON to pretty YAML
+yq -o yaml '.' file.json
+
+# Roundtrip to normalize formatting (the yqdebug alias)
+yq '.' -o json file.yaml | yq -I2 -P          # re-indented YAML
+
+# ---
+# Editing
+
+# Edit in-place
+yq -i '.metadata.name = "newapp"' file.yaml
+
+# Merge another file
+yq '. * load("overrides.yaml")' base.yaml
+
+# Extract to shell variables (used in mise tasks)
+eval "$(yq -o shell '{"a": .field_a, "b": .field_b}' file.yaml)"
