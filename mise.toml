@@ -63,6 +63,40 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
   || echo '⏭️ no Brewfile changes'
 """
 
+[tasks.pip]
+description = "Install pip packages"
+run = '''
+missing=false
+while read -r pkg; do
+  [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+  mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+done < setup/Pipfile.shared
+if [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]]; then
+  while read -r pkg; do
+    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+  done < "setup/Pipfile.$DOTKYL_HOST"
+fi
+if $missing; then
+  echo "🔧 installing pip packages..."
+  mise exec python -- pip install -q -r setup/Pipfile.shared
+  [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]] && \
+    mise exec python -- pip install -q -r "setup/Pipfile.$DOTKYL_HOST"
+  mise reshim
+  echo "✅ done"
+else
+  echo "⏭️ already ok"
+fi
+'''
+
+[tasks.pip-reminder]
+description = "Remind if Pipfile changed in last merge"
+run = """
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
+  && echo '👉 Pipfile changed — run: mise run pip' \
+  || echo '⏭️ no Pipfile changes'
+"""
+
 [tasks.rename-code-dir]
 description = "Rename ~/Code to ~/code (personal machine)"
 run = """
@@ -80,8 +114,8 @@ run = """
 
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab", "brew-reminder"]
+depends = ["hook", "symlinks", "crontab", "brew-reminder", "pip-reminder"]
 
 [tasks.install]
 description = "All tasks including brew"
-depends = ["sync", "brew", "private-repo", "check-host", "rename-code-dir-reminder"]
+depends = ["sync", "brew", "pip", "private-repo", "check-host", "rename-code-dir-reminder"]
