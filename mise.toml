@@ -35,14 +35,16 @@ rm -f "$combined"
 [tasks.brew]
 description = "Install brew packages"
 run = """
+host=$(bin/get-host 2>/dev/null)
 brew bundle check --file setup/Brewfile.shared >/dev/null \
   && echo "⏭️ shared already ok" \
   || { echo "🔧 installing shared packages..." && brew bundle --file setup/Brewfile.shared && echo "✅ shared done"; }
-[[ -n "$DOTKYL_HOST" ]] && {
-  brew bundle check --file setup/Brewfile.$DOTKYL_HOST >/dev/null \
-    && echo "⏭️ $DOTKYL_HOST already ok" \
-    || { echo "🔧 installing $DOTKYL_HOST packages..." && brew bundle --file setup/Brewfile.$DOTKYL_HOST && echo "✅ $DOTKYL_HOST done"; }
+[[ -n "$host" && -f "setup/Brewfile.$host" ]] && {
+  brew bundle check --file setup/Brewfile.$host >/dev/null \
+    && echo "⏭️ $host already ok" \
+    || { echo "🔧 installing $host packages..." && brew bundle --file setup/Brewfile.$host && echo "✅ $host done"; }
 }
+true
 """
 
 [tasks.private-repo]
