@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+#
+# Run daily backups. Paths vary by host because work machine
+# cannot use cloud drives.
+#
+
+set -e
+
+host=$($HOME/.dotkyl/bin/get-host)
+
+case $host in
+    personal)
+        roam_dest=~/GoogleDrive/My\ Drive/Roam\ Backups
+        chrome_dest=~/Library/Mobile\ Documents/com~apple~CloudDocs/ChromeFullHistory/Personal
+        ;;
+    work)
+        roam_dest=~/Documents/RoamBackups
+        chrome_dest=~/Documents/ChromeFullHistory
+        ;;
+    *) echo "unknown host" >&2; exit 1 ;;
+esac
+
+roam_src=~/Library/Application\ Support/Roam\ Research/backups/katylava
+
+# Copy Roam backups
+mkdir -p "$roam_dest"
+cp "$roam_src"/* "$roam_dest"/ 2>/dev/null || true
+
+# Clean old Roam backups
+find "$roam_src" -mtime +7 -type f -delete 2>/dev/null
+find "$roam_dest" -mtime +30 -type f -delete 2>/dev/null
+
+# Move Chrome full history exports
+mkdir -p "$chrome_dest"
+files=(~/Downloads/htu_autobackup_*(N))
+[[ ${#files} -gt 0 ]] && mv "${files[@]}" "$chrome_dest"/

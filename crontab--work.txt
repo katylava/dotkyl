@@ -1,0 +1,6 @@
+*/10 * * * * fetchwork > /dev/null 2>&1
+05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
+59 11 * * 1-4 say "Don't forget about standup"
+28 14 * * 1,2,4 say "Office hours 2 minute warning"
+
+# vim: ft=crontab

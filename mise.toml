@@ -15,11 +15,16 @@ setup/manage-symlinks --dry-run >/dev/null 2>&1 \
 """
 
 [tasks.crontab]
-description = "Install crontab"
+description = "Install crontab (shared + host-specific)"
 run = """
-crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null \
+host=$(bin/get-host 2>/dev/null)
+combined=$(mktemp)
+cat crontab.txt > "$combined"
+[[ -n "$host" && -f "crontab--${host}.txt" ]] && cat "crontab--${host}.txt" >> "$combined"
+crontab -l 2>/dev/null | diff -q - "$combined" >/dev/null \
   && echo "⏭️ already ok" \
-  || { crontab crontab.txt && echo "✅ installed"; }
+  || { crontab "$combined" && echo "✅ installed"; }
+rm -f "$combined"
 """
 
 [tasks.brew]
@@ -58,10 +63,25 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
   || echo '⏭️ no Brewfile changes'
 """
 
+[tasks.rename-code-dir]
+description = "Rename ~/Code to ~/code (personal machine)"
+run = """
+[[ -d ~/Code && ! -d ~/code ]] \
+  && { mv ~/Code ~/code && echo "✅ renamed ~/Code → ~/code"; } \
+  || echo "⏭️ already done"
+"""
+
+[tasks.rename-code-dir-reminder]
+run = """
+[[ -d ~/Code && ! -d ~/code ]] \
+  && echo "👉 Run: mise run rename-code-dir" \
+  || true
+"""
+
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
 depends = ["hook", "symlinks", "crontab", "brew-reminder"]
 
 [tasks.install]
 description = "All tasks including brew"
-depends = ["sync", "brew", "private-repo", "check-host"]
+depends = ["sync", "brew", "private-repo", "check-host", "rename-code-dir-reminder"]
