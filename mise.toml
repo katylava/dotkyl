@@ -24,8 +24,8 @@ description = "Install crontab (shared + host-specific)"
 run = """
 host=$(bin/get-host 2>/dev/null)
 combined=$(mktemp)
-cat crontab.txt > "$combined"
-[[ -n "$host" && -f "crontab--${host}.txt" ]] && cat "crontab--${host}.txt" >> "$combined"
+sed "s|\\$HOME|$HOME|g" crontab.txt > "$combined"
+[[ -n "$host" && -f "crontab--${host}.txt" ]] && sed "s|\\$HOME|$HOME|g" "crontab--${host}.txt" >> "$combined"
 crontab -l 2>/dev/null | diff -q - "$combined" >/dev/null \
   && echo "⏭️ already ok" \
   || { crontab "$combined" && echo "✅ installed"; }
