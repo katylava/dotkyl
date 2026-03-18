@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#
+# Prevent pushing if any gitconfig file contains a real token
+# (the placeholder <token> is fine)
+#
+
+if grep -rq 'https://[^<].*@github.com' private/home/gitconfig-*; then
+    echo "❌ Real token found in private/home/gitconfig-*. Replace with <token> before pushing."
+    exit 1
+fi

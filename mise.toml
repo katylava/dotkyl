@@ -1,9 +1,14 @@
 [tasks.hook]
-description = "Install git post-merge hook"
+description = "Install git hooks"
 run = """
-test -x .git/hooks/post-merge && diff -q setup/hooks/post-merge .git/hooks/post-merge >/dev/null \
-  && echo "⏭️ already installed" \
-  || { cp setup/hooks/post-merge .git/hooks/post-merge && chmod +x .git/hooks/post-merge && echo "✅ installed"; }
+for hook in setup/hooks/*; do
+  name=$(basename "$hook")
+  if test -x ".git/hooks/$name" && diff -q "$hook" ".git/hooks/$name" >/dev/null; then
+    echo "⏭️ $name already installed"
+  else
+    cp "$hook" ".git/hooks/$name" && chmod +x ".git/hooks/$name" && echo "✅ $name installed"
+  fi
+done
 """
 
 [tasks.symlinks]
