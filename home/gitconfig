@@ -31,6 +31,8 @@
     merge-wip = merge -s recursive -X theirs --squash --no-commit
 [branch]
     sort = -authordate
+[commit]
+	verbose = true
 [core]
     attributesfile = ~/.gitattributes
     autocrlf = false
@@ -92,5 +94,8 @@
     untracked = normal reverse
 
 
+
+[includeIf "gitdir:~/code/Work/"]
+    path = ~/.gitconfig-work
 
 # vim: ft=config
