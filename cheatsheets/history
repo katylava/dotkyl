@@ -3,6 +3,7 @@ history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/c
 
 # substitute multiple occurrences of string in last command:
 !:gs/replace-this/with-this/
+^replace-this^with-this^:G
 
 # replace first occurence of string in last command
 ^replace-this^with-this

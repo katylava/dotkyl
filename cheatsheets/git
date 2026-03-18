@@ -72,3 +72,19 @@ git reset --hard origin/<branch>
 # Merge a wip branch into a feature branch without commit history
 git merge SE-534-wip --no-commit --squash
 git reset HEAD
+
+# Find the oldest commit for a path
+git log --diff-filter=A --reverse -- <path> | head -n 1
+# --diff-filter=A: This option filters the commits to only show those where
+# files were added (A). This is crucial for finding the initial commit for a
+# directory's content
+# --reverse: This option displays the commits in chronological order (oldest first).
+
+# Find large files in history
+# https://stackoverflow.com/a/42544963
+git rev-list --objects --all --missing=print |
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' |
+  sed -n 's/^blob //p' |
+  sort --numeric-sort --key=2 |
+  cut -c 1-12,41- |
+  $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest
