@@ -61,7 +61,7 @@ if [[ -n "$used_pct" ]]; then
     for (( i=0; i<filled; i++ )); do context_bar+="█"; done
     for (( i=0; i<empty;  i++ )); do context_bar+="░"; done
 
-    context_label="${used_int}%"
+    context_label="${used_int}%%"
 else
     context_bar="░░░░░░░░░░"
     context_label="—"
