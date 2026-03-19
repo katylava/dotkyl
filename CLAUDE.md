@@ -24,7 +24,7 @@ sopr   # alias for: source ~/.zshrc
 To set up symlinks on a fresh machine (links `home/*` files to `~/`):
 
 ```zsh
-setup/setup-symlinks
+setup/manage-symlinks
 ```
 
 ## Architecture
@@ -32,7 +32,16 @@ setup/setup-symlinks
 ### Zsh Loading Order
 
 `~/.zshenv` sources `lib/010-aliases.zsh` only (runs for all zsh instances).
-`~/.zshrc` sources all `lib/*.zsh` files in numeric order.
+`~/.zshrc` sources all `lib/*.zsh` and `private/lib/*.zsh` files in numeric order, skipping
+host-specific files (named `*--<host>.zsh`) that don't match the current host.
+
+#### Host-specific files
+
+Files named `*--<host>.zsh` (e.g., `010-aliases--work.zsh`) are only loaded when `get-host`
+returns that host name. This allows per-machine overrides without branching. Current hosts:
+`personal`, `work`.
+
+#### File list
 
 Files in `lib/` are numbered to control load order:
 - `000-private.zsh` — secrets/private config (not in repo)
@@ -46,17 +55,22 @@ Files in `lib/` are numbered to control load order:
 - `040-titles.zsh` — terminal title config
 - `080-bookmarks.zsh` — named directory bookmark system
 - `090-prompt.zsh` — starship prompt + custom `MYPWD` variable
+- `095-run.zsh` — ssh-agent identity loading
 - `100-installed.zsh` — config for installed tools (fzf-tab, zsh-autosuggestions, zsh-syntax-highlighting, etc.)
 
 ### Dotfile Symlinking
 
-Files under `home/` are symlinked into `~/` by `setup/manage-symlinks`. For example, `home/zshrc` becomes `~/.zshrc`, `home/gitignore` becomes `~/.gitignore`.
+Symlinks are declared in `setup/symlinks.yml` and applied by `setup/manage-symlinks`.
+Rules (in order):
 
-Subdirectory `home/config/` items are symlinked into `~/.config/`. The nvim config (`nvim/`) is symlinked to `~/.config/nvim`.
+1. `home/*` (excluding `config/`) → `~/` with a `.` prefix (e.g., `home/zshrc` → `~/.zshrc`)
+2. `home/config/*` → `~/.config/` (e.g., `home/config/starship.toml` → `~/.config/starship.toml`)
+3. `nvim/` → `~/.config/nvim`
+4. `iterm/*.json` → `~/Library/Application Support/iTerm2/DynamicProfiles/`
 
 ### iTerm2 Dynamic Profiles
 
-iTerm profiles live in `iterm/*.json` and are symlinked into `~/Library/Application Support/iTerm2/DynamicProfiles/` by `setup/manage-symlinks`. Profiles use inheritance via `Dynamic Profile Parent Name`. Host-specific profiles (e.g., `*-air.json`) override font sizes for different screens.
+iTerm profiles live in `iterm/*.json`. Profiles use inheritance via `Dynamic Profile Parent Name`. Host-specific profiles (e.g., `*-air.json`) override font sizes for different screens.
 
 ### Palette Switching (`lib/002-colors.zsh`)
 
@@ -83,9 +97,28 @@ no need to stay POSIX-portable.
 ### Custom Scripts (`bin/`)
 
 All scripts in `bin/` are on `$PATH`. Notable ones:
+- `claude-statusline` — Claude Code status line renderer (reads JSON from stdin)
 - `findup` — walk up directory tree looking for a file
+- `get-host` — print semantic host name (`personal`, `work`) based on hostname
 - `git-cleanup` — prune merged branches
 - `set-iterm-profile` — switch iTerm profile via escape sequence
+
+### Machine Setup (`setup/`)
+
+- `manage-symlinks` — creates/checks symlinks defined in `symlinks.yml` (supports `--dry-run`)
+- `symlinks.yml` — declarative symlink manifest
+- `Brewfile.shared`, `Brewfile.personal`, `Brewfile.work` — Homebrew bundle files, split by host
+- `Pipfile.shared` — shared Python packages
+- `hooks/` — git hooks (e.g., post-merge runs `mise run sync`)
+
+### Crontab
+
+Crontab entries live in `crontab.txt` (personal) and `crontab--work.txt` (work). These are
+installed by a mise task, not automatically.
+
+### Cheatsheets (`cheatsheets/`)
+
+Markdown cheatsheets for quick reference, used with the `cheat` tool via `home/config/cheat/`.
 
 ### Runtime Version Management
 
