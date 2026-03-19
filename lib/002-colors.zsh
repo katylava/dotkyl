@@ -4,8 +4,16 @@
 
 _PALETTE_STATE="$HOME/.local/state/terminal-palette"
 _STARSHIP_LIGHT="$HOME/.local/state/starship-light.toml"
-ITERM_DARK_PROFILE="Tomorrow Dark Mod Air"
-ITERM_LIGHT_PROFILE="Tomorrow Light Mod Air"
+case "$DOTKYL_HOST" in
+    personal)
+        ITERM_DARK_PROFILE="Tomorrow Dark Mod Air"
+        ITERM_LIGHT_PROFILE="Tomorrow Light Mod Air"
+        ;;
+    *)
+        ITERM_DARK_PROFILE="Tomorrow Dark Mod"
+        ITERM_LIGHT_PROFILE="Tomorrow Light Mod"
+        ;;
+esac
 
 function _apply_palette {
     local mode="${1:-dark}"
@@ -65,6 +73,21 @@ if [[ -f "$_PALETTE_STATE" ]]; then
     _apply_palette light
 else
     _apply_palette dark
+fi
+
+# Defer iTerm profile switch to first prompt so it happens after 040-titles.zsh
+# loads. The title hook then immediately overwrites the profile name iTerm sets.
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    function _palette_init_profile {
+        if [[ "$TERM_PALETTE" == "light" ]]; then
+            set-iterm-profile "$ITERM_LIGHT_PROFILE"
+        else
+            set-iterm-profile "$ITERM_DARK_PROFILE"
+        fi
+        precmd_functions=("${(@)precmd_functions:#_palette_init_profile}")
+        unfunction _palette_init_profile
+    }
+    precmd_functions+=(_palette_init_profile)
 fi
 
 # ---------------------
