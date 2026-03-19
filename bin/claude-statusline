@@ -1,0 +1,146 @@
+#!/usr/bin/env zsh
+# Claude Code status line
+# Reads JSON from stdin, outputs a styled status line.
+
+input=$(cat)
+
+# ── Parse JSON fields ────────────────────────────────────────────────────────
+
+model_id=$(echo "$input" | jq -r '.model.id // "claude"')
+model_name=$(echo "$input" | jq -r '.model.display_name // "Claude"')
+cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // ""')
+used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
+cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
+vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
+
+# ── ANSI helpers ─────────────────────────────────────────────────────────────
+
+reset='\033[0m'
+
+# Foreground colours (256-colour)
+fg_cyan='\033[38;5;80m'       # bright cyan  — matches starship "frame"
+fg_dim='\033[38;5;240m'       # dark grey    — matches starship "separator"
+fg_green='\033[38;5;114m'     # soft green   — matches starship "lang"
+fg_purple='\033[38;5;141m'    # soft purple  — matches starship "ctx"
+fg_yellow='\033[38;5;221m'    # warm yellow  — matches starship "alert"
+fg_red='\033[38;5;203m'       # soft red     — matches starship "err"
+fg_white='\033[38;5;252m'     # near-white
+fg_blue='\033[38;5;111m'      # soft blue    — matches starship "note"
+fg_black='\033[38;5;235m'     # near-black (for text on bright bg)
+bold='\033[1m'
+dim='\033[2m'
+
+# ── Model icon & short name ───────────────────────────────────────────────────
+
+case "$model_name" in
+    *Sonnet*) model_icon="󰫎 " ; model_colour="$fg_cyan"  ;;
+    *Haiku*)  model_icon="󱩖 " ; model_colour="$fg_blue"  ;;
+    *Opus*)   model_icon="󰮣 " ; model_colour="$fg_purple" ;;
+    *)        model_icon=" "  ; model_colour="$fg_white" ;;
+esac
+
+# Strip "claude-" prefix from model ID for brevity
+model_short="${model_id#claude-}"
+
+# ── Context bar ───────────────────────────────────────────────────────────────
+# 10-cell filled/empty block bar
+
+context_bar=""
+context_colour="$fg_green"
+if [[ -n "$used_pct" ]]; then
+    used_int=$(printf '%.0f' "$used_pct")
+    filled=$(( used_int * 10 / 100 ))
+    empty=$(( 10 - filled ))
+
+    # Colour shifts as context fills up
+    if   (( used_int >= 80 )); then context_colour="$fg_red"
+    elif (( used_int >= 60 )); then context_colour="$fg_yellow"
+    else                            context_colour="$fg_green"
+    fi
+
+    for (( i=0; i<filled; i++ )); do context_bar+="█"; done
+    for (( i=0; i<empty;  i++ )); do context_bar+="░"; done
+
+    context_label="${used_int}%"
+else
+    context_bar="░░░░░░░░░░"
+    context_label="—"
+fi
+
+# ── Cost (from API) ──────────────────────────────────────────────────────────
+
+cost=$(printf '%.3f' "$cost_usd")
+
+# ── Vim mode ─────────────────────────────────────────────────────────────────
+
+seg_vim=""
+if [[ -n "$vim_mode" ]]; then
+    case "$vim_mode" in
+        NORMAL)  vim_colour="$fg_green"  ;;
+        INSERT)  vim_colour="$fg_cyan"   ;;
+        VISUAL*) vim_colour="$fg_purple" ;;
+        *)       vim_colour="$fg_yellow" ;;
+    esac
+    seg_vim="${fg_dim} · ${reset}${vim_colour}${vim_mode}${reset}"
+fi
+
+# ── Directory (from $MYPWD, set by _mypwd in 090-prompt.zsh) ─────────────────
+
+# $MYPWD is exported by the interactive shell and uses bookmark-aware truncation.
+# Replace the / separators with the arrow style used elsewhere in the prompt.
+display_cwd="${MYPWD//\//  }"
+
+# ── Git info ──────────────────────────────────────────────────────────────────
+
+git_info=""
+if git_root=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --show-toplevel 2>/dev/null); then
+    branch=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null \
+             || GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
+
+    # Porcelain status for staged/unstaged/untracked counts
+    status_out=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" status --porcelain 2>/dev/null)
+
+    staged=0; modified=0; untracked=0
+    while IFS= read -r line; do
+        x="${line:0:1}"; y="${line:1:1}"
+        [[ "$x" != " " && "$x" != "?" ]] && (( staged++ ))
+        [[ "$y" == "M" || "$y" == "D" ]]  && (( modified++ ))
+        [[ "$x" == "?" ]]                  && (( untracked++ ))
+    done <<< "$status_out"
+
+    # Ahead/behind
+    ahead=0; behind=0
+    ab=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-list --left-right --count \
+         HEAD...@{upstream} 2>/dev/null)
+    if [[ -n "$ab" ]]; then
+        ahead="${ab%%	*}"
+        behind="${ab##*	}"
+    fi
+
+    git_info=" ${fg_green}${fg_dim}${reset}${fg_green} ${branch}${reset}"
+
+    flags=""
+    (( staged    > 0 )) && flags+="${fg_yellow}✚${staged}${reset}"
+    (( modified  > 0 )) && flags+=" ${fg_red}✽${modified}${reset}"
+    (( untracked > 0 )) && flags+=" ${fg_dim}፧${untracked}${reset}"
+    (( ahead     > 0 )) && flags+=" ${fg_cyan}${ahead}↑${reset}"
+    (( behind    > 0 )) && flags+=" ${fg_yellow}${behind}↓${reset}"
+
+    [[ -n "$flags" ]] && git_info+=" ${fg_dim}[${reset}${flags}${fg_dim}]${reset}"
+fi
+
+# ── Assemble the line ─────────────────────────────────────────────────────────
+
+# Left segment: model
+seg_model="${model_colour}${model_icon}${model_short}${reset}"
+
+# Middle segment: context bar + cost
+seg_ctx="${fg_dim}󰾺 ${reset}${context_colour}${context_bar}${reset} ${fg_dim}${context_label}${reset}"
+seg_cost="${fg_dim}\$${reset}${fg_white}${cost}${reset}"
+
+# Right segment: git + cwd
+seg_dir="${fg_cyan} ${reset}${fg_white}${display_cwd}${reset}"
+
+sep="${fg_dim} · ${reset}"
+
+printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${sep}${seg_dir}${git_info}${seg_vim}\n"
