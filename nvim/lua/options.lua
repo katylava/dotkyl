@@ -4,9 +4,6 @@ vim.g.mapleader = "\\"
 -- Python provider
 vim.g.python3_host_prog = vim.fn.exepath("python3")
 
--- True color
-vim.env.NVIM_TUI_ENABLE_TRUE_COLOR = "1"
-
 -- File handling
 vim.opt.binary = true
 vim.opt.fileencoding = "utf-8"
@@ -89,10 +86,3 @@ vim.opt.wildignore = { ".svn", ".git", ".env", "*.bak", "*.pyc", "*.DS_Store", "
 vim.opt.wildmenu = true
 vim.opt.wildmode = { "list:longest" }
 
--- Performance
-vim.opt.ttyfast = true
-
--- Filetype detection
-vim.cmd("filetype on")
-vim.cmd("filetype plugin on")
-vim.cmd("filetype indent on")

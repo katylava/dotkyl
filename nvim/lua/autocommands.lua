@@ -106,7 +106,7 @@ autocmd("BufReadPost", {
 autocmd("BufEnter", {
     pattern = "*",
     callback = function()
-        vim.opt.titlestring = vim.fn.expand("%:t") .. " ∈ " .. vim.fn["FileDir"]()
+        vim.opt.titlestring = vim.fn.expand("%:t") .. " ∈ " .. FileDir()
     end,
 })
 

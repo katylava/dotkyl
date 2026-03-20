@@ -63,7 +63,7 @@ map("n", ",tx", "<cmd>sp term://zsh -f<CR>i")
 map("n", "<Leader>s", "<cmd>SignifyFold<CR>")
 
 -- Window swap
-map("n", "<C-w>m", "<cmd>call WindowSwapping()<CR>")
+map("n", "<C-w>m", "<cmd>lua WindowSwapping()<CR>")
 
 -- NERDTree
 map("", ",d", "<cmd>NERDTreeToggle<CR>")

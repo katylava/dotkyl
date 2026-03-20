@@ -1,6 +1,6 @@
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         "git", "clone", "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
@@ -83,21 +83,21 @@ require("lazy").setup({
                     lineinfo = " %2v:%-3l",
                 },
                 component_function = {
-                    gitbranch = "LightlineFugitive",
-                    readonly = "LightlineReadonly",
-                    modified = "LightlineModified",
-                    filedir = "FileDir",
-                    filename = "LightlineFilename",
-                    time = "LightlineTime",
-                    devicon = "LightlineDevicon",
-                    fileformat = "LightlineFileformat",
-                    fileencoding = "LightlineFileencoding",
-                    filetype = "LightlineFiletype",
+                    gitbranch = "v:lua.LightlineFugitive",
+                    readonly = "v:lua.LightlineReadonly",
+                    modified = "v:lua.LightlineModified",
+                    filedir = "v:lua.FileDir",
+                    filename = "v:lua.LightlineFilename",
+                    time = "v:lua.LightlineTime",
+                    devicon = "v:lua.LightlineDevicon",
+                    fileformat = "v:lua.LightlineFileformat",
+                    fileencoding = "v:lua.LightlineFileencoding",
+                    filetype = "v:lua.LightlineFiletype",
                 },
                 separator = { left = "\u{e0b0}", right = "\u{e0b2}" },
                 subseparator = { left = "\u{e0b1}", right = "\u{e0b3}" },
                 tab_component_function = {
-                    devicon = "LightlineDevicon",
+                    devicon = "v:lua.LightlineDevicon",
                     modified = "lightline#tab#modified",
                     readonly = "lightline#tab#readonly",
                     tabnum = "lightline#tab#tabnum",
