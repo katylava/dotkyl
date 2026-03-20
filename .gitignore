@@ -1,7 +1,6 @@
 lib/000-private.zsh
 private/
 nvim/.netrwhist
-nvim/autoload/plug.vim.old
 nvim/plugged
 home/urlwatch/cache.db
 nvim/autoload/gocomplete.vim

@@ -88,6 +88,25 @@ Named directories stored as symlinks in `~/.dotkyl/bookmarks/`. Commands:
 - `d <name>` — delete bookmark
 - `@@` in ZLE — inserts `~-` prefix for tab-completing bookmarks
 
+### Neovim Config (`nvim/`)
+
+The neovim config is written in Lua. Entry point is `nvim/init.lua`, which loads modules in order:
+
+1. `lua/options.lua` — vim options, settings, leader key
+2. `lua/functions.lua` — FileDir, lightline components, theme (ApplyDark/ApplyLight), window swap
+3. `lua/plugins.lua` — lazy.nvim bootstrap + all plugin specs with inline config
+4. `lua/autocommands.lua` — filetype detection, filetype settings, CoC augroups, trailing whitespace
+5. `lua/mappings.lua` — all keymaps, user commands, CoC mappings
+
+Plugin manager is **lazy.nvim** (auto-bootstraps on first launch; run `:Lazy install`).
+
+Other nvim files:
+- `after/ftplugin/javascript.lua` — JS-specific formatoptions
+- `colors/my-monokai.vim` — custom colorscheme (inactive; catppuccin used)
+- `pcthemes/kyl.vim` — PaperColor overrides (inactive)
+- `syntax/*.vim` — custom syntax files (apex, ejs, tinytower, visualforce)
+- `coc-settings.json` — CoC LSP configuration
+
 ### Shell Script Convention
 
 Prefer `#!/usr/bin/env zsh` over `#!/usr/bin/env bash` for new scripts whenever zsh features

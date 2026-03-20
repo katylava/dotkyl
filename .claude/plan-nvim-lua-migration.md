@@ -1,4 +1,6 @@
-# Plan: Migrate Neovim Config from Vimscript to Lua
+# Plan: Migrate Neovim Config from Vimscript to Lua — COMPLETED
+
+**Status:** Done (2026-03-16)
 
 **Execute after:** plan-single-branch-dotfiles.md, plan-remove-old-version-managers.md
 
