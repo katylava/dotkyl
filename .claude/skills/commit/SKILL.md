@@ -2,6 +2,7 @@
 name: commit
 description: Create git commits following this repo's conventions. Use whenever the user asks to commit, make a commit, save changes, or any variation of committing work. Always use this skill instead of the default commit behavior.
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*), AskUserQuestion
+model: haiku
 ---
 
 # Commit Skill for dotkyl
