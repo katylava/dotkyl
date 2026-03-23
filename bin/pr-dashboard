@@ -1,0 +1,163 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# Usage: pr-dashboard [keyword ...]
+# Shows a prioritized dashboard of open PRs in oreillymedia.
+#
+# Sections:
+#   1. My PRs (with review status)
+#   2. PRs I've commented on
+#   3. Keyword matches (only if keywords provided)
+#
+# Filters out drafts, automated maintenance, and PRs with no activity in 7 days.
+
+ORG=oreillymedia
+DAYS=7
+JSON_FIELDS="url,title,author,isDraft,updatedAt,repository,number"
+CUTOFF=$(date -v-${DAYS}d +%Y-%m-%dT00:00:00Z)
+
+keywords=("$@")
+
+# --- Helpers ---
+
+gh_search() {
+  gh search prs --owner="$ORG" --state=open --json "$JSON_FIELDS" --limit=50 "$@" 2>/dev/null
+}
+
+# Tags each PR with a group field and writes to the shared results file
+tag_and_append() {
+  local group=$1 file=$2
+  jq --arg group "$group" '[.[] | . + {group: $group}]' >> "$file"
+}
+
+format_age() {
+  local updated=$1
+  local now=$(date +%s)
+  local then=$(date -jf "%Y-%m-%dT%H:%M:%SZ" "$updated" +%s 2>/dev/null || echo "$now")
+  local diff=$(( (now - then) / 86400 ))
+  if (( diff == 0 )); then
+    echo "today"
+  elif (( diff == 1 )); then
+    echo "yesterday"
+  else
+    echo "${diff}d ago"
+  fi
+}
+
+review_jq='
+  .reviews | map(.state) | if any(. == "CHANGES_REQUESTED") then "changes requested"
+  elif any(. == "APPROVED") then "approved"
+  elif length > 0 then "review comments"
+  else "awaiting review"
+  end
+'
+
+# --- Queries (parallel) ---
+
+tmpdir=$(mktemp -d)
+trap "rm -rf $tmpdir" EXIT
+
+gh_search --author=@me > "$tmpdir/authored.json" &
+gh_search --commenter=@me > "$tmpdir/commented.json" &
+
+if (( ${#keywords} > 0 )); then
+  for i in {1..${#keywords}}; do
+    gh_search "${keywords[$i]}" > "$tmpdir/keyword_${i}.json" &
+  done
+fi
+
+wait
+
+# --- Tag groups and combine into one file ---
+
+my_login=$(gh api user --jq .login 2>/dev/null)
+results="$tmpdir/all.json"
+
+cat "$tmpdir/authored.json" | tag_and_append "authored" "$results"
+cat "$tmpdir/commented.json" | tag_and_append "commented" "$results"
+
+if (( ${#keywords} > 0 )); then
+  for f in "$tmpdir"/keyword_*.json; do
+    cat "$f" | tag_and_append "keyword" "$results"
+  done
+fi
+
+# --- Filter, dedup, and group ---
+
+# group_rank: authored=1, commented=2, keyword=3 (lower wins during dedup)
+dashboard=$(cat "$results" | jq -s --arg cutoff "$CUTOFF" --arg me "$my_login" '
+  add
+
+  # Filter
+  | [.[] | select(
+      .isDraft == false
+      and .updatedAt > $cutoff
+      and (.author.login != "github-api-surveyor")
+      and (.author.login != "orm-RenovateBot")
+      and ((.title | test("^chore:.*Maintenance"; "i")) | not)
+    )]
+
+  # Remove own PRs from commented/keyword sections
+  | [.[] | select(
+      .group == "authored"
+      or .author.login != $me
+    )]
+
+  # Dedup: keep highest-priority group per URL
+  | group_by(.url)
+  | [.[] | sort_by(
+      if .group == "authored" then 1
+      elif .group == "commented" then 2
+      else 3 end
+    ) | .[0]]
+
+  # Sort by updatedAt descending
+  | sort_by(.updatedAt) | reverse
+')
+
+# --- Review status for authored PRs (parallel) ---
+
+authored_prs=$(echo "$dashboard" | jq -r '.[] | select(.group == "authored") | "\(.repository.nameWithOwner)\t\(.number)"')
+
+review_results=""
+if [[ -n "$authored_prs" ]]; then
+  review_results=$(echo "$authored_prs" | parallel --colsep '\t' --jobs 8 --keep-order \
+    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews --jq '$review_jq' 2>/dev/null)")
+fi
+
+get_review_status() {
+  local repo=$1 number=$2
+  echo "$review_results" | grep "^${repo}#${number}	" | cut -f2
+}
+
+# --- Output ---
+
+print_section() {
+  local group=$1 heading=$2
+  local prs=$(echo "$dashboard" | jq --arg s "$group" '[.[] | select(.group == $s)]')
+  local count=$(echo "$prs" | jq 'length')
+  (( count == 0 )) && return
+
+  echo "## ${heading}"
+  echo ""
+
+  if [[ "$group" == "authored" ]]; then
+    echo "$prs" | jq -r '.[] | "\(.url)\t\(.title)\t\(.updatedAt)\t\(.repository.nameWithOwner)\t\(.number)"' | \
+    while IFS=$'\t' read -r url title updated repo number; do
+      local age=$(format_age "$updated")
+      local rstatus=$(get_review_status "$repo" "$number")
+      echo "- ${url} — ${title} (${age}) [${rstatus}]"
+    done
+  else
+    echo "$prs" | jq -r '.[] | "\(.url)\t\(.author.login)\t\(.title)\t\(.updatedAt)"' | \
+    while IFS=$'\t' read -r url author title updated; do
+      local age=$(format_age "$updated")
+      echo "- ${url} — ${author} — ${title} (${age})"
+    done
+  fi
+  echo ""
+}
+
+print_section "authored" "My PRs"
+print_section "commented" "Commented"
+print_section "keyword" "Keyword matches"
