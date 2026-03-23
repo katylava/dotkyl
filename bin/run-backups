@@ -3,8 +3,7 @@
 # Run daily backups. Paths vary by host because work machine
 # cannot use cloud drives.
 #
-
-set -e
+# Each section runs independently — one failing won't stop the others.
 
 host=$($HOME/.dotkyl/bin/get-host)
 
@@ -17,20 +16,39 @@ case $host in
         roam_dest=~/Documents/RoamBackups
         chrome_dest=~/Documents/ChromeFullHistory
         ;;
-    *) echo "unknown host" >&2; exit 1 ;;
+    *) echo "❌ unknown host: $host" >&2; exit 1 ;;
 esac
 
 roam_src=~/Library/Application\ Support/Roam\ Research/backups/katylava
+chrome_src=~/Downloads
 
-# Copy Roam backups
-mkdir -p "$roam_dest"
-cp "$roam_src"/* "$roam_dest"/ 2>/dev/null || true
+# --- Roam backups ---
+{
+    if [[ ! -d $roam_src ]]; then
+        echo "⚠️  Roam source dir missing: $roam_src" >&2
+    else
+        # (N) = nullglob: empty array instead of error when no matches
+        roam_files=("$roam_src"/*(N))
+        if [[ ${#roam_files} -eq 0 ]]; then
+            echo "⚠️  No Roam backups found in: $roam_src" >&2
+        else
+            mkdir -p "$roam_dest"
+            cp "${roam_files[@]}" "$roam_dest"/
+        fi
+        find "$roam_src" -mtime +7 -type f -delete
+    fi
+    if [[ -d $roam_dest ]]; then
+        find "$roam_dest" -mtime +30 -type f -delete
+    fi
+} || echo "❌ Roam backup failed" >&2
 
-# Clean old Roam backups
-find "$roam_src" -mtime +7 -type f -delete 2>/dev/null
-find "$roam_dest" -mtime +30 -type f -delete 2>/dev/null
-
-# Move Chrome full history exports
-mkdir -p "$chrome_dest"
-files=(~/Downloads/htu_autobackup_*(N))
-[[ ${#files} -gt 0 ]] && mv "${files[@]}" "$chrome_dest"/
+# --- Chrome full history ---
+{
+    files=("$chrome_src"/htu_autobackup_*(N))
+    if [[ ${#files} -eq 0 ]]; then
+        echo "⚠️  No Chrome history exports found matching: htu_autobackup_*" >&2
+    else
+        mkdir -p "$chrome_dest"
+        mv "${files[@]}" "$chrome_dest"/
+    fi
+} || echo "❌ Chrome backup failed" >&2
