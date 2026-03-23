@@ -18,3 +18,6 @@ atrm <job-number>
 
 # Note: `say` commands can be given directly:
 echo 'say "meeting in 5"' | at now + 25 minutes
+
+# Display notification
+echo 'osascript -e '\''display notification "the body" with title "the title" sound name "Frog"'\''' | at 1:00 PM
