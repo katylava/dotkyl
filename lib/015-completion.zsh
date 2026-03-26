@@ -16,7 +16,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 # WHY DOES THIS NOT WORK?!
 zstyle :completion::complete:git-checkout:argument-rest:headrefs command "git for-each-ref --format='%(refname)' refs/heads 2>/dev/null"
 
-fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
+fpath=(~/.dotkyl/completion /opt/homebrew/share/opt/zsh-completions $fpath)
 
 # source /Users/kyl/google-cloud-sdk/completion.zsh.inc
 
@@ -24,4 +24,4 @@ fpath=(~/.dotkyl/completion $(brew --prefix)/share/opt/zsh-completions $fpath)
 # eval "$(op completion zsh)"; compdef _op op # 1password CLI
 
 autoload -Uz compinit
-compinit -C # -C is supposed to speed up compinit, but i can't tell
+compinit -C -u

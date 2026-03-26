@@ -1,4 +1,4 @@
-brew_prefix=`brew --prefix`
+brew_prefix=/opt/homebrew
 
 export EDITOR=nvim
 
@@ -34,4 +34,4 @@ source $brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # must come after zsh-syntax-highlighting
 source $brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-eval "$(mise activate zsh)"
+eval "$(mise activate zsh --shims)"

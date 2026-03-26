@@ -32,7 +32,12 @@ function _apply_palette {
         unset DELTA_FEATURES
         unset STARSHIP_CONFIG
     fi
-    export LS_COLORS="$(vivid generate $VIVID_THEME)"
+    local cache_file="$HOME/.local/state/ls-colors-${VIVID_THEME}"
+    if [[ ! -f "$cache_file" ]]; then
+        mkdir -p "$HOME/.local/state"
+        vivid generate "$VIVID_THEME" > "$cache_file"
+    fi
+    export LS_COLORS="$(<$cache_file)"
 }
 
 function palette {
