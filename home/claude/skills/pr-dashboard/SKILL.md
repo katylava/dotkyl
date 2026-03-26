@@ -6,7 +6,7 @@ description: >
   across oreillymedia. Use when Katy asks about open PRs, what needs review,
   what's going on, or wants a PR status check. Also trigger on "my PRs",
   "what needs my attention", "PR dashboard", or "check PRs".
-allowed-tools: Bash(pr-dashboard *), Bash(gh pr view *), Bash(gh api *)
+allowed-tools: Bash(pr-dashboard *), Bash(gh pr view * | tee *), Bash(gh api * | tee *), Bash(mkdir -p /tmp/pr-dashboard-cache)
 ---
 
 ## Step 1: Gather PRs
