@@ -51,6 +51,10 @@ fi
 # Runs before showing the prompt
 function omz_termsupport_precmd {
   emulate -L zsh
+  if [[ -z "$_tab_color_set" ]]; then
+    tab-color --random
+    _tab_color_set=1
+  fi
   title $ZSH_THEME_TERM_TAB_TITLE_IDLE $ZSH_THEME_TERM_TITLE_IDLE
 }
 
