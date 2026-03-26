@@ -64,8 +64,82 @@ the profile is already correct for new tabs — this call may be unnecessary for
 could be causing the same title-reset issue that `430d184` tried to fix. Need to test whether
 skipping the init profile switch on both machines causes any problems.
 
+## Session 2026-03-23: Title Components fix attempt
+
+### Reproduced on work machine in light mode
+
+Steps to reproduce:
+1. Start iTerm (single tab, dark mode default)
+2. Run `palette light` — theme and title look correct
+3. Open 3+ new tabs — all have light theme, titles correct
+4. Work in one tab for a while
+5. Inactive tab titles revert to iTerm's default title format (e.g. "Tomorrow Dark Mod (zsh)")
+6. Switching to an affected tab and running a command fixes its title (precmd fires)
+
+The colors on affected tabs are still light (profile switch worked), but the tab title
+shows the **dark** profile name — "Tomorrow Dark Mod (zsh)". This is because iTerm's
+default profile for new tabs is dark. The `SetProfile` escape sequence changes the
+appearance but iTerm still uses the original profile name for its default title.
+
+### Root cause
+
+No `Title Components` key was set in the iTerm dynamic profiles, so iTerm used its
+built-in default: **34** (Profile Name + Job = 32 + 2). That's why inactive tabs showed
+"Tomorrow Dark Mod (zsh)" — iTerm was actively maintaining a title based on profile name.
+
+### iTerm Title Components reference
+
+The `Title Components` field is a bitmask stored as an integer in iTerm profiles:
+
+| Value | Meaning            |
+|-------|--------------------|
+| 1     | Session Name       |
+| 2     | Job                |
+| 4     | Working Directory  |
+| 8     | TTY                |
+| 16    | Custom             |
+| 32    | Profile Name       |
+| 64    | Profile & Session  |
+| 128   | User               |
+| 256   | Host               |
+| 512   | Command Line       |
+| 1024  | Size               |
+
+Source: iTerm2 source `iterm2/profile.py` TitleComponents enum.
+
+Previous attempts (session `a291fa17`, set on base profile):
+- **3** (Session Name + Job) — window title bled into tab
+- **6** (Job + Working Directory) — window title bled into tab
+
+### Fix applied
+
+Added `"Title Components": 1` to `iterm/0.base.json` (the base dynamic profile that all
+other profiles inherit from). Value 1 = Session Name only, which is what `\e]1;` sets —
+so iTerm should show only what the shell's `title` function sets and nothing else.
+
+### iTerm dynamic profiles location
+
+Profiles are defined in `/Users/klavallee/.dotkyl/iterm/*.json` and symlinked to
+`~/Library/Application Support/iTerm2/DynamicProfiles/` via `setup/symlinks.yml`.
+Inheritance chain: Base → Tomorrow Dark/Light Mod → Air variants (per host).
+iTerm picks up dynamic profile changes automatically (no restart needed).
+
+### If this reverts or doesn't work
+
+- Check `iterm/0.base.json` still has `"Title Components": 1`
+- If window title bleeds into tab (like previous attempts with 3 and 6), the issue
+  is that iTerm is using `\e]2;` (window title) for the tab. Try value 16 (Custom)
+  or investigate whether `\e]1;` vs `\e]2;` matters for Session Name
+- The open question about skipping `_palette_init_profile` for dark mode is still
+  unresolved (see above) — if title issues persist, try removing the one-shot precmd
+  entirely and see if new tabs still get the right profile
+- `040-titles.zsh` sets both window (`\e]2;`) and tab (`\e]1;`) titles in the `title`
+  function — if Session Name picks up the window title instead of tab title, that
+  could cause the same bleed-through seen with values 3 and 6
+
 ## Previous session history
 
+- 2026-03-23 — reproduced idle title reversion on work machine, added Title Components fix
 - `a291fa17` — deep-dive on tab title components and iTerm title behavior
 - `a0cd7841` — SIGUSR1 palette syncing, starship light mode, palette architecture
 - (personal, earlier session) — idle title reversion investigation, commits `c0fad35`
