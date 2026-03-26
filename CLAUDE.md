@@ -63,7 +63,8 @@ run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 
 ## Workflow
 
-- After completing a task, remind me to commit if there are uncommitted changes.
+- After completing a task, run `git status` to check for uncommitted changes. Only remind me
+  to commit if there are actual uncommitted changes in this repo.
 
 ## Future Work
 
