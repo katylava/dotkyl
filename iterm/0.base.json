@@ -347,6 +347,7 @@
       "Show Mark Indicators": false,
       "Silence Bell": true,
       "Sync Title": false,
+      "Title Components": 1,
       "Tags": [],
       "Terminal Type": "xterm-256color",
       "Thin Strokes": 4,
