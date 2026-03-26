@@ -16,3 +16,4 @@
 # Engineering tasks
 
 - Always use test driven development. Write failing tests first, confirm they fail, then implement the code to make them pass.
+- When making more than ~3 similar edits to a file (bulk deletions, renames, pattern replacements), use `sed` via Bash instead of multiple sequential Edit tool calls.
