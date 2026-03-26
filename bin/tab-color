@@ -147,6 +147,11 @@ if [[ "$name" == "--list" ]]; then
   exit 0
 fi
 
+if [[ "$name" == "--random" ]]; then
+  local keys=(${(ok)colors})
+  name="${keys[RANDOM % $#keys + 1]}"
+fi
+
 rgb="${colors[$name]}"
 if [[ -z "$rgb" ]]; then
   print "Unknown color: $name" >&2
