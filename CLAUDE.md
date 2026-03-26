@@ -61,6 +61,10 @@ run = "brew install espanso && brew uninstall dash"
 run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 ```
 
+## Workflow
+
+- After completing a task, remind me to commit if there are uncommitted changes.
+
 ## Future Work
 
 See `.claude/PLANS.md` for improvement plans.
