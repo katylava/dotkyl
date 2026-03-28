@@ -344,27 +344,87 @@ titles correctly — the problem is specific to the `SetProfile` escape sequence
 1337;SetProfile=). The escape sequence likely uses a different code path that reinitializes
 the session name.
 
-### Next experiment: iTerm Python API for profile switching
+### AppleScript: profile switching is read-only
 
-The Python API has `session.async_set_profile()` which switches a session's profile
-programmatically. It likely uses the same internal code path as the UI (not the escape
-sequence), which would mean it preserves titles.
+iTerm's AppleScript dictionary has `profile name` as `access="r"` (read-only). There is no
+AppleScript command to change an existing session's profile. You can only create *new*
+tabs/windows/splits with a specific profile. Confirmed via the sdef file at
+`/Applications/iTerm.app/Contents/Resources/iTerm2.sdef`.
 
-```python
-partialProfiles = await iterm2.PartialProfile.async_query(connection)
-for partial in partialProfiles:
-    if partial.name == "Target Profile":
-        full = await partial.async_get_full_profile()
-        await session.async_set_profile(full)
+### AppleScript: session name IS writable
+
+Setting the session name via AppleScript works:
+```
+osascript -e 'tell application "iTerm2" to tell current session of current tab of current window to set name to "test-idle"'
 ```
 
-Requires iTerm's Python API runtime to be enabled. Would replace the `SetProfile` escape
-sequence in `set-iterm-profile`.
+This sets the **persistent session name** — the one `Title Components: 1` displays when
+idle. When the temporary OSC 1 title expires on an idle tab, it falls back to this session
+name instead of the profile name. Confirmed: "test-idle" persists on idle tabs after
+`SetProfile` has fired.
 
-### Remaining approaches if Python API doesn't work
+**Limitation:** This only sets the session name once. precmd updates the *displayed* title
+via OSC 1 on every prompt, but the fallback session name stays fixed. Setting it on every
+prompt via AppleScript would be too slow. Setting it once after `SetProfile` only captures
+the state at shell init time, which isn't useful for identifying what you're doing in a tab.
 
-- **TRAPALRM-based title refresh** — periodic re-set of title even when idle (workaround)
-- **AppleScript** — may also use the UI code path for profile switching
+### Python API: can't connect from command line
+
+The Python API (`session.async_set_profile()`) could switch profiles programmatically but
+can't connect from the command line:
+- Direct connection via Unix socket fails with "Connection refused"
+- `it2run` launcher exists but requires downloading iTerm's bundled Python runtime (~heavy
+  setup)
+- Requires enabling Python API in Preferences > General > Magic
+- Requires `pip install iterm2` and potentially `pyobjc` for auth
+- Too much infrastructure for one escape sequence replacement
+
+### OSC 0 test (failed)
+
+Changed `title` function to use `\e]0;$title\a` instead of separate OSC 1 + OSC 2. Result:
+no difference — titles still revert on idle tabs after `SetProfile`. OSC 0 does not set
+the iTerm session name.
+
+### Summary of dead ends
+
+| Approach | Result |
+|----------|--------|
+| Option A: rewrite dynamic profile JSON | Inheritance breaks on key removal |
+| Option B: `defaults write` GUID | iTerm ignores while running |
+| Title Components 0 or 16 | No tab titles at all |
+| OSC 0 instead of OSC 1+2 | Doesn't set session name |
+| Bound Hosts | Locks the host into one profile; new tabs always revert to it |
+| AppleScript set profile | Read-only |
+| Python API | Can't connect from CLI without heavy setup |
+| AppleScript set session name (once) | Works but static — not useful for ongoing tab identification |
+
+### Solution: AppleScript session name on chpwd
+
+**The fix:** Set the iTerm session name via AppleScript on every `cd` (via `chpwd` hook)
+and once at session start (via one-shot precmd, deferred so bookmarks are loaded for `%~`
+expansion). The session name is set to the same truncated PWD format as the tab title
+(`%15<..<%~%<<`).
+
+This works because:
+- `Title Components: 1` (session name) is what iTerm shows on idle tabs
+- OSC 1 (from precmd) temporarily overrides the display while the tab is active
+- When idle, iTerm falls back to the session name — which is now the last `cd` directory
+  instead of the profile name
+- The AppleScript call is backgrounded (`&!`) so it doesn't slow down `cd`
+
+**Implementation:** Added to `lib/040-titles.zsh`:
+- `_iterm_set_session_name` function — sets session name via `osascript`
+- Added to `chpwd_functions` for directory changes
+- Initial call deferred to first precmd (one-shot pattern) so bookmarks from
+  `080-bookmarks.zsh` are available for `%~` named directory expansion
+
+**Confirmed working:** Session name persists through opening iTerm Preferences (which
+previously triggered the title revert). Tab title shows correct directory even after
+`SetProfile` has fired.
+
+**Limitation:** The idle fallback shows the directory at the time of the last `cd`, not
+the title at the time of the last command (which could include a command name via preexec).
+This is acceptable since the directory is the most useful identifier for an idle tab.
 
 ## Previous session history
 
