@@ -1,8 +1,8 @@
 {
   "Profiles": [
     {
-      "Guid": "B7E2C4A1-3F8D-4E6A-9C1B-5D7F0E2A8B34",
-      "Name": "Tomorrow Light Mod",
+      "Guid": "DDD79C56-75B8-460A-812C-2F6F63EF5898",
+      "Name": "Tomorrow Light Mod Base",
       "Dynamic Profile Parent Name": "Base",
       "Only The Default BG Color Uses Transparency": true,
       "Transparency": 0.00,

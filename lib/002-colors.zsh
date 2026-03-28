@@ -4,16 +4,8 @@
 
 _PALETTE_STATE="$HOME/.local/state/terminal-palette"
 _STARSHIP_LIGHT="$HOME/.local/state/starship-light.toml"
-case "$DOTKYL_HOST" in
-    personal)
-        ITERM_DARK_PROFILE="Tomorrow Dark Mod Air"
-        ITERM_LIGHT_PROFILE="Tomorrow Light Mod Air"
-        ;;
-    *)
-        ITERM_DARK_PROFILE="Tomorrow Dark Mod"
-        ITERM_LIGHT_PROFILE="Tomorrow Light Mod"
-        ;;
-esac
+ITERM_DARK_PROFILE="Tomorrow Dark Mod"
+ITERM_LIGHT_PROFILE="Tomorrow Light Mod"
 
 function _apply_palette {
     local mode="${1:-dark}"
