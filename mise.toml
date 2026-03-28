@@ -57,6 +57,18 @@ else
 fi
 """
 
+[tasks.iterm-cleanup]
+description = "Remove broken iTerm dynamic profile symlinks"
+depends = ["symlinks"]
+run = """
+dir="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
+found=false
+for f in "$dir"/*.json(N); do
+  [[ -L "$f" && ! -e "$f" ]] && { rm "$f"; found=true; echo "✅ removed broken link: ${f:t}"; }
+done
+$found || echo "⏭️ no broken links"
+"""
+
 [tasks.check-host]
 description = "Verify hostname is configured"
 run = """
@@ -148,7 +160,7 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
+depends = ["hook", "symlinks", "iterm-cleanup", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
