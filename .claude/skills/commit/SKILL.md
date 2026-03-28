@@ -40,6 +40,7 @@ Common area prefixes derived from this repo's history:
 - `iterm` — iTerm2 profiles/config
 - `urlwatch` — urlwatch config
 - `cheatsheets` — cheatsheet files
+- `setup` — setup scripts (manage-symlinks, etc.)
 
 Multiple areas can be comma-separated: `zsh, iterm: ...`
 
