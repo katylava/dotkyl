@@ -118,21 +118,6 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
   || echo '⏭️ no Pipfile changes'
 """
 
-[tasks.rename-code-dir]
-description = "Rename ~/Code to ~/code (personal machine)"
-run = """
-[[ -d ~/Code && ! -d ~/code ]] \
-  && { mv ~/Code ~/code && echo "✅ renamed ~/Code → ~/code"; } \
-  || echo "⏭️ already done"
-"""
-
-[tasks.rename-code-dir-reminder]
-run = """
-[[ -d ~/Code && ! -d ~/code ]] \
-  && echo "👉 Run: mise run rename-code-dir" \
-  || true
-"""
-
 [tasks.claude-settings-reminder]
 description = "Remind to evaluate claude settings for symlinking"
 run = """
@@ -164,4 +149,4 @@ depends = ["hook", "symlinks", "iterm-cleanup", "crontab", "private-repo", "brew
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host", "rename-code-dir-reminder"]
+depends = ["hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host"]
