@@ -73,6 +73,22 @@ function omz_termsupport_preexec {
 precmd_functions+=(omz_termsupport_precmd)
 preexec_functions+=(omz_termsupport_preexec)
 
+# Set iTerm session name on directory change so idle tabs show the last PWD
+# instead of the profile name. OSC 1 titles are temporary; session name persists.
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+  function _iterm_set_session_name {
+    osascript -e "tell application \"iTerm2\" to tell current session of current tab of current window to set name to \"$(print -Pn '%15<..<%~%<<')\"" &>/dev/null &!
+  }
+  chpwd_functions+=(_iterm_set_session_name)
+  # Defer initial call to first prompt so bookmarks (080) are loaded for %~ expansion
+  function _iterm_init_session_name {
+    _iterm_set_session_name
+    precmd_functions=("${(@)precmd_functions:#_iterm_init_session_name}")
+    unfunction _iterm_init_session_name
+  }
+  precmd_functions+=(_iterm_init_session_name)
+fi
+
 # Set tab title to PWD before launching claude, so the tab shows "dir (claude)"
 # instead of "claude (claude)"
 function claude { print -Pn "\e]1;%15<..<%~%<<\a"; command claude "$@"; }
