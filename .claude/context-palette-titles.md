@@ -320,42 +320,51 @@ From the iTerm2 source (gnachman/iTerm2):
   name. This is what `Title Components: 1` displays.
 - **No escape sequence exists to set session name directly.** OSC 1337 does not have a
   SetSessionName command.
-- OSC 0 (set both icon name and window title) reportedly updates `autoNameFormat` — this
-  could be the fix. Currently we send OSC 1 + OSC 2 separately instead of OSC 0.
+- OSC 0 (set both icon name and window title) reportedly updates `autoNameFormat` — **tested
+  and disproved.** OSC 0 does NOT set the session name. Titles still revert on idle tabs.
 
-### Bound Hosts fix (committed)
+### Bound Hosts (reverted)
 
 Re-added `"Bound Hosts": ["hyperion.lan"]` to `iterm/3.tomorrow-dark-mod-air.json`
-(commit `8927772`). This restores iTerm's automatic profile switching for dark mode on the
-personal machine, eliminating the need for `SetProfile` on new tabs. Titles persist on idle
-tabs in dark mode.
+(commit `8927772`, reverted). Titles persisted for dark mode, but `Bound Hosts` forces new
+tabs to always open with the dark Air profile — `palette light` can switch the current tab
+but new tabs revert to dark. Not viable for palette switching.
 
-**Limitation:** Only one profile can be bound to a host, so this fixes dark mode only.
-Light mode still requires `SetProfile` and still has the title problem.
+### OSC 0 test (failed)
 
-### Next experiment: OSC 0 instead of OSC 1 + OSC 2
+Changed `title` function to use `\e]0;$title\a` instead of separate OSC 1 + OSC 2. Result:
+no difference — titles still revert on idle tabs after `SetProfile`. OSC 0 does not set
+the iTerm session name.
 
-The `title` function currently sends:
+### Key observation: iTerm UI profile switching preserves titles
+
+When switching a tab's profile via iTerm's UI (Edit Session or Profiles menu), the tab
+title is **not** reset. This means iTerm's internal profile switching code path handles
+titles correctly — the problem is specific to the `SetProfile` escape sequence (OSC
+1337;SetProfile=). The escape sequence likely uses a different code path that reinitializes
+the session name.
+
+### Next experiment: iTerm Python API for profile switching
+
+The Python API has `session.async_set_profile()` which switches a session's profile
+programmatically. It likely uses the same internal code path as the UI (not the escape
+sequence), which would mean it preserves titles.
+
+```python
+partialProfiles = await iterm2.PartialProfile.async_query(connection)
+for partial in partialProfiles:
+    if partial.name == "Target Profile":
+        full = await partial.async_get_full_profile()
+        await session.async_set_profile(full)
 ```
-\e]2;$window_title\a   # OSC 2: window name
-\e]1;$tab_title\a      # OSC 1: tab/icon name
-```
 
-If OSC 0 actually sets `autoNameFormat` (the session name), changing to:
-```
-\e]0;$title\a           # OSC 0: both window and tab name
-```
-could make the title persistent by setting the real session name, not just a temporary
-override. This would fix the idle tab problem regardless of `SetProfile`.
+Requires iTerm's Python API runtime to be enabled. Would replace the `SetProfile` escape
+sequence in `set-iterm-profile`.
 
-**Trade-off:** OSC 0 sets both window and tab title to the same value. Currently they're
-set separately (tab gets truncated PWD, window gets `user@host: full_pwd`).
+### Remaining approaches if Python API doesn't work
 
-### Remaining approaches if OSC 0 doesn't work
-
-- **iTerm Python API** — can set session name programmatically
-- **TRAPALRM-based title refresh** — periodic re-set of title even when idle
-- **iTerm Python API for profile switching** — may avoid the title side effect
+- **TRAPALRM-based title refresh** — periodic re-set of title even when idle (workaround)
+- **AppleScript** — may also use the UI code path for profile switching
 
 ## Previous session history
 
