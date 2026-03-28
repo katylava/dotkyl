@@ -137,8 +137,91 @@ iTerm picks up dynamic profile changes automatically (no restart needed).
   function — if Session Name picks up the window title instead of tab title, that
   could cause the same bleed-through seen with values 3 and 6
 
+## Session 2026-03-28: Personal machine title reversion root cause
+
+### Problem
+
+On the personal machine (dark mode, no palette switch), tab titles revert to the profile
+name. iTerm also overwrites the custom title set by the `claude` wrapper. On the work
+machine, titles work correctly (peon-ping overwrites claude's title, which is expected).
+
+### Root cause confirmed
+
+The `Title Components: 1` fix is inherited correctly — both machines show "Session Name"
+in iTerm's profile settings. The real issue is `_palette_init_profile` (lines 85-96 of
+`002-colors.zsh`).
+
+iTerm's default profile GUID (`Default Bookmark Guid` in `com.googlecode.iterm2`) is
+`AE5AC02F-6F03-4B82-B72A-1E6838D6E067` = "Tomorrow Dark Mod". On the personal machine,
+`_palette_init_profile` switches every new tab to "Tomorrow Dark Mod Air" — a real profile
+change that triggers iTerm's async title reset. On the work machine, the default profile
+IS "Tomorrow Dark Mod", so dark mode is a no-op — but light mode still triggers a real
+profile switch and the same title reset.
+
+On the personal machine, both dark and light mode are affected — Air profile variants
+always differ from the default.
+
+### Why escape-sequence-based fixes don't work
+
+- Can't skip the profile switch — Air variants are needed (different font size)
+- Can't change the default to one variant — other modes still need a switch
+- Can't reliably set the title after `SetProfile` — iTerm processes it asynchronously
+  after all shell escapes
+
+### Proposed solutions (not started — compare before implementing)
+
+**Option A: Modify dynamic profile JSON on disk**
+
+Instead of switching between profiles via `SetProfile`, rewrite the active profile's JSON
+(e.g. `iterm/3.tomorrow-dark-mod-air.json`) to swap in light/dark colors. iTerm auto-reloads
+dynamic profiles from disk, so the current tab's appearance changes without a profile switch
+— no async title reset. These files are already tracked in this repo.
+
+Open questions:
+- Does iTerm's auto-reload of dynamic profiles also cause a title reset?
+- How fast does iTerm pick up the file change?
+- The JSON files are version-controlled — need a strategy for generated-vs-committed state
+
+**Option B: Change default profile via iTerm custom settings folder**
+
+iTerm has a "Load settings from a custom folder or URL" feature (Settings → Settings tab).
+Currently disabled, previously pointed at `/Users/kyl/Dropbox/SyncedSettings` (Dropbox no
+longer installed).
+
+The idea: point this at a folder we control (in this repo or another local path). When
+`palette` switches modes, update the `Default Bookmark Guid` in the settings file to the
+correct Air variant. New tabs open with the right profile natively — no `SetProfile` escape
+on shell init, no async title reset. This also solves the secondary goal of backing up
+iTerm settings.
+
+Open questions:
+- What format does iTerm write to the custom folder? (likely plist, unverified)
+- Does enabling with an empty folder save current settings or load nothing?
+- Current tab still needs `SetProfile` for immediate switch — does this still cause title
+  reset on the current tab?
+
+**Setup needed for Option B (if chosen):**
+
+1. Back up current settings: `defaults export com.googlecode.iterm2 ~/iterm2-backup.plist`
+2. Set the custom folder path (with iTerm closed):
+   `defaults write com.googlecode.iterm2 PrefsCustomFolder -string "/path/to/folder"`
+3. Enable loading: `defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true`
+4. Launch iTerm and verify it saves current settings to the folder
+5. Restore from backup if anything goes wrong:
+   `defaults import com.googlecode.iterm2 ~/iterm2-backup.plist`
+
+### Relevant defaults keys
+
+```
+defaults read com.googlecode.iterm2 LoadPrefsFromCustomFolder  # currently 0
+defaults read com.googlecode.iterm2 PrefsCustomFolder          # currently /Users/kyl/Dropbox/SyncedSettings
+defaults read com.googlecode.iterm2 "Default Bookmark Guid"    # AE5AC02F-6F03-4B82-B72A-1E6838D6E067
+```
+
 ## Previous session history
 
+- 2026-03-28 — confirmed root cause: default profile GUID mismatch on personal machine;
+  proposed custom settings folder approach
 - 2026-03-23 — reproduced idle title reversion on work machine, added Title Components fix
 - `a291fa17` — deep-dive on tab title components and iTerm title behavior
 - `a0cd7841` — SIGUSR1 palette syncing, starship light mode, palette architecture
