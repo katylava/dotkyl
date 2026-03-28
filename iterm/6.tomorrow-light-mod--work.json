@@ -1,0 +1,11 @@
+{
+  "Profiles": [
+    {
+      "Guid": "B7E2C4A1-3F8D-4E6A-9C1B-5D7F0E2A8B34",
+      "Name": "Tomorrow Light Mod",
+      "Dynamic Profile Parent Name": "Tomorrow Light Mod Base",
+      "Normal Font": "VictorMonoNFP-Regular 21",
+      "Non Ascii Font": "VictorMonoNFP-Regular 21"
+    }
+  ]
+}
