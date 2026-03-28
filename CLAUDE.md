@@ -4,7 +4,7 @@ Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
 
 ## Applying Changes
 
-- Reload shell after edits: `sopr` (alias for `source ~/.zshrc`)
+- Reload shell after edits: open a new terminal tab
 - Apply symlinks: `setup/manage-symlinks` (supports `--dry-run`)
 
 ## Conventions
