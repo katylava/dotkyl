@@ -218,6 +218,145 @@ defaults read com.googlecode.iterm2 PrefsCustomFolder          # currently /User
 defaults read com.googlecode.iterm2 "Default Bookmark Guid"    # AE5AC02F-6F03-4B82-B72A-1E6838D6E067
 ```
 
+## Session 2026-03-28: Testing Option A and Option B
+
+### Option A testing: dynamic profile JSON rewrite
+
+**Test 1: Adding a key that doesn't exist in the child profile**
+
+Added `Background Color` (dark red) to `iterm/3.tomorrow-dark-mod-air.json` — the Air
+profile didn't have this key, inheriting it from the parent "Tomorrow Dark Mod" profile.
+
+Result: iTerm picked up the change **instantly** — background turned red with no restart
+needed. Did not test title reset because titles were already reverting from the existing
+`_palette_init_profile` `SetProfile` call (couldn't isolate the signal).
+
+**Test 2: Removing the added key (git stash)**
+
+After reverting the file with `git stash` (removing the `Background Color` key), the
+background stayed red — iTerm did **not** fall back to the parent profile's value. New
+tabs also opened with the red background. Required iTerm restart to clear.
+
+**Conclusion for Option A:** iTerm's dynamic profile inheritance does not handle key
+removal correctly. Once a key is explicitly set in a child profile, removing it does not
+cause iTerm to re-inherit from the parent — it caches the last explicit value. This means
+Option A only works if you modify existing keys in place, never add or remove them.
+
+**Option A viability:** To make it work, child profiles would need all color keys inlined
+(not inherited). This defeats the purpose of inheritance — every color change would need
+to be updated in every profile. **Not viable.**
+
+### Option B testing: defaults write to change default profile GUID
+
+**Test:** Changed `Default Bookmark Guid` via `defaults write` while iTerm was running:
+```
+defaults write com.googlecode.iterm2 "Default Bookmark Guid" "F12D33A3-86B4-4F63-B75F-D6659E2C1718"
+```
+
+Result: iTerm **did not pick up the change**. The global preferences UI still showed
+"Tomorrow Dark Mod" as the default profile. iTerm holds preferences in memory while
+running and ignores external `defaults write` changes. Would only take effect after
+iTerm restart, at which point iTerm would likely overwrite it on next quit anyway.
+
+**Conclusion for Option B (via defaults write):** Not viable for live switching. iTerm's
+in-memory preferences take precedence over the defaults database while running.
+
+**Option B via custom settings folder:** Not tested. The custom settings folder approach
+might behave differently (iTerm may watch the folder for changes), but this is unverified.
+
+### Updated problem statement
+
+The problem is not machine-specific. Any time `SetProfile` switches to a profile that
+**differs** from the tab's current profile, iTerm asynchronously resets the tab title.
+This affects:
+- Personal machine: both dark and light mode (Air variants differ from default)
+- Work machine: light mode (default is dark, must switch to light)
+
+A `SetProfile` call to the **already-active** profile is a true no-op — no title reset.
+This was confirmed by manually changing the default profile in iTerm's UI on the personal
+machine to "Tomorrow Dark Mod Air": new tabs opened correctly and `_palette_init_profile`'s
+`SetProfile` to the same profile did not cause a title reset.
+
+### Impact
+
+Tab titles are not cosmetic — they're used to identify which task each tab is working on.
+Idle tabs losing their titles means losing track of what's in each tab without switching
+to it and running a command.
+
+### Title Components testing
+
+Tested changing `Title Components` in `0.base.json` to see if alternative values prevent
+the title reset:
+
+- **`Title Components: 16` (CUSTOM):** Immediately overwrites tab titles with profile name
+  "Tomorrow Dark Mod" — worse than the default. After iTerm restart, no tab titles at all.
+- **`Title Components: 0`:** Before restart, titles reverted to profile name. After restart,
+  no tab titles at all.
+
+Both values prevent escape-sequence titles (OSC 1) from displaying. **Title Components is
+a dead end.**
+
+### Root cause clarification: session name vs tab title
+
+**Key insight:** The `title` function in `040-titles.zsh` uses OSC 1 (icon/tab title) and
+OSC 2 (window title). Neither of these sets the iTerm **session name**. With
+`Title Components: 1` (session name), iTerm displays the session name — OSC 1 is just a
+temporary override that iTerm eventually re-evaluates back to the actual session name.
+
+On idle tabs, iTerm isn't "resetting" anything — it's going back to the real session name,
+which was always initialized from the profile name on session creation. precmd keeps
+papering over it on every prompt via OSC 1.
+
+**This explains the async/delayed behavior:** there is no timer or explicit reset. iTerm
+just re-evaluates `Title Components` and the session name (= profile name) takes over when
+the temporary OSC 1 override expires or is cleared.
+
+### iTerm source code findings
+
+From the iTerm2 source (gnachman/iTerm2):
+- `setProfile:preservingName:` in PTYSession.m — preserves overridden session fields across
+  profile switches (but we aren't setting the session name, so there's nothing to preserve)
+- `autoNameFormat` — internal variable that stores the session name, initialized from profile
+  name. This is what `Title Components: 1` displays.
+- **No escape sequence exists to set session name directly.** OSC 1337 does not have a
+  SetSessionName command.
+- OSC 0 (set both icon name and window title) reportedly updates `autoNameFormat` — this
+  could be the fix. Currently we send OSC 1 + OSC 2 separately instead of OSC 0.
+
+### Bound Hosts fix (committed)
+
+Re-added `"Bound Hosts": ["hyperion.lan"]` to `iterm/3.tomorrow-dark-mod-air.json`
+(commit `8927772`). This restores iTerm's automatic profile switching for dark mode on the
+personal machine, eliminating the need for `SetProfile` on new tabs. Titles persist on idle
+tabs in dark mode.
+
+**Limitation:** Only one profile can be bound to a host, so this fixes dark mode only.
+Light mode still requires `SetProfile` and still has the title problem.
+
+### Next experiment: OSC 0 instead of OSC 1 + OSC 2
+
+The `title` function currently sends:
+```
+\e]2;$window_title\a   # OSC 2: window name
+\e]1;$tab_title\a      # OSC 1: tab/icon name
+```
+
+If OSC 0 actually sets `autoNameFormat` (the session name), changing to:
+```
+\e]0;$title\a           # OSC 0: both window and tab name
+```
+could make the title persistent by setting the real session name, not just a temporary
+override. This would fix the idle tab problem regardless of `SetProfile`.
+
+**Trade-off:** OSC 0 sets both window and tab title to the same value. Currently they're
+set separately (tab gets truncated PWD, window gets `user@host: full_pwd`).
+
+### Remaining approaches if OSC 0 doesn't work
+
+- **iTerm Python API** — can set session name programmatically
+- **TRAPALRM-based title refresh** — periodic re-set of title even when idle
+- **iTerm Python API for profile switching** — may avoid the title side effect
+
 ## Previous session history
 
 - 2026-03-28 — confirmed root cause: default profile GUID mismatch on personal machine;
