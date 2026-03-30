@@ -90,3 +90,13 @@ visibility into, which the user may want to apply to the new computer. Adds
 reminders to the manifest about those.
 
 Finally, pushes up any changes made to this repo during the process.
+
+## Separate install from sync commands
+
+
+find a way to separate things needing frequent sync and things needing
+one-time install/modification/uninstall... different mise.toml files if
+possible (maybe one in the install directory for installs, and the repo root
+one can be for frequent syncs. so the process for something to sync between two
+active computers, would be to put it in the sync file first, then after it is
+done on the other computer, move it to the install file.
