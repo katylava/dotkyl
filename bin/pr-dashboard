@@ -32,14 +32,20 @@ tag_and_append() {
 
 format_age() {
   local updated=$1
-  local now=$(date +%s)
-  local then=$(date -jf "%Y-%m-%dT%H:%M:%SZ" "$updated" +%s 2>/dev/null || echo "$now")
-  local diff=$(( (now - then) / 86400 ))
-  if (( diff == 0 )); then
-    echo "today"
-  elif (( diff == 1 )); then
+  local updated_epoch=$(TZ=UTC date -jf "%Y-%m-%dT%H:%M:%SZ" "$updated" +%s 2>/dev/null || date +%s)
+  local updated_date=$(date -r "$updated_epoch" +%Y-%m-%d)
+  local today=$(date +%Y-%m-%d)
+  local yesterday=$(date -v-1d +%Y-%m-%d)
+
+  if [[ "$updated_date" == "$today" ]]; then
+    local time=$(date -r "$updated_epoch" "+%-l:%M %p %Z" | sed 's/^ //')
+    echo "today at ${time}"
+  elif [[ "$updated_date" == "$yesterday" ]]; then
     echo "yesterday"
   else
+    local today_epoch=$(date -jf "%Y-%m-%d" "$today" +%s)
+    local updated_day_epoch=$(date -jf "%Y-%m-%d" "$updated_date" +%s)
+    local diff=$(( (today_epoch - updated_day_epoch) / 86400 ))
     echo "${diff}d ago"
   fi
 }
@@ -142,17 +148,23 @@ print_section() {
   echo ""
 
   if [[ "$group" == "authored" ]]; then
-    echo "$prs" | jq -r '.[] | "\(.url)\t\(.title)\t\(.updatedAt)\t\(.repository.nameWithOwner)\t\(.number)"' | \
-    while IFS=$'\t' read -r url title updated repo number; do
+    echo "$prs" | jq -r '.[] | "\(.repository.name)\t\(.number)\t\(.url)\t\(.title)\t\(.updatedAt)\t\(.repository.nameWithOwner)"' | \
+    while IFS=$'\t' read -r repo_name number url title updated repo_full; do
       local age=$(format_age "$updated")
-      local rstatus=$(get_review_status "$repo" "$number")
-      echo "- ${url} — ${title} (${age}) [${rstatus}]"
+      local rstatus=$(get_review_status "$repo_full" "$number")
+      echo "- ${repo_name}#${number} — ${title}"
+      echo "  ${url}"
+      echo "  ${age} · ${rstatus}"
+      echo ""
     done
   else
-    echo "$prs" | jq -r '.[] | "\(.url)\t\(.author.login)\t\(.title)\t\(.updatedAt)"' | \
-    while IFS=$'\t' read -r url author title updated; do
+    echo "$prs" | jq -r '.[] | "\(.repository.name)\t\(.number)\t\(.url)\t\(.author.login)\t\(.title)\t\(.updatedAt)"' | \
+    while IFS=$'\t' read -r repo_name number url author title updated; do
       local age=$(format_age "$updated")
-      echo "- ${url} — ${author} — ${title} (${age})"
+      echo "- ${repo_name}#${number} — ${title}"
+      echo "  ${url}"
+      echo "  ${author} · ${age}"
+      echo ""
     done
   fi
   echo ""
