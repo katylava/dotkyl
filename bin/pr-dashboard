@@ -50,13 +50,7 @@ format_age() {
   fi
 }
 
-review_jq='
-  .reviews | map(.state) | if any(. == "CHANGES_REQUESTED") then "changes requested"
-  elif any(. == "APPROVED") then "approved"
-  elif length > 0 then "review comments"
-  else "awaiting review"
-  end
-'
+detail_jq='[(.reviews | map(.state) | if any(. == "CHANGES_REQUESTED") then "changes requested" elif any(. == "APPROVED") then "approved" elif length > 0 then "review comments" else "awaiting review" end), ((.comments | length) + (.reviews | length) | tostring)] | join("|")'
 
 # --- Queries (parallel) ---
 
@@ -128,12 +122,17 @@ authored_prs=$(echo "$dashboard" | jq -r '.[] | select(.group == "authored") | "
 review_results=""
 if [[ -n "$authored_prs" ]]; then
   review_results=$(echo "$authored_prs" | parallel --colsep '\t' --jobs 8 --keep-order \
-    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews --jq '$review_jq' 2>/dev/null)")
+    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews,comments --jq '$detail_jq' 2>/dev/null)")
 fi
 
 get_review_status() {
   local repo=$1 number=$2
-  echo "$review_results" | grep "^${repo}#${number}	" | cut -f2
+  echo "$review_results" | grep "^${repo}#${number}	" | cut -f2 | cut -d'|' -f1
+}
+
+get_comment_count() {
+  local repo=$1 number=$2
+  echo "$review_results" | grep "^${repo}#${number}	" | cut -f2 | cut -d'|' -f2
 }
 
 # --- Output ---
@@ -152,9 +151,13 @@ print_section() {
     while IFS=$'\t' read -r repo_name number url title updated repo_full; do
       local age=$(format_age "$updated")
       local rstatus=$(get_review_status "$repo_full" "$number")
+      local comments=$(get_comment_count "$repo_full" "$number")
+      local meta="${age} · ${rstatus}"
+      (( comments == 1 )) && meta="${meta} · 1 comment"
+      (( comments > 1 )) && meta="${meta} · ${comments} comments"
       echo "- ${repo_name}#${number} — ${title}"
       echo "  ${url}"
-      echo "  ${age} · ${rstatus}"
+      echo "  ${meta}"
       echo ""
     done
   else
