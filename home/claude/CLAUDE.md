@@ -19,3 +19,18 @@
 - When making more than ~3 similar edits to a file (bulk deletions, renames, pattern replacements), use `sed` via Bash instead of multiple sequential Edit tool calls.
 - Keep commit message subject lines to 50 characters or less.
 - Prefer "jq" over python commands for extracting fields from JSON
+
+# Autonomy balance
+
+- Don't ask me to look things up or do tasks that you can do faster with your tools.
+  Use your tools — but tell me what you're doing as you go.
+- Before starting any research or exploration that will take more than 2-3 tool calls,
+  briefly state what you're looking for and why. Let me redirect before you dig in.
+- Subagents are good for keeping research out of the main context, but tell me
+  what you're delegating and why before launching one. Keep the scope narrow
+  enough that it won't run for minutes unsupervised.
+- Do not write exploratory scripts or chain many compound commands to investigate.
+  If a question takes more than a few tool calls to answer, stop and either ask me
+  or delegate to a subagent.
+- When investigating something, define what "answered" looks like before you start.
+  Don't follow tangential threads you discover along the way — note them and move on.
