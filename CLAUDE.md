@@ -63,6 +63,9 @@ run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 
 ## Workflow
 
+- When making changes to this machine that should persist across machines (installing/removing
+  packages, changing tool configs, modifying shell settings, etc.), update the corresponding
+  tracked file in this repo (Brewfile, Pipfile, mise.toml, lib/*.zsh, etc.).
 - After completing a task, run `git status` to check for uncommitted changes. Only remind me
   to commit if there are actual uncommitted changes in this repo.
 
