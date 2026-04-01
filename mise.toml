@@ -44,6 +44,7 @@ brew bundle check --file setup/Brewfile.shared >/dev/null \
     && echo "⏭️ $host already ok" \
     || { echo "🔧 installing $host packages..." && brew bundle --file setup/Brewfile.$host && echo "✅ $host done"; }
 }
+rm -f .brew-outdated
 true
 """
 
@@ -64,9 +65,14 @@ bin/get-host >/dev/null 2>&1 \
 """
 
 [tasks.brew-reminder]
-description = "Remind if Brewfile changed in last merge"
+description = "Remind if Brewfile changed since last brew install"
 run = """
+# Create marker if Brewfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
+  && touch .brew-outdated
+
+# Remind until mise run brew clears the marker
+[[ -f .brew-outdated ]] \
   && echo '👉 Brewfile changed — run: mise run brew' \
   || echo '⏭️ no Brewfile changes'
 """
@@ -95,12 +101,18 @@ if $missing; then
 else
   echo "⏭️ already ok"
 fi
+rm -f .pip-outdated
 '''
 
 [tasks.pip-reminder]
-description = "Remind if Pipfile changed in last merge"
+description = "Remind if Pipfile changed since last pip install"
 run = """
+# Create marker if Pipfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
+  && touch .pip-outdated
+
+# Remind until mise run pip clears the marker
+[[ -f .pip-outdated ]] \
   && echo '👉 Pipfile changed — run: mise run pip' \
   || echo '⏭️ no Pipfile changes'
 """
