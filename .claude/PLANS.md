@@ -17,7 +17,9 @@ post-new-install).
 ## Low priority
 
 ### plan-nvim-lua-migration.md
-Migrate neovim config from vimscript to lua. Has a branch but not yet merged.
+Migrate neovim config from vimscript to lua. Branch `nvim-lua-wip` has first
+attempt — works but has nerdtree icon issues. Needs plugin modernization
+(nerdtree→nvim-tree, etc.) before merging. Detailed lessons learned in plan.
 
 ### plan-nvim-zshrc.md
 Alternate zshrc for neovim terminals — skip slow/harmful lib files.
