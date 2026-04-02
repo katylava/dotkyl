@@ -105,3 +105,11 @@ done on the other computer, move it to the install file. not sure if the moving
 it after syncing is something we can program into the mise tasks or if it needs
 to something claude knows to take care of, either from CLAUDE.md for this repo
 or from a skill
+
+
+## Things to sync
+
+- some claude settings but not all (like peon-ping config) -- is this even
+  possible?
+- app settings: moom, raycast, istat menus
+  - the moom shortcut key is different on each computer, annoyingly
