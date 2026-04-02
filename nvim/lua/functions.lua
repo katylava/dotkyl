@@ -52,7 +52,6 @@ function WindowSwapping()
 end
 
 -- Theme functions: Apply dark/light palette with indent guide colors
--- These interact with lightline (vimscript plugin) so they use vim.cmd
 function ApplyDark()
     vim.opt.background = "dark"
     vim.cmd("hi lineNr guibg=#282828")
@@ -60,12 +59,6 @@ function ApplyDark()
     vim.g.indent_guides_even_color = "#2F3648"
     vim.cmd("hi IndentGuidesOdd guibg=" .. vim.g.indent_guides_odd_color)
     vim.cmd("hi IndentGuidesEven guibg=" .. vim.g.indent_guides_even_color)
-    if vim.g.lightline then
-        vim.cmd("runtime autoload/lightline/colorscheme/catppuccin.vim")
-        vim.fn["lightline#init"]()
-        vim.fn["lightline#colorscheme"]()
-        vim.fn["lightline#update"]()
-    end
 end
 
 function ApplyLight()
@@ -75,91 +68,4 @@ function ApplyLight()
     vim.g.indent_guides_even_color = "#CFD6C8"
     vim.cmd("hi IndentGuidesOdd guibg=" .. vim.g.indent_guides_odd_color)
     vim.cmd("hi IndentGuidesEven guibg=" .. vim.g.indent_guides_even_color)
-    if vim.g.lightline then
-        vim.cmd("runtime autoload/lightline/colorscheme/catppuccin.vim")
-        vim.fn["lightline#init"]()
-        vim.fn["lightline#colorscheme"]()
-        vim.fn["lightline#update"]()
-    end
-end
-
--- Lightline component functions (must be global — lightline calls them by name)
-function LightlineModified()
-    if vim.bo.filetype == "help" then
-        return ""
-    elseif vim.bo.modified then
-        return "+"
-    else
-        return ""
-    end
-end
-
-function LightlineReadonly()
-    if vim.bo.filetype == "help" then
-        return ""
-    elseif vim.bo.readonly then
-        return "\u{e0a2}"
-    else
-        return ""
-    end
-end
-
-function LightlineFugitive()
-    if vim.fn.exists("*FugitiveHead") == 1 then
-        local branch = vim.fn.FugitiveHead()
-        if branch ~= "" then
-            return " " .. branch
-        end
-    end
-    return ""
-end
-
-function LightlineFilename()
-    local ro = LightlineReadonly()
-    local name = vim.fn.expand("%:t")
-    if name == "" then
-        name = "[No Name]"
-    end
-    local mod = LightlineModified()
-    local result = ""
-    if ro ~= "" then
-        result = ro .. " "
-    end
-    result = result .. name
-    if mod ~= "" then
-        result = result .. " " .. mod
-    end
-    return result
-end
-
-function LightlineTime()
-    return os.date("%H:%M")
-end
-
-function LightlineDevicon(n)
-    local buflist = vim.fn.tabpagebuflist(n)
-    local winnr = vim.fn.tabpagewinnr(n)
-    local fname = vim.fn.expand("#" .. buflist[winnr] .. ":t")
-    return vim.fn.WebDevIconsGetFileTypeSymbol(fname)
-end
-
-function LightlineFileformat()
-    if vim.fn.winwidth(0) > 120 then
-        return vim.bo.fileformat
-    end
-    return ""
-end
-
-function LightlineFiletype()
-    if vim.fn.winwidth(0) > 120 then
-        return vim.bo.filetype ~= "" and vim.bo.filetype or "no ft"
-    end
-    return ""
-end
-
-function LightlineFileencoding()
-    if vim.fn.winwidth(0) > 120 then
-        return vim.bo.fileencoding
-    end
-    return ""
 end

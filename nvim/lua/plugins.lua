@@ -54,59 +54,45 @@ require("lazy").setup({
 
     -- Status line
     {
-        "itchyny/lightline.vim",
-        init = function()
-            vim.g.lightline = {
-                colorscheme = "catppuccin",
-                active = {
-                    left = {
-                        { "mode", "paste" },
-                        { "gitbranch" },
-                        { "filedir", "filename" },
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "catppuccin", "ryanoasis/vim-devicons" },
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "auto",
+                    section_separators = { left = "\u{e0b0}", right = "\u{e0b2}" },
+                    component_separators = { left = "\u{e0b1}", right = "\u{e0b3}" },
+                },
+                sections = {
+                    lualine_a = { "mode" },
+                    lualine_b = { { "branch", icon = "\u{e0a0}" } },
+                    lualine_c = { FileDir, { "filename", path = 0, symbols = { modified = " +", readonly = " \u{e0a2}" } } },
+                    lualine_x = {
+                        { "fileformat", cond = function() return vim.fn.winwidth(0) > 120 end },
+                        { "encoding", cond = function() return vim.fn.winwidth(0) > 120 end },
+                        { "filetype", cond = function() return vim.fn.winwidth(0) > 120 end },
                     },
-                    right = {
-                        { "percent", "lineinfo" },
-                        { "fileformat", "fileencoding", "filetype" },
-                        { "time" },
+                    lualine_y = { function() return os.date("%H:%M") end },
+                    lualine_z = { { "progress" }, { "location" } },
+                },
+                inactive_sections = {
+                    lualine_a = { "mode" },
+                    lualine_b = {},
+                    lualine_c = { FileDir, { "filename", path = 0 } },
+                    lualine_x = {},
+                    lualine_y = { "progress", "location" },
+                    lualine_z = {},
+                },
+                tabline = {
+                    lualine_a = {
+                        {
+                            "tabs",
+                            mode = 2, -- tab number + name
+                            max_length = vim.o.columns,
+                        },
                     },
                 },
-                inactive = {
-                    left = {
-                        { "mode" },
-                        { "filedir", "filename" },
-                    },
-                    right = {
-                        { "percent", "lineinfo" },
-                    },
-                },
-                component = {
-                    lineinfo = " %2v:%-3l",
-                },
-                component_function = {
-                    gitbranch = "v:lua.LightlineFugitive",
-                    readonly = "v:lua.LightlineReadonly",
-                    modified = "v:lua.LightlineModified",
-                    filedir = "v:lua.FileDir",
-                    filename = "v:lua.LightlineFilename",
-                    time = "v:lua.LightlineTime",
-                    devicon = "v:lua.LightlineDevicon",
-                    fileformat = "v:lua.LightlineFileformat",
-                    fileencoding = "v:lua.LightlineFileencoding",
-                    filetype = "v:lua.LightlineFiletype",
-                },
-                separator = { left = "\u{e0b0}", right = "\u{e0b2}" },
-                subseparator = { left = "\u{e0b1}", right = "\u{e0b3}" },
-                tab_component_function = {
-                    devicon = "v:lua.LightlineDevicon",
-                    modified = "lightline#tab#modified",
-                    readonly = "lightline#tab#readonly",
-                    tabnum = "lightline#tab#tabnum",
-                },
-                tab = {
-                    active = { "tabnum", "devicon", "filename", "modified" },
-                    inactive = { "tabnum", "devicon", "filename", "modified" },
-                },
-            }
+            })
         end,
     },
 
