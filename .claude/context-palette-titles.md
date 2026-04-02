@@ -1,5 +1,30 @@
 # Context: Palette Profile Switching & Tab Titles
 
+## System overview
+
+Palette switching touches these components:
+- `palette light|dark|status` command in `lib/002-colors.zsh`
+- Switches: iTerm profile, bat theme, vivid LS_COLORS, delta features, starship palette
+- State persists via `~/.local/state/terminal-palette`
+- Per-host iTerm profile names via `ITERM_DARK_PROFILE` / `ITERM_LIGHT_PROFILE` vars
+- `bin/set-iterm-profile` sends escape sequence to switch iTerm profiles
+- Starship uses `[palettes.dark]` and `[palettes.light]` with semantic color names
+- Nvim reads `$TERM_PALETTE` and has `:Light` / `:Dark` commands
+
+**iTerm profiles** (`iterm/`): Dynamic Profile JSON files. `0.base.json` ("Base") is the root.
+Host-specific profiles use the `--<host>` naming convention — only the matching host's file
+is symlinked. Both host variants use the same profile name and GUID namespace, differing
+only in font size.
+
+- Base — dark near-black background with custom ANSI colors, Title Components: 1
+- Transparent — inherits Base, tweaks blur/transparency
+- Tomorrow Dark Mod Base — inherits Base, Tomorrow Night colors
+- Tomorrow Dark Mod (--personal / --work) — inherits Tomorrow Dark Mod Base, host font size
+- Opaque — inherits Tomorrow Dark Mod Base, removes transparency
+- Solarized Light Mod — inherits Base, light Solarized colors
+- Tomorrow Light Mod Base — inherits Base, Tomorrow Light colors
+- Tomorrow Light Mod (--personal / --work) — inherits Tomorrow Light Mod Base, host font size
+
 ## What was fixed (commit `26a75a2`)
 
 - Per-host iTerm profile names via `$DOTKYL_HOST` in `lib/002-colors.zsh` — Air profiles
@@ -119,9 +144,10 @@ so iTerm should show only what the shell's `title` function sets and nothing els
 
 ### iTerm dynamic profiles location
 
-Profiles are defined in `/Users/klavallee/.dotkyl/iterm/*.json` and symlinked to
+Profiles are defined in `/Users/kyl/.dotkyl/iterm/*.json` and symlinked to
 `~/Library/Application Support/iTerm2/DynamicProfiles/` via `setup/symlinks.yml`.
-Inheritance chain: Base → Tomorrow Dark/Light Mod → Air variants (per host).
+Host-specific profiles (`--personal`/`--work`) use the same profile name but different
+font sizes; only the matching host's file is symlinked.
 iTerm picks up dynamic profile changes automatically (no restart needed).
 
 ### If this reverts or doesn't work
@@ -153,13 +179,15 @@ in iTerm's profile settings. The real issue is `_palette_init_profile` (lines 85
 
 iTerm's default profile GUID (`Default Bookmark Guid` in `com.googlecode.iterm2`) is
 `AE5AC02F-6F03-4B82-B72A-1E6838D6E067` = "Tomorrow Dark Mod". On the personal machine,
-`_palette_init_profile` switches every new tab to "Tomorrow Dark Mod Air" — a real profile
+`_palette_init_profile` switches every new tab to the host-specific "Tomorrow Dark Mod"
+variant — if that variant's GUID differs from the default profile GUID, it's a real profile
 change that triggers iTerm's async title reset. On the work machine, the default profile
 IS "Tomorrow Dark Mod", so dark mode is a no-op — but light mode still triggers a real
 profile switch and the same title reset.
 
-On the personal machine, both dark and light mode are affected — Air profile variants
-always differ from the default.
+On the personal machine, both dark and light mode were affected when Air profile variants
+had different GUIDs from the default. (Now resolved by host-specific profile files that
+share the same profile name.)
 
 ### Why escape-sequence-based fixes don't work
 
@@ -426,10 +454,39 @@ previously triggered the title revert). Tab title shows correct directory even a
 the title at the time of the last command (which could include a command name via preexec).
 This is acceptable since the directory is the most useful identifier for an idle tab.
 
+## Session 2026-03-28: Host-specific profile refactor (`58bab298`)
+
+### Problem solved
+
+Eliminated the need for `SetProfile` on shell init for the default (dark) palette by
+making each host's profile load natively with the correct font size.
+
+### Changes (commit `dbd9c64`)
+
+Refactored iTerm dynamic profiles from standalone Air variants to host-specific files:
+- `3.tomorrow-dark-mod.json` → `3.tomorrow-dark-mod-base.json` (colors only, no font)
+- `3.tomorrow-dark-mod-air.json` → `3.tomorrow-dark-mod--personal.json` (font 19)
+- Created `3.tomorrow-dark-mod--work.json` (font 21)
+- Same pattern for light profiles (renumbered to `6.*`)
+- Host-specific files inherit from base via `"Dynamic Profile Parent Name"`
+- Both host variants use the same profile **name** ("Tomorrow Dark Mod") — only font differs
+- Existing `--<host>` symlink convention in `symlinks.yml` handles which file gets linked;
+  no changes to `symlinks.yml` were needed
+- Removed shortcut key assignments from profiles
+- Added `iterm-cleanup` mise task to remove broken symlinks in DynamicProfiles directory
+
+### Why this works
+
+`SetProfile` to the **already-active** profile is a true no-op — no title reset. Since
+each host now has the correct default profile loaded natively, dark mode init doesn't
+need a real profile switch. Light mode still requires `SetProfile` (different profile),
+but that's covered by the AppleScript session name fix.
+
 ## Previous session history
 
-- 2026-03-28 — confirmed root cause: default profile GUID mismatch on personal machine;
-  proposed custom settings folder approach
+- 2026-03-28 (`58bab298`) — host-specific profile refactor (see above)
+- 2026-03-28 (`7dfc7cbb`) — confirmed root cause: default profile GUID mismatch on personal
+  machine; tested Options A and B; AppleScript session name solution
 - 2026-03-23 — reproduced idle title reversion on work machine, added Title Components fix
 - `a291fa17` — deep-dive on tab title components and iTerm title behavior
 - `a0cd7841` — SIGUSR1 palette syncing, starship light mode, palette architecture
