@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
+See `README.md` for a full description of the repo's contents and directory structure.
 
 ## Applying Changes
 
@@ -63,9 +64,19 @@ run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 
 ## Workflow
 
+- When making changes to this machine that should persist across machines (installing/removing
+  packages, changing tool configs, modifying shell settings, etc.), update the corresponding
+  tracked file in this repo (Brewfile, Pipfile, mise.toml, lib/*.zsh, etc.).
 - After completing a task, run `git status` to check for uncommitted changes. Only remind me
   to commit if there are actual uncommitted changes in this repo.
+
+## Memory
+
+This repo is worked on from two computers. Don't use Claude's per-machine memory system
+for project context — it won't sync. Put persistent context in this repo instead (CLAUDE.md,
+`.claude/PLANS.md`, `.claude/notes.md`, or `.claude/context-*.md` files).
 
 ## Future Work
 
 See `.claude/PLANS.md` for improvement plans.
+See `.claude/notes.md` for the human's backlog of ideas to discuss.

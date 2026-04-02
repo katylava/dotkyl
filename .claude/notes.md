@@ -57,6 +57,8 @@ Uses a manifest file (yml or toml) to configure system settings that can be
 programmatically configured, and remind user about ones that have to be
 manually configured.
 
+_We should also figure something out for app settings._
+
 
 ## Claude skills
 
@@ -91,12 +93,15 @@ reminders to the manifest about those.
 
 Finally, pushes up any changes made to this repo during the process.
 
-## Separate install from sync commands
 
+## Separate install from sync commands
 
 find a way to separate things needing frequent sync and things needing
 one-time install/modification/uninstall... different mise.toml files if
 possible (maybe one in the install directory for installs, and the repo root
 one can be for frequent syncs. so the process for something to sync between two
 active computers, would be to put it in the sync file first, then after it is
-done on the other computer, move it to the install file.
+done on the other computer, move it to the install file. not sure if the moving
+it after syncing is something we can program into the mise tasks or if it needs
+to something claude knows to take care of, either from CLAUDE.md for this repo
+or from a skill

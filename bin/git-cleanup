@@ -6,7 +6,7 @@ for b in `git branch --merged $default | grep -v "^\s\+${default}$" | grep -v "^
     git branch -d $b
 done
 
-pruned=`git remote prune origin | tail -n+3 | cut -d' ' -f4 | cut -d'/' -f2`
+pruned=`git remote prune origin | tail -n+3 | cut -d' ' -f4 | cut -d'/' -f2-`
 for branch in $pruned; do
     echo "Pruned remote branch $branch"
     if `git show-ref -q --verify refs/heads/$branch`; then

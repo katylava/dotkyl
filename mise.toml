@@ -44,6 +44,7 @@ brew bundle check --file setup/Brewfile.shared >/dev/null \
     && echo "⏭️ $host already ok" \
     || { echo "🔧 installing $host packages..." && brew bundle --file setup/Brewfile.$host && echo "✅ $host done"; }
 }
+rm -f .brew-outdated
 true
 """
 
@@ -56,19 +57,6 @@ else
   git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"
 fi
 """
-
-[tasks.iterm-cleanup]
-description = "Remove broken iTerm dynamic profile symlinks"
-depends = ["symlinks"]
-run = """
-dir="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
-found=false
-for f in "$dir"/*.json(N); do
-  [[ -L "$f" && ! -e "$f" ]] && { rm "$f"; found=true; echo "✅ removed broken link: ${f:t}"; }
-done
-$found || echo "⏭️ no broken links"
-"""
-
 [tasks.check-host]
 description = "Verify hostname is configured"
 run = """
@@ -77,9 +65,14 @@ bin/get-host >/dev/null 2>&1 \
 """
 
 [tasks.brew-reminder]
-description = "Remind if Brewfile changed in last merge"
+description = "Remind if Brewfile changed since last brew install"
 run = """
+# Create marker if Brewfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
+  && touch .brew-outdated
+
+# Remind until mise run brew clears the marker
+[[ -f .brew-outdated ]] \
   && echo '👉 Brewfile changed — run: mise run brew' \
   || echo '⏭️ no Brewfile changes'
 """
@@ -108,12 +101,18 @@ if $missing; then
 else
   echo "⏭️ already ok"
 fi
+rm -f .pip-outdated
 '''
 
 [tasks.pip-reminder]
-description = "Remind if Pipfile changed in last merge"
+description = "Remind if Pipfile changed since last pip install"
 run = """
+# Create marker if Pipfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
+  && touch .pip-outdated
+
+# Remind until mise run pip clears the marker
+[[ -f .pip-outdated ]] \
   && echo '👉 Pipfile changed — run: mise run pip' \
   || echo '⏭️ no Pipfile changes'
 """
@@ -145,7 +144,7 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "iterm-cleanup", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
+depends = ["hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"

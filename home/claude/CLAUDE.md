@@ -19,6 +19,7 @@
 - When making more than ~3 similar edits to a file (bulk deletions, renames, pattern replacements), use `sed` via Bash instead of multiple sequential Edit tool calls.
 - Keep commit message subject lines to 50 characters or less.
 - Prefer "jq" over python commands for extracting fields from JSON
+- Always include a blank line before lists in markdown files
 
 # Autonomy balance
 
