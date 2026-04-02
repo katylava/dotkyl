@@ -11,7 +11,7 @@
 - Before implementing, ask what "done" looks like if the user hasn't provided tests, expected output, or success criteria.
 - If you've changed approach 3+ times on the same problem, suggest using /rewind or summarize-from-here to clean up context rather than continuing to accumulate failed attempts.
 - Break work into small, reviewable pieces. Don't make many changes at once — propose and complete one logical chunk at a time so I can review as we go.
-- When building up changes incrementally in a git repo, use `git add` to stage completed chunks so diffs only show the new work.
+- When building up changes incrementally in a git repo, `git add` completed chunks *before* starting new changes, so `git diff` shows only the new work. Don't stage after a change is complete.
 
 # Engineering tasks
 
