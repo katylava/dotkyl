@@ -1,5 +1,6 @@
-require("options")
-require("functions")
-require("plugins")
-require("autocommands")
-require("mappings")
+local dir = vim.fn.stdpath("config") .. "/init"
+vim.cmd("source " .. dir .. "/options.vim")
+vim.cmd("luafile " .. dir .. "/functions.lua")
+vim.cmd("luafile " .. dir .. "/plugins.lua")
+vim.cmd("luafile " .. dir .. "/autocommands.lua")
+vim.cmd("source " .. dir .. "/mappings.vim")
