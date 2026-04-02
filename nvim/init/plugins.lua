@@ -177,6 +177,7 @@ require("lazy").setup({
     -- File tree
     {
         "scrooloose/nerdtree",
+        dependencies = { "ryanoasis/vim-devicons" },
         init = function()
             vim.g.NERDTreeIgnore = { "\\.pyc$" }
             vim.g.NERDTreeWinSize = 45

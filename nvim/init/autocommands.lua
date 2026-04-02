@@ -76,6 +76,7 @@ autocmd("FileType", {
     end,
 })
 
+
 -- Crontab: edit in place
 autocmd("FileType", { pattern = "crontab", command = "setlocal nobackup nowritebackup" })
 
