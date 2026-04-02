@@ -343,10 +343,11 @@
         "Red Component": 0.2666666805744171
       },
       "Send Code When Idle": false,
-      "Shortcut": "B",
+      "Shortcut": "",
       "Show Mark Indicators": false,
       "Silence Bell": true,
       "Sync Title": false,
+      "Title Components": 1,
       "Tags": [],
       "Terminal Type": "xterm-256color",
       "Thin Strokes": 4,
@@ -359,8 +360,7 @@
       "Use Non-ASCII Font": false,
       "Vertical Spacing": 1,
       "Visual Bell": true,
-      "Window Type": 0,
-      "Working Directory": "/Users/kyl"
+      "Window Type": 0
     }
   ]
 }

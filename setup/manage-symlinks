@@ -9,6 +9,7 @@
 local DOTKYL="${0:A:h:h}"    # ${0:A:h:h} = this script's grandparent dir
 local MANIFEST="$DOTKYL/setup/symlinks.yml"
 local HANDLER=apply_link
+local HOST=$($DOTKYL/bin/get-host 2>/dev/null)
 
 local ok=true
 
@@ -25,7 +26,11 @@ dry_run_link() {
     elif [[ -L "$target" ]]; then
         print "would relink: $target (currently $(readlink "$target")) -> $source"
     else
-        print "would overwrite: $target (currently a file) -> $source"
+        if [[ -d "$target" ]]; then
+            print "would back up $target -> $target.bak and link: $target -> $source"
+        else
+            print "would replace file: $target -> $source"
+        fi
     fi
     ok=false
 }
@@ -33,6 +38,10 @@ dry_run_link() {
 apply_link() {
     local source=$1 target=$2
     mkdir -p "${target:h}"  # ${target:h} = parent directory
+    if [[ -d "$target" && ! -L "$target" ]]; then
+        mv "$target" "$target.bak"
+        print "backed up: $target -> $target.bak"
+    fi
     ln -sfn "$source" "$target"
 }
 
@@ -43,6 +52,9 @@ process_glob() {
         local name="${source:t}"  # ${source:t} = basename
         # Wrap both sides in commas for exact match within comma-separated list
         [[ ",$excludes," == *",$name,"* ]] && continue
+        # Skip host-specific entries (name--host) not for this host
+        [[ "$name" == *--* && "$name" != *--$HOST* ]] && continue
+        name="${name//--$HOST/}"  # strip --host from target name
         $HANDLER "$source" "$target$name"
     done
 }

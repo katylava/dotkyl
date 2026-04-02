@@ -1,0 +1,17 @@
+# Substitute string in filenames
+rename -S "old" "new" *
+
+# Remove a string from filenames
+rename -d "unwanted" *
+
+# Add a prefix to all files
+rename -A 'prefix.' *
+
+# Change extension
+rename -s txt json *.txt
+
+# Replace spaces with underscores
+rename -S " " "_" *
+
+# Dry run (show what would happen)
+rename -n -S "old" "new" *

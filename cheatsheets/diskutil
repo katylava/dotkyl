@@ -1,0 +1,17 @@
+# List all disks and partitions
+diskutil list
+
+# Mount a disk
+diskutil mountDisk disk2
+
+# Unmount a disk
+diskutil unmount disk2
+
+# Eject a disk
+diskutil eject disk2
+
+# Repair a disk (must be unmounted first)
+diskutil repairDisk disk2
+
+# Repair a partition
+diskutil repairVolume disk2s1

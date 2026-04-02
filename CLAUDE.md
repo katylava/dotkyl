@@ -1,10 +1,11 @@
 # CLAUDE.md
 
 Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
+See `README.md` for a full description of the repo's contents and directory structure.
 
 ## Applying Changes
 
-- Reload shell after edits: `sopr` (alias for `source ~/.zshrc`)
+- Reload shell after edits: open a new terminal tab
 - Apply symlinks: `setup/manage-symlinks` (supports `--dry-run`)
 
 ## Conventions
@@ -25,25 +26,6 @@ crontab files and Brewfiles.
 
 Symlinks are declared in `setup/symlinks.yml` and applied by `setup/manage-symlinks`.
 The `private/` submodule mirrors the `home/` structure for sensitive files.
-
-### Neovim Config (`nvim/`)
-
-The neovim config is written in Lua. Entry point is `nvim/init.lua`, which loads modules in order:
-
-1. `lua/options.lua` — vim options, settings, leader key
-2. `lua/functions.lua` — FileDir, lightline components, theme (ApplyDark/ApplyLight), window swap
-3. `lua/plugins.lua` — lazy.nvim bootstrap + all plugin specs with inline config
-4. `lua/autocommands.lua` — filetype detection, filetype settings, CoC augroups, trailing whitespace
-5. `lua/mappings.lua` — all keymaps, user commands, CoC mappings
-
-Plugin manager is **lazy.nvim** (auto-bootstraps on first launch; run `:Lazy install`).
-
-Other nvim files:
-- `after/ftplugin/javascript.lua` — JS-specific formatoptions
-- `colors/my-monokai.vim` — custom colorscheme (inactive; catppuccin used)
-- `pcthemes/kyl.vim` — PaperColor overrides (inactive)
-- `syntax/*.vim` — custom syntax files (apex, ejs, tinytower, visualforce)
-- `coc-settings.json` — CoC LSP configuration
 
 ### Shell Scripts
 
@@ -80,6 +62,21 @@ run = "brew install espanso && brew uninstall dash"
 run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 ```
 
+## Workflow
+
+- When making changes to this machine that should persist across machines (installing/removing
+  packages, changing tool configs, modifying shell settings, etc.), update the corresponding
+  tracked file in this repo (Brewfile, Pipfile, mise.toml, lib/*.zsh, etc.).
+- After completing a task, run `git status` to check for uncommitted changes. Only remind me
+  to commit if there are actual uncommitted changes in this repo.
+
+## Memory
+
+This repo is worked on from two computers. Don't use Claude's per-machine memory system
+for project context — it won't sync. Put persistent context in this repo instead (CLAUDE.md,
+`.claude/PLANS.md`, `.claude/notes.md`, or `.claude/context-*.md` files).
+
 ## Future Work
 
 See `.claude/PLANS.md` for improvement plans.
+See `.claude/notes.md` for the human's backlog of ideas to discuss.

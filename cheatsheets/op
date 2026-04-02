@@ -1,0 +1,29 @@
+# Run a command with secrets injected from env file
+op run --env-file=.env -- <command>
+op run --account=my --env-file=roam.env -- python script.py
+
+# Get an item
+op item get <item> --vault=<vault>
+op item get <item> --fields=password
+
+# Read a secret reference
+op read "op://vault/item/field"
+
+# List items in a vault
+op item list --vault=<vault>
+
+# List vaults
+op vault list
+
+# Sign in
+op signin
+op signin --account=<account>
+
+# Check current session
+op whoami
+
+# Create a document
+op document create <file> --vault=<vault>
+
+# Secret reference format (for .env files)
+# KEY="op://vault/item/field"

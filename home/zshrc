@@ -23,4 +23,4 @@ done
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # uncomment for profiling startup
-# zprof
+# zprof > ~/zprof.txt

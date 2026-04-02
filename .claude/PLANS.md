@@ -1,36 +1,24 @@
-# Dotfiles Improvement Plans — Execution Order
+# Dotfiles Improvement Plans
 
-Execute plans in this order. Each plan notes what it depends on and what it affects downstream.
+## High priority
 
-## 1. plan-single-branch-dotfiles.md
-**Foundation — do this first.**
-Establishes the single-branch model, `mise.toml`, `dotkyl-private` repo, bootstrap script, and
-host-aware zshrc loader. Everything else assumes this is in place.
+### plan-audit-dotfiles.md
+Audit `~/` and `~/.config/` to decide what goes in public vs private repo.
 
-## 2. plan-audit-dotfiles.md
-With the private repo now available, audit `~/` and `~/.config/` to decide what goes in the
-public repo vs `dotkyl-private`. Do this before restructuring individual config areas so you have
-a complete picture.
+## Medium priority
 
-## 3. plan-remove-old-version-managers.md + plan-cheatsheets.md
-Batch these together — both touch `lib/100-installed.zsh`. Cleans up stale asdf/nodenv/pyenv
-refs and removes the stale `DEFAULT_CHEAT_DIR` export in the same pass.
+### plan-bootstrap.md
+Fresh machine bootstrap script. Also becoming relevant for existing machines — one-time
+install tasks (e.g., peon-ping) accumulate in `mise.toml` and never need to run again.
+See `.claude/notes.md` "Separate install from sync commands" for ideas on splitting
+install vs sync. See also `.claude/notes.md` for related ideas (pre-new-install,
+post-new-install).
 
-## ~~4. plan-nvim-lua-migration.md~~ DONE
-Completed. Neovim config fully migrated from Vimscript to Lua:
-- Entry point is `nvim/init.lua` loading modular Lua files
-- Plugin manager switched from vim-plug to lazy.nvim
-- All options, mappings, autocommands, and functions in Lua modules
-- Plugin config consolidated into lazy.nvim specs
-- `nvim/init.vim` and `nvim/autoload/plug.vim` deleted
+## Low priority
 
----
-
-## Optional / low priority (no required order, may never be done)
+### plan-nvim-lua-migration.md
+Migrate neovim config from vimscript to lua. Has a branch but not yet merged.
 
 ### plan-nvim-zshrc.md
-Can be done any time after plan-single-branch-dotfiles.md. The terminal mapping
-(`term://zsh -f`) was not changed during the Lua migration — this plan can still update it.
-
-### plan-terminal-palettes.md
-Independent. Can be done any time after plan-single-branch-dotfiles.md.
+Alternate zshrc for neovim terminals — skip slow/harmful lib files.
+If done before nvim-lua-migration, skip the terminal mapping step there.
