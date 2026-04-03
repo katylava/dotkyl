@@ -37,3 +37,5 @@
   or delegate to a subagent.
 - When investigating something, define what "answered" looks like before you start.
   Don't follow tangential threads you discover along the way — note them and move on.
+- When asked to wrap markdown, use this command: `prettier --prose-wrap always
+  --print-width 80 --write <file.md> 2>&1`
