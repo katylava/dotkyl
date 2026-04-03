@@ -50,7 +50,9 @@ format_age() {
   fi
 }
 
-detail_jq='[(.reviews | map(.state) | if any(. == "CHANGES_REQUESTED") then "changes requested" elif any(. == "APPROVED") then "approved" elif length > 0 then "review comments" else "awaiting review" end), ((.comments | length) + (.reviews | length) | tostring)] | join("|")'
+detail_jq='[(.reviews | map(.state) | if any(. == "CHANGES_REQUESTED") then "changes requested" elif any(. == "APPROVED") then "approved" elif length > 0 then "review comments" else "awaiting review" end), ((.comments | length) + (.reviews | length) | tostring), (([(.comments // [])[] | {t: "comment", at: .createdAt, by: .author.login}] + [(.reviews // [])[] | {t: "review", at: .submittedAt, by: .author.login}] + [(.commits // [])[] | {t: "commit", at: .committedDate, by: ((.authors // [])[0].login // "unknown")}]) | sort_by(.at) | if length > 0 then last | "\(.t)|\(.by)" else "|" end)] | join("|")'
+
+activity_jq='([(.comments // [])[] | {t: "comment", at: .createdAt, by: .author.login}] + [(.reviews // [])[] | {t: "review", at: .submittedAt, by: .author.login}] + [(.commits // [])[] | {t: "commit", at: .committedDate, by: ((.authors // [])[0].login // "unknown")}]) | sort_by(.at) | if length > 0 then last | "\(.t)|\(.by)" else "|" end'
 
 # --- Queries (parallel) ---
 
@@ -122,7 +124,7 @@ authored_prs=$(echo "$dashboard" | jq -r '.[] | select(.group == "authored") | "
 review_results=""
 if [[ -n "$authored_prs" ]]; then
   review_results=$(echo "$authored_prs" | parallel --colsep '\t' --jobs 8 --keep-order \
-    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews,comments --jq '$detail_jq' 2>/dev/null)")
+    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews,comments,commits --jq '$detail_jq' 2>/dev/null)")
 fi
 
 get_review_status() {
@@ -133,6 +135,35 @@ get_review_status() {
 get_comment_count() {
   local repo=$1 number=$2
   echo "$review_results" | grep "^${repo}#${number}	" | cut -f2 | cut -d'|' -f2
+}
+
+# --- Activity details for non-authored PRs updated today ---
+
+today_date=$(date +%Y-%m-%d)
+today_prs=$(echo "$dashboard" | jq -r --arg today "$today_date" \
+  '.[] | select(.group != "authored") | select(.updatedAt[:10] == $today) | "\(.repository.nameWithOwner)\t\(.number)"')
+
+activity_results=""
+if [[ -n "$today_prs" ]]; then
+  activity_results=$(echo "$today_prs" | parallel --colsep '\t' --jobs 8 --keep-order \
+    "echo {1}#{2}\"\t\"\$(gh pr view {2} --repo {1} --json reviews,comments,commits --jq '$activity_jq' 2>/dev/null)")
+fi
+
+get_activity() {
+  local repo=$1 number=$2
+  local line
+  # Check review_results (authored PRs) then activity_results (non-authored today PRs)
+  line=$(echo "$review_results" | grep "^${repo}#${number}	" | cut -f2 | cut -d'|' -f3-4 || true)
+  if [[ -z "$line" || "$line" == "|" ]]; then
+    line=$(echo "$activity_results" | grep "^${repo}#${number}	" | cut -f2 || true)
+  fi
+  if [[ -n "$line" && "$line" != "|" ]]; then
+    local atype=$(echo "$line" | cut -d'|' -f1)
+    local aby=$(echo "$line" | cut -d'|' -f2)
+    if [[ -n "$atype" && -n "$aby" ]]; then
+      echo "${atype} by ${aby}"
+    fi
+  fi
 }
 
 # --- Output ---
@@ -152,7 +183,10 @@ print_section() {
       local age=$(format_age "$updated")
       local rstatus=$(get_review_status "$repo_full" "$number")
       local comments=$(get_comment_count "$repo_full" "$number")
-      local meta="${age} · ${rstatus}"
+      local activity=$(get_activity "$repo_full" "$number")
+      local meta="${age}"
+      [[ "$age" == today* && -n "$activity" ]] && meta="${meta} · ${activity}"
+      meta="${meta} · ${rstatus}"
       (( comments == 1 )) && meta="${meta} · 1 comment"
       (( comments > 1 )) && meta="${meta} · ${comments} comments"
       echo "- ${repo_name}#${number} — ${title}"
@@ -161,12 +195,17 @@ print_section() {
       echo ""
     done
   else
-    echo "$prs" | jq -r '.[] | "\(.repository.name)\t\(.number)\t\(.url)\t\(.author.login)\t\(.title)\t\(.updatedAt)"' | \
-    while IFS=$'\t' read -r repo_name number url author title updated; do
+    echo "$prs" | jq -r '.[] | "\(.repository.name)\t\(.number)\t\(.url)\t\(.author.login)\t\(.title)\t\(.updatedAt)\t\(.repository.nameWithOwner)"' | \
+    while IFS=$'\t' read -r repo_name number url author title updated repo_full; do
       local age=$(format_age "$updated")
+      local meta="${author} · ${age}"
+      if [[ "$age" == today* ]]; then
+        local activity=$(get_activity "$repo_full" "$number")
+        [[ -n "$activity" ]] && meta="${meta} · ${activity}"
+      fi
       echo "- ${repo_name}#${number} — ${title}"
       echo "  ${url}"
-      echo "  ${author} · ${age}"
+      echo "  ${meta}"
       echo ""
     done
   fi
