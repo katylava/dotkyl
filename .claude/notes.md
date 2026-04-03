@@ -123,10 +123,3 @@ run sync. Would like a hook for updating the tab title that overrides any other
 title updates, like from peon-ping or vibe island. Although vibe island's
 titles are good, it costs $15 per machine so I'm only going to have it
 installed on my work computer. So I need custom hooks that do what it does.
-
-
-## streamline mise run sync output on git pull
-
-Have been having trouble getting `mise run sync` to output just the info i want
-and nothing else. When i get rid of timings and the commands (it outputs the
-value of "run" for each task), i also lose the task names.
