@@ -1,6 +1,10 @@
-[tasks.hook]
+[settings]
+task.timings = false
+
+[tasks.git-hook]
 description = "Install git hooks"
 run = """
+# ...
 for hook in setup/hooks/*; do
   name=$(basename "$hook")
   if test -x ".git/hooks/$name" && diff -q "$hook" ".git/hooks/$name" >/dev/null; then
@@ -14,6 +18,7 @@ done
 [tasks.symlinks]
 description = "Symlink dotfiles into ~/"
 run = """
+# ...
 setup/manage-symlinks --dry-run >/dev/null 2>&1 \
   && echo "⏭️ already ok" \
   || { setup/manage-symlinks && echo "✅ set up"; }
@@ -22,6 +27,7 @@ setup/manage-symlinks --dry-run >/dev/null 2>&1 \
 [tasks.crontab]
 description = "Install crontab (shared + host-specific)"
 run = """
+# ...
 host=$(bin/get-host 2>/dev/null)
 combined=$(mktemp)
 sed "s|\\$HOME|$HOME|g" crontab.txt > "$combined"
@@ -35,6 +41,7 @@ rm -f "$combined"
 [tasks.brew]
 description = "Install brew packages"
 run = """
+# ...
 host=$(bin/get-host 2>/dev/null)
 brew bundle check --file setup/Brewfile.shared >/dev/null \
   && echo "⏭️ shared already ok" \
@@ -51,6 +58,7 @@ true
 [tasks.private-repo]
 description = "Clone or pull private dotfiles repo"
 run = """
+# ...
 if test -d private/.git; then
   git -C private pull --quiet && echo "⏭️ private up to date"
 else
@@ -60,6 +68,7 @@ fi
 [tasks.check-host]
 description = "Verify hostname is configured"
 run = """
+# ...
 bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
@@ -67,6 +76,7 @@ bin/get-host >/dev/null 2>&1 \
 [tasks.brew-reminder]
 description = "Remind if Brewfile changed since last brew install"
 run = """
+# ...
 # Create marker if Brewfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
   && touch .brew-outdated
@@ -80,6 +90,7 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
 [tasks.pip]
 description = "Install pip packages"
 run = '''
+# ...
 missing=false
 while read -r pkg; do
   [[ -z "$pkg" || "$pkg" == \#* ]] && continue
@@ -107,6 +118,7 @@ rm -f .pip-outdated
 [tasks.pip-reminder]
 description = "Remind if Pipfile changed since last pip install"
 run = """
+# ...
 # Create marker if Pipfile changed in last merge
 git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
   && touch .pip-outdated
@@ -120,6 +132,7 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
 [tasks.claude-settings-reminder]
 description = "Remind to evaluate claude settings for symlinking"
 run = """
+# ...
 [[ -L ~/.claude/settings.json ]] \
   && true \
   || echo "👉 Compare ~/.claude/settings.json across machines, then move to home/claude/ and symlink"
@@ -128,6 +141,7 @@ run = """
 [tasks.peon-ping]
 description = "Install peon-ping with sound packs"
 run = """
+# ...
 curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh | bash -s -- \
   --packs=glados,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
 """
@@ -135,6 +149,7 @@ curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh 
 [tasks.peon-ping-reminder]
 description = "Remind to install peon-ping if missing"
 run = """
+# ...
 [ -d ~/.claude/hooks/peon-ping ] \
   && echo '⏭️ peon-ping already installed' \
   || echo '👉 Run: mise run peon-ping'
@@ -144,8 +159,8 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host"]
+depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host"]
