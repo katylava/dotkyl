@@ -69,48 +69,8 @@ re-figure out on clean install.
 
 ## Install
 
-These installation instructions are for my future self.
-
-### Prerequisites (manual, in order)
-
-1. **Xcode Command Line Tools** — provides `git`, `make`, etc.:
-   ```zsh
-   xcode-select --install
-   ```
-2. **Homebrew**:
-   ```zsh
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-3. **1Password app** — install from https://1password.com and sign in.
-4. **GitHub personal access token** stored in 1Password at
-   `Personal/GitHub Token/credential`, with the `admin:public_key` scope
-   (needed to register SSH keys).
-5. **mise and 1Password CLI**:
-   ```zsh
-   brew install mise 1password-cli
-   ```
-
-### Bootstrap
-
-Run the bootstrap script (fetches via curl before the repo is cloned):
-
-```zsh
-curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bootstrap | zsh
-```
-
-Or if you've already cloned the repo:
-
-```zsh
-cd ~/.dotkyl
-setup/bootstrap
-```
-
-This will generate an SSH key, register it with GitHub via 1Password, clone the
-repos, and run `mise run install`.
-
-### After bootstrap
-
-Follow the "Next steps" printed by the bootstrap script.
+See [clean-install.md](clean-install.md) for backup, clean install, and
+bootstrap instructions.
 
 
 ## How It Works
