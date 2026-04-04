@@ -1,0 +1,19 @@
+[settings]
+task.timings = false
+
+# Graduated one-time installs — things already installed on all active machines,
+# kept here so a new machine can still bootstrap them.
+#
+# Lifecycle: new one-time installs start at repo root (with a reminder in sync).
+# After all active machines have them, move the task here and delete the reminder.
+
+[tasks.peon-ping]
+description = "Install peon-ping with sound packs"
+run = """
+curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh | bash -s -- \
+  --packs=glados,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
+"""
+
+[tasks.install]
+description = "Run all graduated one-time installs (manual, after root bootstrap)"
+depends = ["peon-ping"]

@@ -37,6 +37,13 @@ no need to stay POSIX-portable. All scripts in `bin/` are on `$PATH`.
 `mise run install` ensures the machine is in the correct state. `mise run sync` runs just the
 fast tasks (used by the post-merge hook).
 
+`setup/mise.toml` holds graduated one-time per-machine installs. After the initial
+bootstrap, run `cd setup && mise run install` to install them on a new machine.
+
+One-time per-machine install tasks get created in root `mise.toml`, then graduate
+into `setup/mise.toml` via `mise run graduate <name>` after running on the second
+machine. Use the `add-install-task` skill to create new ones.
+
 Each task uses inline check-or-run logic for idempotency:
 ```toml
 [tasks.example]

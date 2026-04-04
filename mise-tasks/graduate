@@ -1,0 +1,85 @@
+#!/usr/bin/env zsh
+# Graduate a one-time install task from root mise.toml to setup/mise.toml.
+# Moves the [tasks.<name>] block, deletes [tasks.<name>-reminder], removes
+# the reminder from the sync deps array, and commits (no push).
+#
+# Usage: mise run graduate <task-name>
+
+set -euo pipefail
+
+name=${1:?Usage: mise run graduate <task-name>}
+repo_root=${0:A:h:h}  # script: mise-tasks/graduate → parent → parent = repo root
+root_toml=$repo_root/mise.toml
+setup_toml=$repo_root/setup/mise.toml
+
+# Safety: task must already be in origin/main (pushed and pulled elsewhere)
+git -C "$repo_root" fetch --quiet origin main
+if ! git -C "$repo_root" show origin/main:mise.toml | grep -q "^\[tasks\.$name\]$"; then
+  echo "❌ [tasks.$name] not in origin/main — push it first" >&2
+  exit 1
+fi
+
+# Extract [tasks.<name>] block: header through line before next [ header
+task_block=$(awk -v header="[tasks.$name]" '
+  $0 == header { in_block = 1; print; next }
+  in_block && /^\[/ { exit }
+  in_block { print }
+' "$root_toml")
+
+if [[ -z "$task_block" ]]; then
+  echo "❌ [tasks.$name] not found in $root_toml" >&2
+  exit 1
+fi
+
+# awk -v can't accept multiline values — pass block via tempfile
+block_file=$(mktemp)
+echo "${task_block%$'\n'}" > "$block_file"
+
+# Insert block contents before [tasks.install] in setup_toml
+tmp=$(mktemp)
+awk -v bf="$block_file" '
+  /^\[tasks\.install\]$/ {
+    while ((getline line < bf) > 0) print line
+    print ""
+  }
+  { print }
+' "$setup_toml" > "$tmp"
+mv "$tmp" "$setup_toml"
+rm -f "$block_file"
+
+# Add "<name>" to setup install depends array
+sed -i '' -E \
+  -e "s/^depends = \[\]$/depends = [\"$name\"]/" \
+  -e "s/^(depends = \[[^]]+)\]$/\1, \"$name\"]/" \
+  "$setup_toml"
+
+# Delete [tasks.<name>] and [tasks.<name>-reminder] blocks from root
+for block in "$name" "$name-reminder"; do
+  tmp=$(mktemp)
+  awk -v header="[tasks.$block]" '
+    $0 == header { in_block = 1; next }
+    in_block && /^\[/ { in_block = 0 }
+    in_block { next }
+    !in_block { print }
+  ' "$root_toml" > "$tmp"
+  mv "$tmp" "$root_toml"
+done
+
+# Remove "<name>-reminder" from sync depends array
+sed -i '' -E \
+  -e "s/, \"$name-reminder\"//" \
+  -e "s/\"$name-reminder\", //" \
+  -e "s/\"$name-reminder\"//" \
+  "$root_toml"
+
+# Strip trailing blank lines left over from block deletions
+tmp=$(mktemp)
+awk '/./ {for(i=0;i<blanks;i++)print ""; blanks=0; print; next} {blanks++}' \
+  "$root_toml" > "$tmp"
+mv "$tmp" "$root_toml"
+
+# Commit (no push — user reviews and pushes when ready)
+git -C "$repo_root" add mise.toml setup/mise.toml
+git -C "$repo_root" commit -m "setup: graduate $name to setup/mise.toml"
+
+echo "✅ graduated $name"
