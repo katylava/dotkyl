@@ -138,28 +138,11 @@ run = """
   || echo "👉 Compare ~/.claude/settings.json across machines, then move to home/claude/ and symlink"
 """
 
-[tasks.peon-ping]
-description = "Install peon-ping with sound packs"
-run = """
-# ...
-curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh | bash -s -- \
-  --packs=glados,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
-"""
-
-[tasks.peon-ping-reminder]
-description = "Remind to install peon-ping if missing"
-run = """
-# ...
-[ -d ~/.claude/hooks/peon-ping ] \
-  && echo '⏭️ peon-ping already installed' \
-  || echo '👉 Run: mise run peon-ping'
-"""
-
 # NOTE: sync and install share some deps (hook, symlinks, crontab).
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
