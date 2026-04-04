@@ -1,0 +1,20 @@
+# Login with Okta
+vault login -method okta -address $VAULT_ADDR username=$USER
+
+# Login and get only the token
+vault login -method okta -address $VAULT_ADDR -token-only username=$USER
+
+# Read a secret (JSON)
+vault kv get --format=json secret/<service>/<cluster>/_default_
+
+# Read a secret and extract just the data
+vault kv get --format=json secret/<service>/<cluster>/_default_ | jq -r .data
+
+# Write a secret
+vault kv put secret/path key=value
+
+# List auth methods
+vault auth list
+
+# Logout
+vault logout

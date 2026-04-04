@@ -205,19 +205,10 @@ without thinking much:
 
 * The query_roam.py script was like 80% vibe coded. I needed results fast. I
   hope to refactor someday.
-* The palette switching in lib/002-colors.zsh was 100% written by Claude. I was
-  in a hurry to work outside to protect a feral kitten from a mean old tomcat
-  (!), and I needed light mode to work reliably for that. As part of that it
-  also wrote the iTerm tomorrow-light profiles. Happy to let it write iTerm
-  profiles for me in the future because it's so much easier than doing it
-  through the iTerm settings and exporting them.
+* The palette switching in lib/002-colors.zsh was 100% written by Claude. It...
+  doesn't always work well, so consider it in progress.
 * When I'm ready to do the neovim vimscript->lua conversion, I think Claude
   will be doing a lot work that I don't understand.
 
 There's other stuff in here that I didn't write and don't fully understand, but
 it was written by other humans in the pre-LLM era.
-
-_(!) The kitten has since since been trapped and as I'm writing this on March
-15, 2026, she is scheduled to be spayed tomorrow, so don't worry for her!_
-
-<img src="https://lh3.googleusercontent.com/pw/AP1GczMKU0sKJuuHlJ4EVSJt9RUlVATfn4QRRsROqlSA_nsVzPGZQePXqw8IYYsBIVet6E3X229Adz8NwH4GopE-mWNaQ2HbrfdJQRfQR0kDPZZjSyF9eR29mp78bBTvu3z3MwZgO2ZS0W_eDfEv7_A0Bttc=w1186-h1576-s-no-gm" alt="Tempo" width="400">

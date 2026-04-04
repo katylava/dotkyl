@@ -1,7 +1,14 @@
 - source_glob: home/*
   target_dir: "~"
   prefix: .
-  excludes: [config]
+  excludes: [config, claude]
+
+- source_glob: home/claude/*
+  target_dir: ~/.claude
+  excludes: [skills]
+
+- source_glob: home/claude/skills/*
+  target_dir: ~/.claude/skills
 
 - source_glob: home/config/*
   target_dir: ~/.config

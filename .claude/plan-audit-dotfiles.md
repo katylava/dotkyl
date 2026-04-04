@@ -25,10 +25,16 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 **Tool-generated state** (`.cache/`, `.nvm/`, `.fzf/`, `.histfile`, `.viminfo`, etc.)
 → leave untracked
 
-**Contain plaintext secrets or auth tokens — never commit anywhere:**
+**Contain secrets or auth tokens — need special handling:**
 - `.npmrc` (has live GCP OAuth tokens)
-- `.edgerc`, `.ssh/`, `.gnupg/`, `.kube/`, `.terraform.d/`, `.pypirc`, `.vpn/`
+- `.gnupg/`, `.kube/`, `.terraform.d/`, `.pypirc`, `.vpn/`
 - `~/.config/gh/hosts.yml`
+
+These can be committed if secrets are obfuscated (e.g., placeholder values like `<token>`)
+with a post-merge hook or mise task that replaces them with real values via `op` (1Password
+CLI). This is preferable to leaving them untracked entirely, since it means a new machine
+can be set up from the repo. A pre-push hook should guard against accidentally pushing
+real secrets.
 
 **Contains sensitive but not secret org info (internal hostnames, internal tool config)**
 → `dotkyl-private`
@@ -58,10 +64,26 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 | `~/.config/iterm2/` | `home/config/iterm2/` | Check for scripts with internal URLs |
 | Work tool configs | `home/<toolname>rc` | Review per tool |
 
-### Leave untracked (secrets or auto-generated)
+### Leave untracked (auto-generated state only)
 
-`.npmrc`, `.edgerc`, `.ssh/`, `.gnupg/`, `.kube/`, `.terraform.d/`, `.pypirc`, `.vpn/`,
-`~/.config/gh/hosts.yml`, `~/.claude.json`
+`~/.claude.json` and similar tool-generated state files.
+
+Files with secrets (`.npmrc`, `.ssh/`, `.gnupg/`, `.kube/`, etc.) can be committed with
+placeholder values and hydrated via `op` — see "Contain secrets" section above.
+
+## Audit Tasks
+
+Claude can only access one machine per session. To audit both:
+
+1. On each computer, run these and save the output to a file in the repo:
+   ```
+   ls -d ~/.[!.]* | sort > /tmp/dotfiles-audit-$(hostname).txt
+   ls ~/.config/ | sort >> /tmp/dotfiles-audit-$(hostname).txt
+   ```
+2. Bring both files into a Claude session (or paste them) for help categorizing
+3. For each entry, decide: public repo / private repo / host-specific / leave untracked
+4. Pay special attention to files that exist on one machine but not the other —
+   these are likely host-specific and need conditional symlinking
 
 ## Process for Adding Files
 
@@ -77,6 +99,46 @@ Decide what in `~/` and `~/.config/` should be tracked in git, and where:
 **Partial-directory case** (e.g. `gh/config.yml` without `hosts.yml`): `setup/manage-symlinks`
 symlinks whole directories by default. For partial cases, add explicit per-file symlink logic
 to `setup/manage-symlinks`.
+
+## Host-Specific and Per-File Routing
+
+Some dotfiles need more nuance than "public vs private" — they vary per host, or a single
+directory contains a mix of public/private/work/personal files.
+
+### Known cases
+
+**`~/.ssh/config`** — different on work vs personal. Both versions should be stored so
+either machine can be set up from scratch.
+- Option A: `home/ssh/config--personal` and `private/home/ssh/config--work`, with a
+  symlink task that picks the right one based on `$DOTKYL_HOST`
+- Option B: A shared base `home/ssh/config` with host-specific `Include` directives
+  pointing to `~/.ssh/config.d/work` or `~/.ssh/config.d/personal`
+- The symlinks system (`setup/manage-symlinks` + `symlinks.yml`) may need to support
+  host-conditional entries for cases like this.
+
+**`~/.edgerc`** — private, work-only. Goes in `dotkyl-private/home/edgerc` and should
+only be symlinked on the work machine.
+
+**`~/.claude/skills/`** — mixed routing:
+- Some skills are personal (both machines, public repo)
+- Some are work-only (public repo, `--work` suffix or conditional symlink)
+- Some are both (public repo, no suffix)
+- Some are private (dotkyl-private)
+- Current `setup/symlinks.yml` symlinks whole directories. Need per-file or per-subdirectory
+  routing for `.claude/skills/`.
+
+### Implication for symlink tooling
+
+The current `setup/manage-symlinks` + `symlinks.yml` system handles:
+- Whole-directory symlinks (`home/config/*` → `~/.config/`)
+- No host-awareness or per-file routing
+
+To support the cases above, it needs to gain either:
+- Host-conditional entries in `symlinks.yml` (e.g., `only_on: work`)
+- Per-file entries for mixed directories
+- Or a convention where private repo symlinks override/supplement public ones per host
+
+This should be designed as part of this audit, not deferred.
 
 ## Decision Rule
 

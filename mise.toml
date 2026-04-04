@@ -1,59 +1,166 @@
-[tasks.hook]
-description = "Install git post-merge hook"
+[settings]
+task.timings = false
+
+[tasks.git-hook]
+description = "Install git hooks"
 run = """
-test -x .git/hooks/post-merge && diff -q setup/hooks/post-merge .git/hooks/post-merge >/dev/null \
-  && echo "⏭️ already installed" \
-  || { cp setup/hooks/post-merge .git/hooks/post-merge && chmod +x .git/hooks/post-merge && echo "✅ installed"; }
+# ...
+for hook in setup/hooks/*; do
+  name=$(basename "$hook")
+  if test -x ".git/hooks/$name" && diff -q "$hook" ".git/hooks/$name" >/dev/null; then
+    echo "⏭️ $name already installed"
+  else
+    cp "$hook" ".git/hooks/$name" && chmod +x ".git/hooks/$name" && echo "✅ $name installed"
+  fi
+done
 """
 
 [tasks.symlinks]
 description = "Symlink dotfiles into ~/"
 run = """
+# ...
 setup/manage-symlinks --dry-run >/dev/null 2>&1 \
   && echo "⏭️ already ok" \
   || { setup/manage-symlinks && echo "✅ set up"; }
 """
 
 [tasks.crontab]
-description = "Install crontab"
+description = "Install crontab (shared + host-specific)"
 run = """
-crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null \
+# ...
+host=$(bin/get-host 2>/dev/null)
+combined=$(mktemp)
+sed "s|\\$HOME|$HOME|g" crontab.txt > "$combined"
+[[ -n "$host" && -f "crontab--${host}.txt" ]] && sed "s|\\$HOME|$HOME|g" "crontab--${host}.txt" >> "$combined"
+crontab -l 2>/dev/null | diff -q - "$combined" >/dev/null \
   && echo "⏭️ already ok" \
-  || { crontab crontab.txt && echo "✅ installed"; }
+  || { crontab "$combined" && echo "✅ installed"; }
+rm -f "$combined"
 """
 
 [tasks.brew]
 description = "Install brew packages"
 run = """
+# ...
+host=$(bin/get-host 2>/dev/null)
 brew bundle check --file setup/Brewfile.shared >/dev/null \
   && echo "⏭️ shared already ok" \
   || { echo "🔧 installing shared packages..." && brew bundle --file setup/Brewfile.shared && echo "✅ shared done"; }
-[[ -n "$DOTKYL_HOST" ]] && {
-  brew bundle check --file setup/Brewfile.$DOTKYL_HOST >/dev/null \
-    && echo "⏭️ $DOTKYL_HOST already ok" \
-    || { echo "🔧 installing $DOTKYL_HOST packages..." && brew bundle --file setup/Brewfile.$DOTKYL_HOST && echo "✅ $DOTKYL_HOST done"; }
+[[ -n "$host" && -f "setup/Brewfile.$host" ]] && {
+  brew bundle check --file setup/Brewfile.$host >/dev/null \
+    && echo "⏭️ $host already ok" \
+    || { echo "🔧 installing $host packages..." && brew bundle --file setup/Brewfile.$host && echo "✅ $host done"; }
 }
+rm -f .brew-outdated
+true
 """
 
 [tasks.private-repo]
-description = "Clone private dotfiles repo"
+description = "Clone or pull private dotfiles repo"
 run = """
-test -d private/.git \
-  && echo "⏭️ already cloned" \
-  || { git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"; }
+# ...
+if test -d private/.git; then
+  git -C private pull --quiet && echo "⏭️ private up to date"
+else
+  git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"
+fi
 """
-
 [tasks.check-host]
 description = "Verify hostname is configured"
 run = """
+# ...
 bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
 
+[tasks.brew-reminder]
+description = "Remind if Brewfile changed since last brew install"
+run = """
+# ...
+# Create marker if Brewfile changed in last merge
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Brewfile' \
+  && touch .brew-outdated
+
+# Remind until mise run brew clears the marker
+[[ -f .brew-outdated ]] \
+  && echo '👉 Brewfile changed — run: mise run brew' \
+  || echo '⏭️ no Brewfile changes'
+"""
+
+[tasks.pip]
+description = "Install pip packages"
+run = '''
+# ...
+missing=false
+while read -r pkg; do
+  [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+  mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+done < setup/Pipfile.shared
+if [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]]; then
+  while read -r pkg; do
+    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+  done < "setup/Pipfile.$DOTKYL_HOST"
+fi
+if $missing; then
+  echo "🔧 installing pip packages..."
+  mise exec python -- pip install -q -r setup/Pipfile.shared
+  [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]] && \
+    mise exec python -- pip install -q -r "setup/Pipfile.$DOTKYL_HOST"
+  mise reshim
+  echo "✅ done"
+else
+  echo "⏭️ already ok"
+fi
+rm -f .pip-outdated
+'''
+
+[tasks.pip-reminder]
+description = "Remind if Pipfile changed since last pip install"
+run = """
+# ...
+# Create marker if Pipfile changed in last merge
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
+  && touch .pip-outdated
+
+# Remind until mise run pip clears the marker
+[[ -f .pip-outdated ]] \
+  && echo '👉 Pipfile changed — run: mise run pip' \
+  || echo '⏭️ no Pipfile changes'
+"""
+
+[tasks.claude-settings-reminder]
+description = "Remind to evaluate claude settings for symlinking"
+run = """
+# ...
+[[ -L ~/.claude/settings.json ]] \
+  && true \
+  || echo "👉 Compare ~/.claude/settings.json across machines, then move to home/claude/ and symlink"
+"""
+
+[tasks.peon-ping]
+description = "Install peon-ping with sound packs"
+run = """
+# ...
+curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh | bash -s -- \
+  --packs=glados,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
+"""
+
+[tasks.peon-ping-reminder]
+description = "Remind to install peon-ping if missing"
+run = """
+# ...
+[ -d ~/.claude/hooks/peon-ping ] \
+  && echo '⏭️ peon-ping already installed' \
+  || echo '👉 Run: mise run peon-ping'
+"""
+
+# NOTE: sync and install share some deps (hook, symlinks, crontab).
+# When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["hook", "symlinks", "crontab"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "peon-ping-reminder"]
 
 [tasks.install]
-description = "All tasks including brew"
-depends = ["sync", "brew", "private-repo", "check-host"]
+description = "Full machine setup (run manually)"
+depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host"]
