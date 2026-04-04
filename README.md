@@ -37,7 +37,7 @@ things by `mise run install`.
 ### /lib
 
 Files that are sourced by `~/.zshrc`. Coolest thing in here is
-[`bookmark`](https://github.com/katylava/dotkyl/blob/master/lib/080-bookmarks.zsh).
+[`bookmark`](https://github.com/katylava/dotkyl/blob/main/lib/080-bookmarks.zsh).
 
 ### /nvim
 
@@ -49,6 +49,10 @@ Symlinked to `~/.config/nvim` by `mise run install`.
 If you looked at my init.vim, yeah I know, I have too many plugins. Half of
 them I don't even use. I'm a plugin hoarder. We could make a TV show about
 people like me.
+
+### /mise-tasks
+
+Mise task scripts that are too long to inline in `mise.toml`.
 
 ### /setup
 

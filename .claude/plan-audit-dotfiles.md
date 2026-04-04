@@ -1,7 +1,5 @@
 # Plan: Audit ~/. for Repo Inclusion
 
-**Execute after:** plan-single-branch-dotfiles.md (private repo must exist first)
-
 ## Goal
 
 Decide what in `~/` and `~/.config/` should be tracked in git, and where:
