@@ -110,10 +110,7 @@ repos, and run `mise run install`.
 
 ### After bootstrap
 
-1. Add your machine's hostname to `bin/get-host`
-2. Commit and push
-3. Run `mise run install` (so host-specific tasks pick up the new hostname)
-4. Open nvim and run `:PlugInstall`
+Follow the "Next steps" printed by the bootstrap script.
 
 
 ## How It Works
@@ -182,12 +179,14 @@ proposes changes, the repo owner reviews and approves each commit.
 
 Claude has project-level context via `CLAUDE.md` (repo conventions, architecture,
 file layout) and persistent memory across sessions (user preferences, project
-state, feedback). It also has two custom skills for this repo:
+state, feedback). It also has three custom skills for this repo:
 
 - **commit** — creates commits following the repo's `<area>: <description>`
   format, stages files explicitly, and confirms the message before committing.
 - **write-script** — writes or refactors shell scripts in `bin/`, applying the
   repo's style conventions.
+- **add-install-task** — walks through creating a one-time install task in
+  `mise.toml` to sync a hand-installed app to the other machine.
 
 Renovation plans live in `.claude/plan-*.md`. These are living documents that
 Claude and the repo owner work through together — Claude updates them as work

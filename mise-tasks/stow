@@ -1,14 +1,14 @@
 #!/usr/bin/env zsh
-# Graduate a one-time install task from root mise.toml to setup/mise.toml.
+# Stow a one-time install task from root mise.toml into setup/mise.toml.
 # Moves the [tasks.<name>] block, deletes [tasks.<name>-reminder], removes
 # the reminder from the sync deps array, and commits (no push).
 #
-# Usage: mise run graduate <task-name>
+# Usage: mise run stow <task-name>
 
 set -euo pipefail
 
-name=${1:?Usage: mise run graduate <task-name>}
-repo_root=${0:A:h:h}  # script: mise-tasks/graduate → parent → parent = repo root
+name=${1:?Usage: mise run stow <task-name>}
+repo_root=${0:A:h:h}  # script: mise-tasks/stow → parent → parent = repo root
 root_toml=$repo_root/mise.toml
 setup_toml=$repo_root/setup/mise.toml
 
@@ -80,6 +80,6 @@ mv "$tmp" "$root_toml"
 
 # Commit (no push — user reviews and pushes when ready)
 git -C "$repo_root" add mise.toml setup/mise.toml
-git -C "$repo_root" commit -m "setup: graduate $name to setup/mise.toml"
+git -C "$repo_root" commit -m "setup: stow $name into setup/mise.toml"
 
-echo "✅ graduated $name"
+echo "✅ stowed $name"

@@ -1,7 +1,7 @@
 [settings]
 task.timings = false
 
-# Graduated one-time installs — things already installed on all active machines,
+# Stowed one-time installs — things already installed on all active machines,
 # kept here so a new machine can still bootstrap them.
 #
 # Lifecycle: new one-time installs start at repo root (with a reminder in sync).
@@ -15,5 +15,5 @@ curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh 
 """
 
 [tasks.install]
-description = "Run all graduated one-time installs (manual, after root bootstrap)"
+description = "Run all stowed one-time installs (manual, after root bootstrap)"
 depends = ["peon-ping"]

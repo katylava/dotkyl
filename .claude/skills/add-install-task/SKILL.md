@@ -7,7 +7,7 @@ description: Add a one-time install task to root mise.toml to sync a hand-instal
 
 Create a new one-time install task in root `mise.toml`. The task exists so the
 *other* machine can install the app via `mise run <name>` after being nudged by
-a sync reminder. After running, the task self-graduates to `setup/mise.toml`.
+a sync reminder. After running, the task self-stows to `setup/mise.toml`.
 
 ## Step 1: Identify the app and install path
 
@@ -41,12 +41,12 @@ run = """
 # ...
 [ -d "/Applications/<App Name>.app" ] \\
   && echo "⏭️ <App Name> already installed" \\
-  || { echo "👉 Install <App Name> from <source>, then run: mise run graduate <name>"; exit 1; }
+  || { echo "👉 Install <App Name> from <source>, then run: mise run stow <name>"; exit 1; }
 """
 ```
 
-Note: graduation doesn't happen automatically here since install is manual. The
-task exits 1 so it's visible in mise output, and the user runs graduate by hand
+Note: stowing doesn't happen automatically here since install is manual. The
+task exits 1 so it's visible in mise output, and the user runs stow by hand
 after installing.
 
 ## Step 2b: Direct download URL
@@ -64,15 +64,15 @@ run = """
 [ -d "/Applications/<App Name>.app" ] && { echo "⏭️ <App Name> already installed"; exit 0; }
 curl -fL -o ~/Downloads/<filename> "<download-url>"
 open ~/Downloads
-echo "👉 Install <App Name>, then run: mise run graduate <name>"
+echo "👉 Install <App Name>, then run: mise run stow <name>"
 """
 ```
 
-Same as 2a — user runs `mise run graduate <name>` after the manual install step.
+Same as 2a — user runs `mise run stow <name>` after the manual install step.
 
 ## Step 2c: Headless install command
 
-The task runs the install command itself and self-graduates on success. No user
+The task runs the install command itself and self-stows on success. No user
 intervention needed. This is the pattern for things like `curl ... | bash`
 installers or GitHub-release binary drops.
 
@@ -85,7 +85,7 @@ run = """
 # ...
 <check-command> \\
   && echo "⏭️ <App Name> already installed" \\
-  || { <install-command> && mise run graduate <name>; }
+  || { <install-command> && mise run stow <name>; }
 """
 ```
 
@@ -131,5 +131,5 @@ the other machine sees the reminder on its next pull.
 - If the app was already installed on both machines before the task was written,
   skip this skill and add the task straight to `setup/mise.toml`.
 - For brew casks, skip this skill and add to the appropriate `Brewfile.*`.
-- Graduation is manual for these app-install tasks (user runs `mise run graduate
+- Stowing is manual for these app-install tasks (user runs `mise run stow
   <name>` after the manual install step completes).
