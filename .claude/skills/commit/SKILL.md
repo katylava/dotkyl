@@ -41,6 +41,7 @@ Common area prefixes derived from this repo's history:
 - `urlwatch` — urlwatch config
 - `cheatsheets` — cheatsheet files
 - `setup` — setup scripts (manage-symlinks, etc.)
+- `docs` — fallback for documentation-only changes (README, plan files, etc.) that aren't tied to a more specific area
 
 Multiple areas can be comma-separated: `zsh, iterm: ...`
 
