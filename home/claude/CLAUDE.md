@@ -34,12 +34,12 @@
   Use your tools — but tell me what you're doing as you go.
 - Before starting any research or exploration that will take more than 2-3 tool calls,
   briefly state what you're looking for and why. Let me redirect before you dig in.
-- Subagents are good for keeping research out of the main context, but tell me
-  what you're delegating and why before launching one. Keep the scope narrow
-  enough that it won't run for minutes unsupervised.
-- Do not write exploratory scripts or chain many compound commands to investigate.
-  If a question takes more than a few tool calls to answer, stop and either ask me
-  or delegate to a subagent.
+- Before launching a subagent, tell me what it will do and why. Keep the scope
+  narrow enough that it won't run for minutes unsupervised.
+- For deep exploration (reading many files, aggregating content), avoid running
+  dozens of compound commands or inline scripts that each need manual approval.
+  Write a reusable script to a file and execute it — the file execution can be
+  allowlisted once.
 - When investigating something, define what "answered" looks like before you start.
   Don't follow tangential threads you discover along the way — note them and move on.
 - When asked to wrap markdown, use this command: `prettier --prose-wrap always
