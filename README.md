@@ -37,7 +37,7 @@ things by `mise run install`.
 ### /lib
 
 Files that are sourced by `~/.zshrc`. Coolest thing in here is
-[`bookmark`](https://github.com/katylava/dotkyl/blob/master/lib/080-bookmarks.zsh).
+[`bookmark`](https://github.com/katylava/dotkyl/blob/main/lib/080-bookmarks.zsh).
 
 ### /nvim
 
@@ -49,6 +49,10 @@ Symlinked to `~/.config/nvim` by `mise run install`.
 If you looked at my init.vim, yeah I know, I have too many plugins. Half of
 them I don't even use. I'm a plugin hoarder. We could make a TV show about
 people like me.
+
+### /mise-tasks
+
+Mise task scripts that are too long to inline in `mise.toml`.
 
 ### /setup
 
@@ -69,13 +73,8 @@ re-figure out on clean install.
 
 ## Install
 
-These installation instructions are for my future self. But I guess they could
-be useful if you decided to set up your dotfiles like mine... unfortunately, I
-have revamped this repo recently and haven't yet created the bootstrapping
-script, so I don't even know the installation steps right now. Need to
-implement the plan in .claude/plan-bootstrap.md first.
-
-Neovim plugins: open nvim and do `:PlugInstall`.
+See [clean-install.md](clean-install.md) for backup, clean install, and
+bootstrap instructions.
 
 
 ## How It Works
@@ -144,12 +143,14 @@ proposes changes, the repo owner reviews and approves each commit.
 
 Claude has project-level context via `CLAUDE.md` (repo conventions, architecture,
 file layout) and persistent memory across sessions (user preferences, project
-state, feedback). It also has two custom skills for this repo:
+state, feedback). It also has three custom skills for this repo:
 
 - **commit** — creates commits following the repo's `<area>: <description>`
   format, stages files explicitly, and confirms the message before committing.
 - **write-script** — writes or refactors shell scripts in `bin/`, applying the
   repo's style conventions.
+- **add-install-task** — walks through creating a one-time install task in
+  `mise.toml` to sync a hand-installed app to the other machine.
 
 Renovation plans live in `.claude/plan-*.md`. These are living documents that
 Claude and the repo owner work through together — Claude updates them as work
