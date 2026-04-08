@@ -69,6 +69,10 @@ run = "brew install espanso && brew uninstall dash"
 run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 ```
 
+### Commits
+
+Always use the /commit skill for commits — never commit manually.
+
 ## Workflow
 
 - When making changes to this machine that should persist across machines (installing/removing
