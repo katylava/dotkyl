@@ -1,11 +1,12 @@
 PATH=$HOME/.dotkyl/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
-45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 30 */4 * * * env LC_ALL='C' /usr/local/bin/gupdatedb 2>&1 | grep -v "Permission denied" | grep -vi keybase | grep -v "Operation not permitted" | grep -v "No such file or directory"
-30 15 * * * brew update
-15 11 */2 * * ping -c1 -W2 8.8.8.8 > /dev/null 2>&1 && env LC_ALL=en_US.UTF-8 urlwatch
-0 14 25 * * brew cleanup --prune=90
-01 13 * * * run-backups
 50 8-17 * * 1-5 osascript -e 'display notification "Get up and get steps" with title "Move!" sound name "Frog"'
+15 11 */2 * * ping -c1 -W2 8.8.8.8 > /dev/null 2>&1 && env LC_ALL=en_US.UTF-8 urlwatch
+02 12 * * * cd ~/.dotkyl && git fetch
+01 13 * * * run-backups
+0 14 25 * * brew cleanup --prune=90
+30 15 * * * brew update
+45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 
 # vim: ft=crontab
