@@ -138,11 +138,33 @@ run = """
   || echo "👉 Compare ~/.claude/settings.json across machines, then move to home/claude/ and symlink"
 """
 
+[tasks.install-peon-lcars]
+description = "Download LCARS peon-ping pack"
+run = """
+# ...
+if [[ -d "$HOME/.claude/hooks/peon-ping/packs/lcars/sounds" ]]; then
+  echo "⏭️ lcars pack already installed"
+else
+  bash "$HOME/.claude/hooks/peon-ping/scripts/pack-download.sh" \
+    --dir="$HOME/.claude/hooks/peon-ping" --packs=lcars \
+    && echo "✅ lcars pack installed" \
+    && echo "👉 Add lcars to your peon-ping rotation: /peon-ping-config"
+fi
+"""
+
+[tasks.install-peon-lcars-reminder]
+description = "Remind to install LCARS peon-ping pack"
+run = """
+# ...
+[[ -d "$HOME/.claude/hooks/peon-ping/packs/lcars/sounds" ]] \
+  || echo "👉 Run: mise run install-peon-lcars"
+"""
+
 # NOTE: sync and install share some deps (hook, symlinks, crontab).
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "install-peon-lcars-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"

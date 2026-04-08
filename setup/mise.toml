@@ -11,7 +11,7 @@ task.timings = false
 description = "Install peon-ping with sound packs"
 run = """
 curl -fsSL https://raw.githubusercontent.com/PeonPing/peon-ping/main/install.sh | bash -s -- \
-  --packs=glados,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
+  --packs=glados,lcars,sc_battlecruiser,sc_dropship,sc_ghost,sc_kerrigan,sc_marine,sc_medic,sc_raynor,sc_scv,sc_tank,sc_vessel
 """
 
 [tasks.install]
