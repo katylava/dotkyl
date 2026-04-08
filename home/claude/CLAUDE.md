@@ -22,7 +22,6 @@
 
 - For application code, use test driven development. Write failing tests first, confirm they fail, then implement the code to make them pass. Don't apply TDD to shell scripts — the fixture/harness ceremony outweighs the value; verify scripts by running them against real inputs.
 - When making more than ~3 similar edits to a file (bulk deletions, renames, pattern replacements), use `sed` via Bash instead of multiple sequential Edit tool calls.
-- Always use the /commit skill for commits — never commit manually.
 - Keep commit message subject lines to 50 characters or less.
 - Never amend a commit on a pushed branch unless I explicitly ask for it.
 - Prefer "jq" over python commands for extracting fields from JSON
