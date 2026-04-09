@@ -7,6 +7,7 @@ export CFLAGS=-Qunused-arguments
 export CPPFLAGS=-Qunused-arguments
 
 export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+export CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1
 export DOCKER_CLI_HINTS=false
 
 export GPG_TTY=$(tty)
