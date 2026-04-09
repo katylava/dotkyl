@@ -25,6 +25,7 @@
 - Keep commit message subject lines to 50 characters or less.
 - Never amend a commit on a pushed branch unless I explicitly ask for it.
 - Prefer "jq" over python commands for extracting fields from JSON
+- Use `python` and `pip`, not `python3` and `pip3` — they point to the same thing on this machine
 - Always include a blank line before lists in markdown files
 
 # Autonomy balance
