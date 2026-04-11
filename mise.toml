@@ -142,7 +142,7 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder", "install-peon-lcars-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
