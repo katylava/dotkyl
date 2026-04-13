@@ -42,8 +42,8 @@ $character
 
 [custom.etc_host]
     description = "Shows if oreilly.[com|review] is in /etc/hosts"
-    command = 'grep -oE "oreilly\.(com|review)" /etc/hosts | uniq | sed s/\n//g | sed s/oreilly//g'
-    when = 'grep -qE "oreilly\.(com|review)" /etc/hosts'
+    command = 'grep -vE "^[^#]*vpn\.corp" /etc/hosts | grep -oE "oreilly\.(com|review)" | uniq | sed s/\n//g | sed s/oreilly//g'
+    when = 'grep -vE "^[^#]*vpn\.corp" /etc/hosts | grep -qE "oreilly\.(com|review)"'
     symbol = "󰾋"
     style = "bg:note fg:bright-white"
     format = "[](bg:note fg:separator)[ $symbol $output ]($style)[](bg:separator fg:note)"
