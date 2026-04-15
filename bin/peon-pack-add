@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+# Install one or more peon-ping soundpacks and add them to the rotation.
+
+set -e
+
+PEON=~/.claude/hooks/peon-ping/peon.sh
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: peon-pack-add <pack> [<pack>...]"
+    echo
+    echo "Installs each peon-ping soundpack and adds it to the rotation."
+    exit 1
+fi
+
+# Both `packs install` and `packs rotation add` accept comma-separated lists,
+# so join the args with commas and call each command once.
+# ${(j:,:)@} is zsh syntax for joining the positional params with ",".
+packs="${(j:,:)@}"
+
+"$PEON" packs install "$packs"
+"$PEON" packs rotation add "$packs"
