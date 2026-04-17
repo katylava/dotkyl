@@ -17,6 +17,7 @@
 - If you've changed approach 3+ times on the same problem, suggest using /rewind or summarize-from-here to clean up context rather than continuing to accumulate failed attempts.
 - Break work into small, reviewable pieces. Don't make many changes at once — propose and complete one logical chunk at a time so I can review as we go. After I've reviewed a chunk, `git add` it before starting the next one so `git diff` stays clean.
 - Never assert the current state of external systems (git, filesystem, processes, remote branches) based on what you remember doing. The user works in other terminals and time passes between turns. If you're about to say "X is uncommitted" or "the file still has Y" or "the server is running" — check first, or phrase it as a question.
+- Auto-memory is only worth using for facts specific to the current project (e.g. "this repo's build needs env var X"). General feedback, preferences, or cross-project guidance belongs in an explicit tracked file (this CLAUDE.md, a project CLAUDE.md, or `.claude/notes.md`) — not auto-memory. If in doubt, ask where to put it.
 
 # Engineering tasks
 
@@ -28,6 +29,7 @@
 - Use `python` and `pip`, not `python3` and `pip3` — they point to the same thing on this machine
 - Always include a blank line before lists in markdown files
 - In markdown prose, don't put two tildes on the same line. Some renderers I use pair them into strikethrough. A single `~` (e.g. `~100ms`) is fine; two on one line (e.g. "takes ~100ms and ~3 retries") is not. Rewrite one or both as "about"/"roughly". Tildes inside backtick code spans are fine.
+- Don't renumber numbered lists one item at a time with sequential Edit calls. If an insertion or deletion shifts numbers, use `sed` to renumber in one shot, leave gaps in the numbering, or switch to an unordered list. Watching a dozen tool calls just to bump `### 13` → `### 10` etc. is painful.
 
 # Autonomy balance
 
