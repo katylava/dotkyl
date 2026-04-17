@@ -27,6 +27,7 @@
 - Prefer "jq" over python commands for extracting fields from JSON
 - Use `python` and `pip`, not `python3` and `pip3` — they point to the same thing on this machine
 - Always include a blank line before lists in markdown files
+- In markdown prose, don't put two tildes on the same line. Some renderers I use pair them into strikethrough. A single `~` (e.g. `~100ms`) is fine; two on one line (e.g. "takes ~100ms and ~3 retries") is not. Rewrite one or both as "about"/"roughly". Tildes inside backtick code spans are fine.
 
 # Autonomy balance
 
