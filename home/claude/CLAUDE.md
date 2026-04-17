@@ -17,7 +17,7 @@
 - If you've changed approach 3+ times on the same problem, suggest using /rewind or summarize-from-here to clean up context rather than continuing to accumulate failed attempts.
 - Break work into small, reviewable pieces. Don't make many changes at once — propose and complete one logical chunk at a time so I can review as we go. After I've reviewed a chunk, `git add` it before starting the next one so `git diff` stays clean.
 - Never assert the current state of external systems (git, filesystem, processes, remote branches) based on what you remember doing. The user works in other terminals and time passes between turns. If you're about to say "X is uncommitted" or "the file still has Y" or "the server is running" — check first, or phrase it as a question.
-- Auto-memory is only worth using for facts specific to the current project (e.g. "this repo's build needs env var X"). General feedback, preferences, or cross-project guidance belongs in an explicit tracked file (this CLAUDE.md, a project CLAUDE.md, or `.claude/notes.md`) — not auto-memory. If in doubt, ask where to put it.
+- Auto-memory is only worth using for facts specific to the current project (e.g. "this repo's build needs env var X"). General feedback, preferences, or cross-project guidance belongs in an explicit tracked file (this CLAUDE.md, a project CLAUDE.md, update to the relevant skill, a new skill, etc.) — not auto-memory. If in doubt, ask where to put it.
 
 # Engineering tasks
 
