@@ -35,7 +35,8 @@ Common area prefixes derived from this repo's history:
 - `git` — git-related config (includes gitconfig, gitignore, etc.)
 - `alias` — alias changes (in lib/010-aliases.zsh)
 - `crontab` — cron jobs
-- `claude` — .claude/ config, CLAUDE.md
+- `claude` — .claude/ config, CLAUDE.md (but see `skills` below)
+- `skills` — Claude skills (under `home/claude/skills/` or `.claude/skills/`)
 - `home` — files in home/ (symlinkable dotfiles)
 - `iterm` — iTerm2 profiles/config
 - `urlwatch` — urlwatch config
