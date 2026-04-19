@@ -21,6 +21,10 @@ This is a workflow that requires careful reading of each file before deciding wh
 
 ## Workflow
 
+### Always run commands from the Drive root
+
+All of the bundled helper scripts (`scan_inbox.py`, `append_log.py`) and all the shell commands in this skill assume cwd is the Drive root — the folder containing `Google Drive Reorg Rules.md` and `-Inbox/`. Do not `cd` into `-Inbox/` partway through the session. If you need to compose a command that looks like it's cd-ing, use absolute paths or `cd /path/to/drive/root && ...` instead. The helper scripts will fail with a clear error if the marker file isn't in cwd.
+
 ### Step 1: Read the rules
 
 Read `Google Drive Reorg Rules.md` from the root of the mounted Google Drive. This file contains the canonical sorting rules — folder destinations, naming conventions, and special cases. The rules may evolve over time, so always read the current version rather than relying on cached knowledge.
@@ -42,14 +46,25 @@ Also scan the existing folder structure (especially `Household/2030Shenandoah/Re
 
 ### Step 3: Read every file before sorting
 
-This is the most important rule. Never sort by filename alone. For each file:
+This is the most important rule. Never sort by filename alone.
 
-- **PDFs**: Extract text using `pypdf`. If text extraction yields nothing (scanned document), visually inspect the PDF by reading it as an image.
-- **Images** (JPG, PNG, HEIC): View them to understand what they depict. HEIC files may need conversion (`magick` or `convert` from ImageMagick) before viewing.
-- **ZIPs**: List contents, extract if needed to understand what's inside.
-- **Other formats**: Use appropriate tools to read the content.
+Run the bundled scanner to extract text/metadata from everything in the inbox in one shot:
 
-Process files in batches to be efficient, but make sure you actually understand each file's content before deciding where it goes.
+```bash
+python /Users/kyl/.claude/skills/sort-inbox/scan_inbox.py
+```
+
+(Pass a path as an optional argument if the inbox is not `./-Inbox/`.)
+
+The scanner prints a per-file section with:
+
+- **PDFs**: extracted text via `pypdf`. If extraction yields nothing, it prints `NEEDS_IMAGE_VIEW` — open the PDF with the Read tool to view it as an image.
+- **Images** (JPG, PNG, HEIC, etc.): flagged `NEEDS_IMAGE_VIEW` — open with the Read tool. HEIC files may need conversion (`magick` or `convert` from ImageMagick) if Read can't display them directly.
+- **Archives** (.zip, .tgz, .tar.gz, .tar): lists entries.
+- **Text-like files**: prints content.
+- **Other**: flagged `UNKNOWN_TYPE` — inspect manually.
+
+Prefer the scanner over ad-hoc inline Python — the file execution only needs to be approved once. After the scan, follow up on any `NEEDS_IMAGE_VIEW` files with the Read tool. Make sure you actually understand each file's content before deciding where it goes.
 
 ### Step 4: Categorize and identify ambiguities
 
