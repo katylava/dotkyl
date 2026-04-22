@@ -47,3 +47,11 @@
   Don't follow tangential threads you discover along the way — note them and move on.
 - When asked to wrap markdown, use this command: `prettier --prose-wrap always
   --print-width 80 --write <file.md> 2>&1`
+
+# Environment
+
+- Terminal: iTerm2
+- Editor: neovim
+- Coreutils: BSD by default. GNU versions available as `gsed`, `gfind`, `gdate`, `greadlink`, `gls`, etc. No `ggrep` — plain `grep` is BSD. Don't assume GNU-only flags work with plain `sed`/`grep`/`find`.
+- Preferred CLI tools: `ag` over `grep` for interactive code search. Use plain `grep` in pipes and scripts.
+- Clipboard: `pbcopy` / `pbpaste` are available.
