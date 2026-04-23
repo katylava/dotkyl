@@ -4,6 +4,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' } " colorscheme
 Plug 'chrisbra/csv.vim', { 'for': 'csv' } " CSV utilities
+Plug 'dlyongemallo/diffview.nvim' " diff/merge tool (maintained fork of sindrets/diffview.nvim)
 Plug 'editorconfig/editorconfig-vim' " supoport for .editorconfig files
 Plug 'github/copilot.vim' " AI programmer
 Plug 'godlygeek/tabular' " Align text :help tabular
@@ -17,6 +18,7 @@ Plug 'luochen1990/rainbow' " color-code matching brackets
 Plug 'mhinz/vim-signify' " VCS signs
 Plug 'nathanaelkane/vim-indent-guides' " color column by indent level
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " completion, LSP
+Plug 'nvim-tree/nvim-web-devicons' " lua devicons (for diffview file icons)
 Plug 'scrooloose/nerdtree' " shows current directory in a buffer
 Plug 'sheerun/vim-polyglot' " syntax highlighting for everything
 Plug 'tpope/vim-characterize' " `ga` for unicode name, digraphs, emoji codes, and html entities
@@ -620,3 +622,26 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+
+" ---------------------
+" diffview
+" ---------------------
+
+lua << EOF
+require("diffview").setup({
+  enhanced_diff_hl = true,
+  diffopt = { algorithm = "histogram" },
+})
+EOF
+
+" all uncommitted changes (unstaged + staged in split view)
+nnoremap <silent> <leader>dd :DiffviewOpen<CR>
+" staged only (git diff --cached)
+nnoremap <silent> <leader>ds :DiffviewOpen --cached<CR>
+" diff vs branch/commit (tab-completes — type branch name then <CR>)
+nnoremap <leader>db :DiffviewOpen<Space>
+" last commit, like git show HEAD
+nnoremap <silent> <leader>dc :DiffviewOpen HEAD^!<CR>
+" close
+nnoremap <silent> <leader>dq :DiffviewClose<CR>
