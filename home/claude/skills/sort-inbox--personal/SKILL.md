@@ -64,7 +64,7 @@ The scanner prints a per-file section with:
 - **Text-like files**: prints content.
 - **Other**: flagged `UNKNOWN_TYPE` — inspect manually.
 
-Prefer the scanner over ad-hoc inline Python — the file execution only needs to be approved once. After the scan, follow up on any `NEEDS_IMAGE_VIEW` files with the Read tool. Make sure you actually understand each file's content before deciding where it goes.
+Prefer the bundled scripts (`scan_inbox.py`, `append_log.py`) over ad-hoc inline Python — file executions only need to be approved once, and the scripts encode the skill's quirks (e.g. CSV quoting, marker-file guard). After the scan, follow up on any `NEEDS_IMAGE_VIEW` files with the Read tool. Make sure you actually understand each file's content before deciding where it goes.
 
 ### Step 4: Categorize and identify ambiguities
 
@@ -96,7 +96,13 @@ Once you have answers to your questions, sort everything. For each file:
 
 ### Step 6: Log actions
 
-Log every action to `-Inbox/sort-log.csv`. Append to the file if it already exists (previous sort sessions' logs should be preserved). If the file doesn't exist yet, write a header row first.
+Log every action to `-Inbox/sort-log.csv` using the bundled appender — do not write inline Python for this:
+
+```bash
+python /Users/kyl/.claude/skills/sort-inbox/append_log.py -Inbox/sort-log.csv '<json-rows>'
+```
+
+`<json-rows>` is a JSON array of objects with the columns listed below. The script writes the header row if the file doesn't exist yet, and handles the visible-quote formatting for `original_filename`, `new_filename`, and `destination` automatically.
 
 Columns: `date,original_filename,new_filename,destination,description,reason`
 
