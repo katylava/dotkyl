@@ -6,6 +6,55 @@ reference; its post-mortem lives in `plan-nvim-lua-migration.md` (deprecated).
 **Branch:** `nvim-lua-v2` (fresh, off current `main`)
 **Rollback tag:** `pre-nvim-lua` (already exists from attempt 1)
 
+## Session resumption
+
+This work spans multiple sessions. At the start of every session working on
+this plan, Claude must:
+
+1. **Read this entire plan file.** The Progress checklist and Decisions log
+   below are the source of truth for what's done and what was decided.
+2. **Verify branch state.**
+   - `git branch --show-current` — should be `nvim-lua-v2` (or create it if
+     missing and Progress shows step 1 not done)
+   - `git log --oneline main..HEAD` — confirms which step commits exist; cross-
+     check against the Progress checklist
+   - `git status` — must be clean before starting new work
+3. **Sync with `main`.** Katy's other machine may have pushed new commits.
+   - `git fetch origin`
+   - `git log --oneline HEAD..origin/main -- nvim/` — list nvim changes on main
+     since this branch diverged
+   - If any: merge `origin/main` into `nvim-lua-v2` (`git merge origin/main`).
+     Conflicts are most likely in `init.vim` (deleted on this branch) — for
+     each, port the change to the appropriate file in the new layout
+     (`init/mappings.vim`, `init/plugins.lua`, etc.) and record what was done
+     in the Decisions log. **Never silently drop a change from main.**
+   - Also check `git log --oneline HEAD..origin/main` for non-nvim changes; let
+     the merge bring them in normally.
+4. **Confirm with Katy.** Before doing any new step, summarize in 2-3 lines:
+   "Last completed step: X. Main has/hasn't moved. Next step: Y. About to do
+   the triage / make the change." Wait for her go-ahead.
+
+## Progress
+
+Update the checkbox and add the commit SHA when a step lands. Add brief
+notes inline if anything didn't go to plan.
+
+- [ ] **Step 1**: Base conversion — _commit:_
+- [ ] **Step 2**: ctrlp → fzf only — _commit:_
+- [ ] **Step 3**: vim-signify → gitsigns.nvim — _commit:_
+- [ ] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_
+- [ ] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_
+- [ ] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_
+- [ ] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_
+- [ ] **Step 8**: Cleanup — _commit:_
+
+## Decisions log
+
+Persistent record of triage outcomes and merge-from-main reconciliations.
+Each entry: date, context, decision. Append; don't rewrite.
+
+_(empty — first entry will be added when step 1 starts)_
+
 ## Guiding principles
 
 ### Preserve muscle memory
