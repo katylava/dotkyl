@@ -42,7 +42,7 @@ notes inline if anything didn't go to plan.
 
 - [x] **Step 1**: Base conversion — _commit:_ `c96221c`
 - [x] **Step 2**: ctrlp → fzf only — _commit:_ `4fd7d6c`
-- [ ] **Step 3**: vim-signify → gitsigns.nvim — _commit:_
+- [x] **Step 3**: vim-signify → gitsigns.nvim — _commit:_ `88bf7e1`
 - [ ] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_
 - [ ] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_
 - [ ] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_
@@ -53,6 +53,16 @@ notes inline if anything didn't go to plan.
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-26 — Step 3 (signify → gitsigns) landed (`88bf7e1`)
+
+- **Mapping ported:** `<Leader>s` → `:GitsignsFold`. The new command toggles
+  on second press (restores prior foldmethod/foldexpr/foldenable/foldlevel
+  via window-local saved state) — improvement over signify's one-way fold.
+- **Option dropped:** `g:signify_vcs_list = ['git']` (gitsigns is git-only;
+  the option's purpose is N/A).
+- gitsigns ships with extras (hunk preview, stage/unstage, blame line, hunk
+  text objects, `]c`/`[c` navigation) but none were enabled — defaults only.
 
 ### 2026-04-26 — Step 2 (ctrlp → fzf) landed (`4fd7d6c`)
 
