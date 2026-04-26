@@ -135,8 +135,11 @@ to do; replaying is less work than reconciling.
 ## Merging to main
 
 Out of scope for the migration session. After step 8 lands, Katy will use the
-branch for real work for 1-5 days on both machines, then merge to main herself.
-**Claude does not merge to main during this work.**
+branch for real work for 1-5 days on both machines, then merge to main herself
+via a **squash-merged GitHub PR**. GitHub's squash-merge collapses to one
+commit but preserves each per-step commit message as a bullet in the merge
+commit body, so the per-step messages survive on main. **Claude does not
+merge to main during this work.**
 
 ## Execution model
 
