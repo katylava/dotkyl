@@ -169,11 +169,20 @@ Each step is one commit on `nvim-lua-v2`. Steps 2-7 (plugin swaps) require a
    - **not sure** → drop; note it; revisit if missed during soak
 4. Conversation continues — Katy may have follow-up questions or change
    her mind on items as she learns more about the new plugin.
-5. Claude makes the change.
-6. Final triage outcomes (mappings ported / dropped, options handled, plus
+5. Claude makes the change and runs the headless smoke test
+   (`nvim --headless +qa`) to catch syntax errors and lazy.nvim install
+   issues.
+6. **Claude gives Katy a short list of concrete things to try in nvim**
+   that exercise the new behavior (port of each kept mapping, any
+   noteworthy new behavior, edge cases relevant to the swap). Wait for
+   her to test and report back before committing — she catches UX
+   regressions Claude can't see headless.
+7. Iterate on any issues she finds. The change is done when she says it
+   works.
+8. Final triage outcomes (mappings ported / dropped, options handled, plus
    any decisions that emerged in conversation) are written into the
    Decisions log entry for the step. The triage file is deleted.
-7. Commit message body summarizes what was ported and what was dropped.
+9. Commit message body summarizes what was ported and what was dropped.
 
 Step 1 (base conversion) does not need a checkpoint — it just moves existing
 config into the new file structure. Customizations get triaged when their
