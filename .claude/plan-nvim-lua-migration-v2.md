@@ -21,15 +21,16 @@ this plan, Claude must:
    - `git status` — must be clean before starting new work
 3. **Sync with `main`.** Katy's other machine may have pushed new commits.
    - `git fetch origin`
-   - `git log --oneline HEAD..origin/main -- nvim/` — list nvim changes on main
-     since this branch diverged
-   - If any: merge `origin/main` into `nvim-lua-v2` (`git merge origin/main`).
-     Conflicts are most likely in `init.vim` (deleted on this branch) — for
-     each, port the change to the appropriate file in the new layout
+   - `git log --oneline HEAD..origin/main` — list all new commits on main. If
+     none, skip the rest of this step.
+   - `git log --oneline HEAD..origin/main -- nvim/` — list specifically the
+     nvim changes. These are the ones likely to need manual porting because
+     `init.vim` is deleted on this branch.
+   - `git merge origin/main` — always merge in any new main commits. Non-nvim
+     changes flow in normally. Nvim conflicts (most likely in `init.vim`):
+     for each, port the change to the appropriate file in the new layout
      (`init/mappings.vim`, `init/plugins.lua`, etc.) and record what was done
      in the Decisions log. **Never silently drop a change from main.**
-   - Also check `git log --oneline HEAD..origin/main` for non-nvim changes; let
-     the merge bring them in normally.
 4. **Confirm with Katy.** Before doing any new step, summarize in 2-3 lines:
    "Last completed step: X. Main has/hasn't moved. Next step: Y. About to do
    the triage / make the change." Wait for her go-ahead.
