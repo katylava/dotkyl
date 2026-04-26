@@ -215,10 +215,11 @@ require("lazy").setup({
                     highlight = { "IblOdd", "IblEven" },
                 },
                 scope = { enabled = false },
-                exclude = {
-                    filetypes = { "help", "nerdtree" },
-                },
             })
+            -- Hide the level-1 guide (mirrors vim-indent-guides start_level=2)
+            local hooks = require("ibl.hooks")
+            hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+            hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
         end,
     },
 
