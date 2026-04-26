@@ -41,7 +41,7 @@ Update the checkbox and add the commit SHA when a step lands. Add brief
 notes inline if anything didn't go to plan.
 
 - [x] **Step 1**: Base conversion — _commit:_ `c96221c`
-- [ ] **Step 2**: ctrlp → fzf only — _commit:_
+- [x] **Step 2**: ctrlp → fzf only — _commit:_ `4fd7d6c`
 - [ ] **Step 3**: vim-signify → gitsigns.nvim — _commit:_
 - [ ] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_
 - [ ] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_
@@ -53,6 +53,44 @@ notes inline if anything didn't go to plan.
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-26 — Step 2 (ctrlp → fzf) landed (`4fd7d6c`)
+
+Triage outcome:
+
+- **Mappings ported:** `,f` → `:FzfFiles`, `,m` → `:FzfHistory`.
+- **Mappings dropped:** `,g` (CtrlPBuffer), `,r` (CtrlPClearCache — fzf has
+  no cache to clear), `<C-q>` (ctrlp invoke).
+- **Options dropped, with rationale:**
+  - `match_window_*` → covered by `g:fzf_layout = { up = '~40%' }`
+  - `show_hidden` → covered by ag's `--hidden` flag
+  - `switch_buffer = 'Et'` → fzf default behavior already does this
+  - `custom_ignore` → set via ag's `--ignore` flags (and `-U` so
+    `.gitignored` files are still findable, which Katy needs)
+  - `root_markers = ['.ctrlp']` → no fzf equivalent; dropped (`:GFiles`
+    handles git-root scope but Katy explicitly didn't want git-root)
+  - `dont_split = 'NERD'` → moot (fzf opens in a panel, not a split)
+- **Prompt mappings dropped:** fzf defaults (`<C-n>`/`<C-p>` and arrow
+  keys for next/prev) match Katy's current bindings exactly; history
+  mappings not needed since `,m` covers the recent-files use case.
+
+Beyond the pure port:
+
+- `--reverse` layout (best match at top, prompt at top), top panel.
+- ag with `-U` + explicit excludes for `node_modules`/`coverage`/`.DS_Store`
+  so `.gitignored` files are findable but noise is excluded.
+- `<C-e>` / `<C-y>` scroll the fzf preview (mirrors vim scroll keys).
+- `BAT_STYLE=plain` removes line-number gutter from previews.
+
+Other decisions in this session:
+
+- **All terminal-mode mappings removed** (`jk`, `<C-h/j/k/l>` window-nav,
+  `,tv` / `,tx` terminal openers). Katy hadn't built a habit of using
+  terminal mode, and the global `tnoremap` was kicking her out of fzf
+  via key collision.
+- **mouse=a kept**; use Option-click in iTerm to bypass mouse reporting
+  when selecting text. Comment added to `nvim/init/options.vim`.
+  Resolves the lualine + fzf "can't select with mouse" deferred items.
 
 ### 2026-04-26 — Step 1 (base conversion) landed (`c96221c`)
 
@@ -264,11 +302,9 @@ Largest swap. Current coc state:
 ## Out of scope
 
 - **Merging to main** — Katy's call after the soak
-- **Mouse/cursor cmdline regression** (couldn't select cmdline text in attempt
-  1) — investigate after step 8 if still present; plugin swaps may incidentally
-  fix it
-- **Lualine mouse text-select** (noted in step 1 smoke test; can't select
-  status line text with mouse) — same investigation window
+- ~~**Mouse/cursor cmdline regression** / **Lualine mouse text-select**~~ —
+  resolved as a decision, not a bug: keep `mouse=a`, use Option-click in iTerm
+  to bypass mouse reporting (see step 2 decisions log entry)
 - **Changing mappings Katy currently uses** — would ask first; this plan only
   *moves* existing mappings or *retires* unused ones
 
