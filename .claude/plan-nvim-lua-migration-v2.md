@@ -67,19 +67,20 @@ Each entry: date, context, decision. Append; don't rewrite.
   - Dark even: `#383C52`
   - Light odd: `#E2E7DD`
   - Light even: `#DDE2D8`
-- **`exclude_filetypes`** ported as `exclude.filetypes = { "help",
-  "nerdtree" }`. Note: `nerdtree` becomes irrelevant after step 5;
-  add `NvimTree` to the list then.
+- **`exclude_filetypes`** initially ported as `exclude.filetypes = { "help",
+  "nerdtree" }`, then dropped entirely in follow-up (`aeb9e92`) — Katy
+  isn't using the editor for real work until the migration is done, so
+  guides showing in nerdtree mid-migration is fine.
 - **ColorScheme handling rewrite.** `set background=...` triggers a
   colorscheme reload that clears non-builtin highlight groups (including
   IblOdd/IblEven), and ibl's own ColorScheme autocmd panics if those
   groups don't exist. Fix: re-apply ibl colors via a ColorScheme
   autocmd registered in `functions.lua` (which loads before
   `plugins.lua`, so our autocmd runs before ibl's).
-- **Behavior difference noted (deferred):** indent-blankline shows a
-  guide at indent level 1 that vim-indent-guides' `start_level=2`
-  suppressed. No clean equivalent exists in indent-blankline. If it
-  bothers during the soak we'll explore workarounds.
+- **Level-1 guide resolved in follow-up** (`aeb9e92`): ibl v3 ships
+  built-in WHITESPACE hooks `hide_first_space_indent_level` and
+  `hide_first_tab_indent_level`. Registering both restores the
+  `start_level=2` behavior from vim-indent-guides.
 
 ### 2026-04-26 — Step 3 (signify → gitsigns) landed (`88bf7e1`)
 
