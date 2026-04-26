@@ -48,8 +48,8 @@ map <F1> <ESC>
 " Remove trailing space without overwriting current search
 nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" Signify fold
-nnoremap <Leader>s :SignifyFold<CR>
+" Gitsigns fold (show only changed hunks)
+nnoremap <Leader>s :GitsignsFold<CR>
 
 " Window swap
 nnoremap <C-w>m :call WindowSwapping()<CR>

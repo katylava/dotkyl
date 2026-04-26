@@ -155,9 +155,49 @@ require("lazy").setup({
 
     -- VCS signs
     {
-        "mhinz/vim-signify",
-        init = function()
-            vim.g.signify_vcs_list = { "git" }
+        "lewis6991/gitsigns.nvim",
+        config = function()
+            local gs = require("gitsigns")
+            gs.setup()
+
+            -- :GitsignsFold — toggle fold-unchanged-lines view. First call
+            -- saves current fold settings then folds non-hunk lines; second
+            -- call restores. Replaces vim-signify's :SignifyFold.
+            function _G._gitsigns_fold_expr()
+                local hunks = gs.get_hunks() or {}
+                local lnum = vim.v.lnum
+                for _, hunk in ipairs(hunks) do
+                    local added = hunk.added or {}
+                    local start = added.start or 0
+                    local count = math.max(added.count or 0, 1)
+                    if lnum >= start and lnum < start + count then
+                        return 0
+                    end
+                end
+                return 1
+            end
+
+            vim.api.nvim_create_user_command("GitsignsFold", function()
+                local ok, saved = pcall(vim.api.nvim_win_get_var, 0, "_gitsigns_fold_saved")
+                if ok and saved then
+                    vim.wo.foldmethod = saved.foldmethod
+                    vim.wo.foldexpr = saved.foldexpr
+                    vim.wo.foldenable = saved.foldenable
+                    vim.wo.foldlevel = saved.foldlevel
+                    vim.api.nvim_win_del_var(0, "_gitsigns_fold_saved")
+                else
+                    vim.api.nvim_win_set_var(0, "_gitsigns_fold_saved", {
+                        foldmethod = vim.wo.foldmethod,
+                        foldexpr = vim.wo.foldexpr,
+                        foldenable = vim.wo.foldenable,
+                        foldlevel = vim.wo.foldlevel,
+                    })
+                    vim.wo.foldmethod = "expr"
+                    vim.wo.foldexpr = "v:lua._gitsigns_fold_expr()"
+                    vim.wo.foldenable = true
+                    vim.wo.foldlevel = 0
+                end
+            end, {})
         end,
     },
 
