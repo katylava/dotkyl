@@ -9,5 +9,6 @@ nvim/autoload/gocomplete.vim
 nvim/ftplugin/go/gocomplete.vim
 .claude/settings.local.json
 .claude/plans/
+.claude/triage-step*.md
 .brew-outdated
 .pip-outdated
