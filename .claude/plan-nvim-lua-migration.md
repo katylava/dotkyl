@@ -1,5 +1,9 @@
 # Plan: Migrate Neovim Config from Vimscript to Lua
 
+> **DEPRECATED — attempt 1 post-mortem.** Active plan is
+> `plan-nvim-lua-migration-v2.md`. This file is kept for the lessons-learned
+> section, which is referenced by v2.
+
 **Branch:** `nvim-lua-wip` (based on main + first attempt at migration)
 **Rollback tag:** `pre-nvim-lua` (main before any lua changes)
 
