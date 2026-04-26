@@ -1,17 +1,12 @@
 " Escape
 inoremap jk <Esc>
 inoremap kk <Esc>
-tnoremap jk <C-\><C-n>
 
 " Window navigation
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-h> :wincmd h<CR>
 nnoremap <C-l> :wincmd l<CR>
-tnoremap <C-j> <C-\><C-n><C-w>h
-tnoremap <C-k> <C-\><C-n><C-w>j
-tnoremap <C-h> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
 
 " Window resize (<opt> = - . ,)
 nnoremap ≠ 10<C-W>+
@@ -53,10 +48,6 @@ map <F1> <ESC>
 " Remove trailing space without overwriting current search
 nnoremap <silent> ,s :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" Terminal mode
-nnoremap ,tv :vsp term://zsh -f<CR>i
-nnoremap ,tx :sp term://zsh -f<CR>i
-
 " Signify fold
 nnoremap <Leader>s :SignifyFold<CR>
 
@@ -67,11 +58,9 @@ nnoremap <C-w>m :call WindowSwapping()<CR>
 map ,d :NERDTreeToggle<CR>
 map ,e :NERDTreeFind<CR>
 
-" CtrlP
-map ,f :CtrlP<CR>
-map ,m :CtrlPMRU<CR>
-map ,g :CtrlPBuffer<CR>
-map ,r :CtrlPClearCache<CR>
+" Fuzzy finder (fzf.vim, with command_prefix='Fzf')
+map ,f :FzfFiles<CR>
+map ,m :FzfHistory<CR>
 
 " Copilot
 imap <silent><script><expr> <C-n> copilot#Accept("\<CR>")

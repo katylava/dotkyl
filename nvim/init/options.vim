@@ -58,6 +58,10 @@ set tw=79
 set iskeyword+=-
 
 " Mouse
+" mouse=a captures mouse events for vim, which means iTerm refuses normal
+" text selection ("mouse reporting has prevented making a selection").
+" Decision: keep mouse=a; hold Option while clicking/dragging in iTerm to
+" select text. Don't disable mouse reporting in iTerm.
 set mouse=a
 
 " Wildmenu

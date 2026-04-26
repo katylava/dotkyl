@@ -113,34 +113,31 @@ require("lazy").setup({
     {
         "junegunn/fzf.vim",
         init = function()
-            vim.g.fzf_layout = { down = "~40%" }
+            vim.g.fzf_layout = { up = "~40%" }
             vim.g.fzf_command_prefix = "Fzf"
+            -- --reverse: prompt at top, best match adjacent to prompt
+            -- ctrl-e/ctrl-y scroll the preview (mirrors vim's scroll keys)
+            vim.env.FZF_DEFAULT_OPTS = table.concat({
+                "--reverse",
+                "--bind ctrl-e:preview-down,ctrl-y:preview-up",
+            }, " ")
+            -- bat is fzf.vim's previewer; "plain" drops line numbers and header
+            vim.env.BAT_STYLE = "plain"
+            -- ag -U disables .gitignore (so gitignored files are findable);
+            -- explicit ignores match the old ctrlp custom_ignore.
+            vim.env.FZF_DEFAULT_COMMAND = table.concat({
+                "ag --hidden -U",
+                "--ignore .git",
+                "--ignore node_modules",
+                "--ignore .DS_Store",
+                "--ignore coverage",
+                "-g ''",
+            }, " ")
         end,
     },
 
     -- Custom text objects
     { "kana/vim-textobj-user" },
-
-    -- File finder
-    {
-        "kien/ctrlp.vim",
-        init = function()
-            vim.g.ctrlp_match_window_bottom = 0
-            vim.g.ctrlp_match_window_reversed = 0
-            vim.g.ctrlp_show_hidden = 1
-            vim.g.ctrlp_map = "<C-q>"
-            vim.g.ctrlp_switch_buffer = "Et"
-            vim.g.ctrlp_custom_ignore = "node_modules\\|DS_Store\\|coverage"
-            vim.g.ctrlp_root_markers = { ".ctrlp" }
-            vim.g.ctrlp_dont_split = "NERD"
-            vim.g.ctrlp_prompt_mappings = {
-                ['PrtSelectMove("j")'] = { "<c-n>", "<down>" },
-                ['PrtSelectMove("k")'] = { "<c-p>", "<up>" },
-                ['PrtHistory(-1)'] = { "<c-j>" },
-                ['PrtHistory(1)'] = { "<c-k>" },
-            }
-        end,
-    },
 
     -- Show marks in the sign column
     { "kshenoy/vim-signature" },
