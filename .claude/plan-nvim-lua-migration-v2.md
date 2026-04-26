@@ -40,7 +40,7 @@ this plan, Claude must:
 Update the checkbox and add the commit SHA when a step lands. Add brief
 notes inline if anything didn't go to plan.
 
-- [ ] **Step 1**: Base conversion — _commit:_
+- [x] **Step 1**: Base conversion — _commit:_ `c96221c`
 - [ ] **Step 2**: ctrlp → fzf only — _commit:_
 - [ ] **Step 3**: vim-signify → gitsigns.nvim — _commit:_
 - [ ] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_
@@ -54,7 +54,17 @@ notes inline if anything didn't go to plan.
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
 
-_(empty — first entry will be added when step 1 starts)_
+### 2026-04-26 — Step 1 (base conversion) landed (`c96221c`)
+
+- Smoke test on personal machine: status line, NERDTree+devicons, ctrlp,
+  diffview, dark/light toggle, CoC, terminal splits all working.
+- **New deferred issue:** can't select text in the lualine status line with
+  the mouse. May be related to attempt-1's "mouse/cursor cmdline regression"
+  noted in Out of scope. Revisit after step 7 (the LSP swap may incidentally
+  fix mouse handling).
+- `python3` → `python` correction: wip's options.vim had
+  `exepath('python3')` but main's init.vim was already on `exepath('python')`
+  (commit `dbdd396`). Used main's value.
 
 ## Guiding principles
 
@@ -257,6 +267,8 @@ Largest swap. Current coc state:
 - **Mouse/cursor cmdline regression** (couldn't select cmdline text in attempt
   1) — investigate after step 8 if still present; plugin swaps may incidentally
   fix it
+- **Lualine mouse text-select** (noted in step 1 smoke test; can't select
+  status line text with mouse) — same investigation window
 - **Changing mappings Katy currently uses** — would ask first; this plan only
   *moves* existing mappings or *retires* unused ones
 
