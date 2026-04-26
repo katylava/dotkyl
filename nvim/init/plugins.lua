@@ -203,20 +203,22 @@ require("lazy").setup({
 
     -- Color column by indent level
     {
-        "nathanaelkane/vim-indent-guides",
-        init = function()
-            vim.g.indent_guides_start_level = 2
-            vim.g.indent_guides_guide_size = 1
-            vim.g.indent_guides_enable_on_vim_startup = 1
-            vim.g.indent_guides_exclude_filetypes = { "help", "nerdtree" }
-            vim.g.indent_guides_auto_colors = 0
-        end,
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
         config = function()
-            -- Apply colors after the plugin loads (needs g:indent_guides_*_color from theme)
-            if vim.g.indent_guides_odd_color then
-                vim.cmd("hi IndentGuidesOdd guibg=" .. vim.g.indent_guides_odd_color)
-                vim.cmd("hi IndentGuidesEven guibg=" .. vim.g.indent_guides_even_color)
-            end
+            -- char=" " makes the indicator a space; the IblOdd/IblEven groups
+            -- supply the column colors via guibg. Mirrors vim-indent-guides'
+            -- look. Highlight colors are set in ApplyDark/ApplyLight.
+            require("ibl").setup({
+                indent = {
+                    char = " ",
+                    highlight = { "IblOdd", "IblEven" },
+                },
+                scope = { enabled = false },
+                exclude = {
+                    filetypes = { "help", "nerdtree" },
+                },
+            })
         end,
     },
 

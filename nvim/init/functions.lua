@@ -51,21 +51,36 @@ function WindowSwapping()
     end
 end
 
--- Theme functions: Apply dark/light palette with indent guide colors
+-- IblOdd/IblEven are used by indent-blankline (configured in plugins.lua).
+-- Re-apply them on every ColorScheme event because `set background=...`
+-- triggers a colorscheme reload that clears non-builtin highlight groups,
+-- and ibl's own ColorScheme handler errors if these don't exist.
+-- Registered here (functions.lua) so it runs before ibl loads/registers
+-- its handler, guaranteeing ours fires first.
+local function apply_ibl_colors()
+    local odd, even
+    if vim.o.background == "dark" then
+        -- odd: slightly darker than bg with blue cast; even: slightly
+        -- lighter than bg with purple cast. Both distinct from CursorColumn.
+        odd, even = "#233046", "#383C52"
+    else
+        -- odd: barely darker than bg, subtle cool green.
+        -- even: same hue family, a touch darker than odd.
+        odd, even = "#E2E7DD", "#DDE2D8"
+    end
+    vim.api.nvim_set_hl(0, "IblOdd", { bg = odd })
+    vim.api.nvim_set_hl(0, "IblEven", { bg = even })
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", { callback = apply_ibl_colors })
+
+-- Theme functions
 function ApplyDark()
     vim.opt.background = "dark"
     vim.cmd("hi lineNr guibg=#282828")
-    vim.g.indent_guides_odd_color = "#233046"
-    vim.g.indent_guides_even_color = "#2F3648"
-    vim.cmd("hi IndentGuidesOdd guibg=" .. vim.g.indent_guides_odd_color)
-    vim.cmd("hi IndentGuidesEven guibg=" .. vim.g.indent_guides_even_color)
 end
 
 function ApplyLight()
     vim.opt.background = "light"
     vim.cmd("hi lineNr guibg=#C8C8A8 guifg=#282828")
-    vim.g.indent_guides_odd_color = "#C3D0C6"
-    vim.g.indent_guides_even_color = "#CFD6C8"
-    vim.cmd("hi IndentGuidesOdd guibg=" .. vim.g.indent_guides_odd_color)
-    vim.cmd("hi IndentGuidesEven guibg=" .. vim.g.indent_guides_even_color)
 end
