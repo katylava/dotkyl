@@ -43,7 +43,7 @@ notes inline if anything didn't go to plan.
 - [x] **Step 1**: Base conversion — _commit:_ `c96221c`
 - [x] **Step 2**: ctrlp → fzf only — _commit:_ `4fd7d6c`
 - [x] **Step 3**: vim-signify → gitsigns.nvim — _commit:_ `88bf7e1`
-- [ ] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_
+- [x] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_ `19883da`
 - [ ] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_
 - [ ] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_
 - [ ] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_
@@ -53,6 +53,33 @@ notes inline if anything didn't go to plan.
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-26 — Step 4 (indent-guides → indent-blankline) landed (`19883da`)
+
+- **All customizations ported.** Alternating IblOdd/IblEven highlights
+  (with `char = " "` plus `guibg`) reproduce vim-indent-guides' column-fill
+  visual. `start_level=2` and `guide_size=1` were vim-indent-guides
+  internals; indent-blankline's defaults are close.
+- **Colors revisited.** Original colors didn't translate well — the dark
+  even and both light shades were too dark or off-hue.
+  Final palette:
+  - Dark odd: `#233046` (kept from original)
+  - Dark even: `#383C52`
+  - Light odd: `#E2E7DD`
+  - Light even: `#DDE2D8`
+- **`exclude_filetypes`** ported as `exclude.filetypes = { "help",
+  "nerdtree" }`. Note: `nerdtree` becomes irrelevant after step 5;
+  add `NvimTree` to the list then.
+- **ColorScheme handling rewrite.** `set background=...` triggers a
+  colorscheme reload that clears non-builtin highlight groups (including
+  IblOdd/IblEven), and ibl's own ColorScheme autocmd panics if those
+  groups don't exist. Fix: re-apply ibl colors via a ColorScheme
+  autocmd registered in `functions.lua` (which loads before
+  `plugins.lua`, so our autocmd runs before ibl's).
+- **Behavior difference noted (deferred):** indent-blankline shows a
+  guide at indent level 1 that vim-indent-guides' `start_level=2`
+  suppressed. No clean equivalent exists in indent-blankline. If it
+  bothers during the soak we'll explore workarounds.
 
 ### 2026-04-26 — Step 3 (signify → gitsigns) landed (`88bf7e1`)
 
