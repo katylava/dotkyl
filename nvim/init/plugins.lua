@@ -67,7 +67,7 @@ require("lazy").setup({
     -- Status line
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = { "catppuccin", "ryanoasis/vim-devicons" },
+        dependencies = { "catppuccin", "nvim-tree/nvim-web-devicons" },
         config = function()
             require("lualine").setup({
                 options = {
@@ -148,7 +148,7 @@ require("lazy").setup({
         init = function()
             vim.g.rainbow_active = 1
             vim.g.rainbow_conf = {
-                separately = { nerdtree = 0 },
+                separately = { NvimTree = 0 },
             }
         end,
     },
@@ -228,12 +228,41 @@ require("lazy").setup({
 
     -- File tree
     {
-        "scrooloose/nerdtree",
-        dependencies = { "ryanoasis/vim-devicons" },
-        init = function()
-            vim.g.NERDTreeIgnore = { "\\.pyc$" }
-            vim.g.NERDTreeWinSize = 45
-            vim.g.NERDTreeShowHidden = 1
+        "nvim-tree/nvim-tree.lua",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            local function on_attach(bufnr)
+                local api = require("nvim-tree.api")
+                api.config.mappings.default_on_attach(bufnr)
+
+                local function opts(desc)
+                    return {
+                        desc = "nvim-tree: " .. desc,
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                end
+
+                -- Override defaults to match nerdtree muscle memory
+                vim.keymap.set("n", "i", api.node.open.horizontal, opts("Open: horizontal split"))
+                vim.keymap.set("n", "s", api.node.open.vertical, opts("Open: vertical split"))
+                vim.keymap.set("n", "t", api.node.open.tab, opts("Open: new tab"))
+                vim.keymap.set("n", "?", api.tree.toggle_help, opts("Help"))
+                vim.keymap.set("n", "C", api.tree.change_root_to_node, opts("Change root"))
+            end
+
+            require("nvim-tree").setup({
+                on_attach = on_attach,
+                view = { width = 40 },
+                filters = {
+                    -- show dotfiles (NERDTreeShowHidden=1)
+                    dotfiles = false,
+                    -- hide .pyc (NERDTreeIgnore)
+                    custom = { ".*%.pyc$" },
+                },
+            })
         end,
     },
 
@@ -263,12 +292,4 @@ require("lazy").setup({
 
     -- Get syntax group for highlighting
     { "vim-scripts/SyntaxAttr.vim" },
-
-    -- Icons for filetypes (must come last)
-    {
-        "ryanoasis/vim-devicons",
-        init = function()
-            vim.g.WebDevIconsNerdTreeBeforeGlyphPadding = ""
-        end,
-    },
 })

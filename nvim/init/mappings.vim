@@ -54,9 +54,9 @@ nnoremap <Leader>s :GitsignsFold<CR>
 " Window swap
 nnoremap <C-w>m :call WindowSwapping()<CR>
 
-" NERDTree
-map ,d :NERDTreeToggle<CR>
-map ,e :NERDTreeFind<CR>
+" nvim-tree
+map ,d :NvimTreeToggle<CR>
+map ,e :NvimTreeFindFile<CR>
 
 " Fuzzy finder (fzf.vim, with command_prefix='Fzf')
 map ,f :FzfFiles<CR>
