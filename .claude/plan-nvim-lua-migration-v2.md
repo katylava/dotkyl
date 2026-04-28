@@ -47,12 +47,26 @@ notes inline if anything didn't go to plan.
 - [x] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_ `9315211`
 - [x] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_ `9146216`
 - [x] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_ `9c263f2`
-- [ ] **Step 8**: Cleanup — _commit:_
+- [x] **Step 8**: Cleanup — _commit:_ `7738bc9`
 
 ## Decisions log
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-28 — Step 8 (cleanup) landed (`7738bc9`)
+
+- **Deleted** `nvim/syntax/{apex,ejs,tinytower,visualforce}.vim` —
+  filetypes dropped in step 6.
+- **Deleted** `nvim/autoload/plug.vim.old` and removed the now-empty
+  `nvim/autoload/` directory (was untracked; vim-plug long gone).
+- **`nvim/lua/`** wasn't present — nothing to remove.
+- **Updated** `plan-nvim-zshrc.md` `init.vim` reference to
+  `init/mappings.vim` to match the new layout.
+- **Note (not changed):** `plan-nvim-zshrc.md` step 4 references `,tv`/
+  `,tx` terminal mappings, which were removed in step 2. The whole
+  step is moot now but left as-is for the user to review.
+- **No TODO/FIXME** left in `nvim/init/*` files.
 
 ### 2026-04-28 — Step 7 (coc → native LSP stack) landed (`9c263f2`)
 
