@@ -62,8 +62,8 @@ map ,e :NvimTreeFindFile<CR>
 map ,f :FzfFiles<CR>
 map ,m :FzfHistory<CR>
 
-" Copilot
-imap <silent><script><expr> <C-n> copilot#Accept("\<CR>")
+" Copilot (was <C-n>; remapped to free <C-n>/<C-p> for cmp menu nav)
+imap <silent><script><expr> <C-j> copilot#Accept("\<CR>")
 
 " Diffview
 " all uncommitted changes (unstaged + staged in split view)
@@ -83,94 +83,3 @@ command! W  write
 command! Wq wq
 command! Wn wn
 command! WN wN
-
-" ---------------------
-" CoC mappings
-" ---------------------
-
-" Tab completion
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Diagnostics navigation
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Show documentation
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-" Symbol renaming
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-nmap ,n  <Plug>(coc-format)
-
-" Code actions
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>ac  <Plug>(coc-codeaction)
-nmap <leader>qf  <Plug>(coc-fix-current)
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-" Text objects for functions and classes
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Scroll float windows/popups
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-
-" Selection ranges
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" CoC commands
-command! -nargs=0 Format :call CocActionAsync('format')
-command! -nargs=? Fold :call CocAction('fold', <f-args>)
-command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-" CoCList mappings
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<CR>
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<CR>
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<CR>
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<CR>
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<CR>
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>

@@ -1,5 +1,4 @@
 local autocmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
 
 -- Filetype detection
 autocmd("BufRead", { pattern = "*.gs", command = "set filetype=javascript" })
@@ -114,22 +113,6 @@ autocmd("BufEnter", {
 
 -- Remove html link/italic overrides from colorscheme
 autocmd("ColorScheme", { pattern = "*", command = "hi link htmlLink NONE | hi link htmlItalic NONE" })
-
--- CoC: highlight symbol under cursor
-autocmd("CursorHold", { pattern = "*", command = "silent call CocActionAsync('highlight')" })
-
--- CoC augroup
-local coc_group = augroup("mygroup", { clear = true })
-autocmd("FileType", {
-    group = coc_group,
-    pattern = { "typescript", "json" },
-    command = "setl formatexpr=CocAction('formatSelected')",
-})
-autocmd("User", {
-    group = coc_group,
-    pattern = "CocJumpPlaceholder",
-    command = "call CocActionAsync('showSignatureHelp')",
-})
 
 -- Trailing whitespace highlighting
 vim.cmd("highlight ExtraWhitespace ctermbg=red guibg=red")

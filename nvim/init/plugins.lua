@@ -223,8 +223,19 @@ require("lazy").setup({
         end,
     },
 
-    -- Completion, LSP
-    { "neoclide/coc.nvim", branch = "release" },
+    -- LSP, completion, formatting, linting (configured in init/lsp.lua)
+    { "williamboman/mason.nvim" },
+    { "williamboman/mason-lspconfig.nvim" },
+    { "WhoIsSethDaniel/mason-tool-installer.nvim" },
+    { "neovim/nvim-lspconfig" },
+    { "hrsh7th/nvim-cmp" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-buffer" },
+    { "hrsh7th/cmp-path" },
+    { "L3MON4D3/LuaSnip" },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "stevearc/conform.nvim" },
+    { "mfussenegger/nvim-lint" },
 
     -- File tree
     {
