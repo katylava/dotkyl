@@ -60,12 +60,47 @@ def scan_pdf(path: Path) -> None:
             t = page.extract_text() or ""
         except Exception as e:
             t = f"[extract error: {e}]"
-        all_text.append(f"--- page {i+1} ---\n{t}")
+        annots = extract_annotation_text(page)
+        section = f"--- page {i+1} ---\n{t}"
+        if annots:
+            section += f"\n[annotations]\n{annots}"
+        all_text.append(section)
     combined = "\n".join(all_text).strip()
     if not combined or not any(c.isalnum() for c in combined):
         print("NEEDS_IMAGE_VIEW — no extractable text (scanned/image-only PDF)")
         return
     print(truncate(combined))
+
+
+def extract_annotation_text(page) -> str:
+    """Pull text out of FreeText / Text / Highlight annotations on a page.
+
+    pypdf's extract_text() only reads the page content stream, so sticky
+    notes and free-text annotations layered on top of a scanned PDF are
+    missed. This walks /Annots and collects any /Contents strings.
+    """
+    annots = page.get("/Annots")
+    if not annots:
+        return ""
+    lines = []
+    try:
+        for a in annots:
+            try:
+                obj = a.get_object()
+            except Exception:
+                continue
+            contents = obj.get("/Contents")
+            if not contents:
+                continue
+            subtype = str(obj.get("/Subtype", "")).lstrip("/")
+            author = obj.get("/T")
+            tag = subtype or "Annot"
+            if author:
+                tag = f"{tag} by {author}"
+            lines.append(f"  [{tag}] {contents}")
+    except Exception as e:
+        return f"[annotation walk error: {e}]"
+    return "\n".join(lines)
 
 
 def scan_archive(path: Path) -> None:
