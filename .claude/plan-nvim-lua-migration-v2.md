@@ -44,7 +44,7 @@ notes inline if anything didn't go to plan.
 - [x] **Step 2**: ctrlp → fzf only — _commit:_ `4fd7d6c`
 - [x] **Step 3**: vim-signify → gitsigns.nvim — _commit:_ `88bf7e1`
 - [x] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_ `19883da`
-- [ ] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_
+- [x] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_ `9315211`
 - [ ] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_
 - [ ] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_
 - [ ] **Step 8**: Cleanup — _commit:_
@@ -53,6 +53,49 @@ notes inline if anything didn't go to plan.
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-28 — Step 5 (nerdtree → nvim-tree, vim-devicons → nvim-web-devicons) landed (`9315211`)
+
+- **Outside-tree mappings ported:** `,d` → `:NvimTreeToggle`,
+  `,e` → `:NvimTreeFindFile`.
+- **Tree options ported:**
+  - `NERDTreeIgnore = ['\.pyc$']` → `filters.custom = { ".*%.pyc$" }`
+  - `NERDTreeWinSize = 45` → `view.width = 40` (45 felt too wide in
+    nvim-tree, dropped to 40 during testing)
+  - `NERDTreeShowHidden = 1` → `filters.dotfiles = false`
+- **In-tree overrides** (preserve nerdtree muscle memory). nvim-tree's
+  defaults put file-open actions on Ctrl-letters; we override single
+  letters to match nerdtree:
+  - `i` → horizontal split (was unbound)
+  - `s` → vertical split (was `system_open` — Katy doesn't use it)
+  - `t` → new tab (was unbound)
+  - `?` → help (default was `g?`)
+  - `C` → change tree root (was `toggle_git_clean` — Katy doesn't use it)
+  - `R` left as default (same key as nerdtree, no override needed)
+  - Dropped `cd` override (Katy uses `C` only)
+- **In-tree behaviors NOT ported** (Katy "never" / "no" in triage):
+  open-in-current-window via `<CR>`/`o` (still works as nvim-tree
+  default; she just doesn't use it), toggle dotfiles `Shift-I`,
+  create/delete/rename/move, bookmarks. `u` (parent dir, "rarely") also
+  dropped — nvim-tree's `-` works if needed.
+- **Plugin set changes:**
+  - `scrooloose/nerdtree` removed
+  - `ryanoasis/vim-devicons` removed
+  - `nvim-tree/nvim-tree.lua` added
+  - `nvim-tree/nvim-web-devicons` already present (diffview dep), now
+    also a dep of nvim-tree and lualine
+  - `lualine.nvim` deps updated: `vim-devicons` → `nvim-web-devicons`
+  - `rainbow` `separately = { nerdtree = 0 }` → `{ NvimTree = 0 }`
+- **Files deleted:** `nvim/after/syntax/nerdtree.vim` (bracket-conceal
+  workaround was specific to nerdtree+vim-devicons, no longer needed).
+- **Stale dir cleanup:** `nvim/plugged/` (vim-plug's old install dir)
+  deleted locally because fzf's `,f` was surfacing it. Already
+  gitignored. Other machine: delete it during the soak transition.
+- **nvim-tree-only features surfaced** (Katy didn't enable any, but
+  noting them for reference): live filter (`f`/`F`), git-ignored toggle
+  (`I`), dotfiles toggle (`H`), buffer-only filter (`B`), path copies
+  (`gy`/`Y`/`y`/`ge`), git-change navigation (`[c`/`]c`), diagnostic
+  navigation (`[e`/`]e`), tab preview.
 
 ### 2026-04-26 — Step 4 (indent-guides → indent-blankline) landed (`19883da`)
 
