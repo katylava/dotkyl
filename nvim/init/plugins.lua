@@ -277,6 +277,13 @@ require("lazy").setup({
                 },
                 renderer = {
                     icons = {
+                        -- Two-space padding (default is one) gives wider
+                        -- glyphs (markdown, toml) breathing room without
+                        -- breaking row alignment for narrow ones.
+                        padding = "  ",
+                        -- Render git status in the signcolumn so the
+                        -- 2-space padding doesn't apply around git icons.
+                        git_placement = "signcolumn",
                         glyphs = {
                             git = {
                                 unstaged = "✽",
