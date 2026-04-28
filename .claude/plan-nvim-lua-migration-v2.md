@@ -45,7 +45,7 @@ notes inline if anything didn't go to plan.
 - [x] **Step 3**: vim-signify → gitsigns.nvim — _commit:_ `88bf7e1`
 - [x] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_ `19883da`
 - [x] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_ `9315211`
-- [ ] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_
+- [x] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_ `9146216`
 - [ ] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_
 - [ ] **Step 8**: Cleanup — _commit:_
 
@@ -53,6 +53,29 @@ notes inline if anything didn't go to plan.
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-28 — Step 6 (polyglot → nvim-treesitter) landed (`9146216`)
+
+- No triage needed — polyglot had zero customizations.
+- Used **nvim-treesitter v1** (the rewrite). Different API from v0.x:
+  the plugin is now a tiny scope (just installs/manages parsers).
+  Highlight is enabled per-filetype via an autocmd that calls
+  `vim.treesitter.start()`. Indentation/folding intentionally not
+  enabled (treesitter indent is still experimental; can opt in later).
+- v1 requires `tree-sitter` CLI installed locally (it builds parsers
+  with the system toolchain instead of shipping prebuilt binaries).
+  Added `tree-sitter-cli` to `setup/Brewfile.shared`. Picks up
+  automatically via `mise run brew`.
+- **Parsers installed for actively-edited languages:** bash, comment,
+  css, html, javascript, json, json5, lua, markdown, markdown_inline,
+  python, query, regex, sql, toml, tsx, typescript, vim, vimdoc, yaml.
+- **Languages dropped** (not actively used anymore): apex, ejs,
+  tinytower, visualforce. Their `nvim/syntax/*.vim` files remain on
+  disk but won't be loaded since those filetypes are never opened.
+  Cleanup deferred to step 8.
+- Visual difference: treesitter highlight is more granular than
+  polyglot (function names, parameters, etc. get distinct colors).
+  catppuccin handles treesitter groups out of the box.
 
 ### 2026-04-28 — Step 5 (nerdtree → nvim-tree, vim-devicons → nvim-web-devicons) landed (`9315211`)
 
