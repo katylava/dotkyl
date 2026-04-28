@@ -266,8 +266,39 @@ require("lazy").setup({
         end,
     },
 
-    -- Syntax highlighting for everything
-    { "sheerun/vim-polyglot" },
+    -- Syntax highlighting via treesitter parsers (nvim-treesitter v1)
+    {
+        "nvim-treesitter/nvim-treesitter",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            local ts = require("nvim-treesitter")
+            ts.setup({})
+
+            local parsers = {
+                "bash", "comment", "css", "html",
+                "javascript", "json", "json5", "lua",
+                "markdown", "markdown_inline", "python",
+                "query", "regex", "sql", "toml", "tsx",
+                "typescript", "vim", "vimdoc", "yaml",
+            }
+            ts.install(parsers)
+
+            -- Enable highlight on FileType
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = {
+                    "bash", "css", "html",
+                    "javascript", "javascriptreact",
+                    "json", "json5", "lua",
+                    "markdown", "python",
+                    "sh", "sql", "toml",
+                    "typescript", "typescriptreact",
+                    "vim", "yaml",
+                },
+                callback = function() pcall(vim.treesitter.start) end,
+            })
+        end,
+    },
 
     -- `ga` for unicode name, digraphs, emoji codes, and html entities
     { "tpope/vim-characterize" },
