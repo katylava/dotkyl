@@ -46,13 +46,69 @@ notes inline if anything didn't go to plan.
 - [x] **Step 4**: vim-indent-guides → indent-blankline.nvim — _commit:_ `19883da`
 - [x] **Step 5**: nerdtree → nvim-tree, devicons → nvim-web-devicons — _commit:_ `9315211`
 - [x] **Step 6**: vim-polyglot → nvim-treesitter — _commit:_ `9146216`
-- [ ] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_
+- [x] **Step 7**: coc.nvim → nvim-lspconfig + nvim-cmp — _commit:_ `9c263f2`
 - [ ] **Step 8**: Cleanup — _commit:_
 
 ## Decisions log
 
 Persistent record of triage outcomes and merge-from-main reconciliations.
 Each entry: date, context, decision. Append; don't rewrite.
+
+### 2026-04-28 — Step 7 (coc → native LSP stack) landed (`9c263f2`)
+
+- **Replacement stack:** mason.nvim + mason-lspconfig + mason-tool-installer
+  for tool installation; nvim-lspconfig for bundled server configs;
+  nvim-cmp + cmp-nvim-lsp + cmp-buffer + cmp-path for completion;
+  LuaSnip + cmp_luasnip for the snippet engine cmp requires;
+  conform.nvim for formatters; nvim-lint for linters.
+- **API:** uses nvim 0.11+ `vim.lsp.config` / `vim.lsp.enable` (avoids the
+  deprecated `require("lspconfig").<server>.setup({})` framework — the
+  bundled server configs in nvim-lspconfig are still picked up via
+  runtimepath).
+- **Servers installed:** pyright, ts_ls (via mason).
+- **Tools installed:** black (Python formatter), flake8 (Python linter),
+  prettier (JS/TS/JSON/CSS/HTML/MD/YAML formatter), eslint_d (JS/TS linter).
+- **Mappings ported (from triage):**
+  - `gd` → `vim.lsp.buf.definition` (LspAttach buffer-local)
+  - `gr` → `vim.lsp.buf.references` (LspAttach buffer-local)
+  - `,n` → `:lua require("conform").format(...)` (format buffer)
+- **Completion keys: switched to nvim-cmp defaults** (deviation from
+  port-faithful muscle-memory rule, accepted as worth relearning).
+  Initial port mirrored coc's Tab/S-Tab nav, but Tab+Enter overlap with
+  copilot's accept-suggestion needs and other defaults made overrides
+  fragile. Final binding: `<C-n>`/`<C-p>` navigate menu, `<C-y>` confirms,
+  `<C-e>` aborts, `<C-b>`/`<C-f>` scroll docs, no `<CR>` binding (Enter
+  always inserts a newline). `preselect = none` keeps "no auto-pick"
+  behavior from old `suggest.noselect`.
+- **Copilot accept remapped:** `<C-n>` → `<C-j>` to free `<C-n>` for cmp
+  menu nav. Was the only insert-mode mapping change required by the swap.
+- **Mappings dropped (Katy "don't use"):** `<C-space>` refresh, `[g`/`]g`
+  diagnostics nav, `gy`/`gi` type/impl, `K` hover, `<leader>rn` rename,
+  `<leader>a`/`<leader>ac`/`<leader>qf`/`<leader>cl` code actions,
+  `<leader>f` format-selection, `if`/`af`/`ic`/`ac` text objects, `<C-f>`
+  /`<C-b>` float scroll, `<C-s>` range select, `:Format`/`:Fold`/`:OR`,
+  all `<space>*` CocList mappings, CursorHold symbol highlight.
+- **Settings ported automatically (no triage):** pyright inlay hints
+  disabled (settings → vim.lsp.config); black/flake8 wired via
+  conform/nvim-lint; `suggest.noselect: true` → cmp `preselect = none`.
+- **Plugin set changes:**
+  - `neoclide/coc.nvim` removed
+  - 12 plugins added: mason.nvim, mason-lspconfig.nvim,
+    mason-tool-installer.nvim, nvim-lspconfig, nvim-cmp,
+    cmp-nvim-lsp, cmp-buffer, cmp-path, LuaSnip, cmp_luasnip,
+    conform.nvim, nvim-lint
+- **Files changed:**
+  - `nvim/init/lsp.lua` created (entire LSP/completion/format/lint config)
+  - `nvim/init.lua` sources lsp.lua between plugins.lua and autocommands.lua
+  - `nvim/init/mappings.vim`: stripped CoC section
+  - `nvim/init/autocommands.lua`: removed CursorHold and `mygroup`
+    (formatexpr, CocJumpPlaceholder) autocmds
+  - `nvim/coc-settings.json`: deleted
+- **Skipped from earlier proposal:** telescope.nvim (no `<space>*` mappings
+  kept); nvim-treesitter-textobjects (no `if`/`af`/`ic`/`ac` kept);
+  Trouble.nvim (no diagnostics list use case); null-ls (chose
+  conform+nvim-lint instead — recommended modern split, lower
+  maintenance overhead).
 
 ### 2026-04-28 — Step 6 (polyglot → nvim-treesitter) landed (`9146216`)
 
