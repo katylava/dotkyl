@@ -131,6 +131,8 @@ require("lazy").setup({
                 "--ignore node_modules",
                 "--ignore .DS_Store",
                 "--ignore coverage",
+                "--ignore '*.pyc'",
+                "--ignore __pycache__",
                 "-g ''",
             }, " ")
         end,
@@ -272,6 +274,19 @@ require("lazy").setup({
                     dotfiles = false,
                     -- hide .pyc (NERDTreeIgnore)
                     custom = { ".*%.pyc$" },
+                },
+                renderer = {
+                    icons = {
+                        glyphs = {
+                            git = {
+                                unstaged = "✽",
+                                staged = "✚",
+                                renamed = "⥱",
+                                untracked = "፧",
+                                deleted = "✗",
+                            },
+                        },
+                    },
                 },
             })
         end,
