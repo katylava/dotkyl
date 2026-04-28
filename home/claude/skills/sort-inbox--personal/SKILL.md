@@ -25,6 +25,8 @@ This is a workflow that requires careful reading of each file before deciding wh
 
 All of the bundled helper scripts (`scan_inbox.py`, `append_log.py`) and all the shell commands in this skill assume cwd is the Drive root — the folder containing `Google Drive Reorg Rules.md` and `-Inbox/`. Do not `cd` into `-Inbox/` partway through the session. If you need to compose a command that looks like it's cd-ing, use absolute paths or `cd /path/to/drive/root && ...` instead. The helper scripts will fail with a clear error if the marker file isn't in cwd.
 
+**Check cwd at the start with `pwd`.** If Claude was launched from inside `-Inbox/` (or anywhere other than the Drive root), STOP and tell the user to relaunch from the Drive root.
+
 ### Step 1: Read the rules
 
 Read `Google Drive Reorg Rules.md` from the root of the mounted Google Drive. This file contains the canonical sorting rules — folder destinations, naming conventions, and special cases. The rules may evolve over time, so always read the current version rather than relying on cached knowledge.
