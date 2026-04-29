@@ -80,12 +80,15 @@ require("lazy").setup({
                     lualine_b = { { "branch", icon = "\u{e0a0}" } },
                     lualine_c = { FileDir, { "filename", path = 0, symbols = { modified = " +", readonly = " \u{e0a2}" } } },
                     lualine_x = {
-                        { "fileformat", cond = function() return vim.fn.winwidth(0) > 120 end },
-                        { "encoding", cond = function() return vim.fn.winwidth(0) > 120 end },
-                        { "filetype", cond = function() return vim.fn.winwidth(0) > 120 end },
+                        { "fileformat", cond = function() return vim.o.columns > 120 end },
+                        { "encoding", cond = function() return vim.o.columns > 120 end },
+                        { "filetype", cond = function() return vim.o.columns > 120 end },
                     },
                     lualine_y = { function() return os.date("%H:%M") end },
-                    lualine_z = { { "progress" }, { "location" } },
+                    lualine_z = {
+                        { "progress", separator = "", padding = { left = 1, right = 0 } },
+                        { "location", padding = { left = 1, right = 1 } },
+                    },
                 },
                 inactive_sections = {
                     lualine_a = { "mode" },
