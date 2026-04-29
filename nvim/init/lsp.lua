@@ -1,25 +1,14 @@
 -- LSP, completion, formatting, linting
 -- ============================================================================
 -- Plugin set:
---   mason.nvim                  - install LSP servers / formatters / linters
---   mason-lspconfig.nvim        - bridge mason ↔ lspconfig
---   mason-tool-installer.nvim   - keep formatters/linters auto-installed
 --   nvim-lspconfig              - presets for ~200 LSP servers
 --   nvim-cmp + sources          - completion popup
 --   LuaSnip + cmp_luasnip       - snippet engine (cmp requires one)
 --   conform.nvim                - run formatters (black, prettier)
 --   nvim-lint                   - run linters (flake8, eslint_d)
-
--- ----------------------------------------------------------------------------
--- Mason: install tools
--- ----------------------------------------------------------------------------
-require("mason").setup()
-require("mason-lspconfig").setup({
-    ensure_installed = { "pyright", "ts_ls" },
-})
-require("mason-tool-installer").setup({
-    ensure_installed = { "black", "flake8", "prettier", "eslint_d" },
-})
+--
+-- LSP servers, formatters, and linters are installed via mise
+-- (setup/Pipfile.shared, setup/Npmfile.shared) and resolved on PATH.
 
 -- ----------------------------------------------------------------------------
 -- LSP servers (nvim 0.11+ vim.lsp.config API)

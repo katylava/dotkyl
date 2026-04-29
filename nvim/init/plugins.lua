@@ -226,9 +226,6 @@ require("lazy").setup({
     },
 
     -- LSP, completion, formatting, linting (configured in init/lsp.lua)
-    { "williamboman/mason.nvim" },
-    { "williamboman/mason-lspconfig.nvim" },
-    { "WhoIsSethDaniel/mason-tool-installer.nvim" },
     { "neovim/nvim-lspconfig" },
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
@@ -238,6 +235,8 @@ require("lazy").setup({
     { "saadparwaiz1/cmp_luasnip" },
     { "stevearc/conform.nvim" },
     { "mfussenegger/nvim-lint" },
+    -- Tools (pyright, ts_ls, prettier, eslint_d, black, flake8) are installed
+    -- via mise (setup/Pipfile.shared, setup/Npmfile.shared) and resolved on PATH.
 
     -- File tree
     {

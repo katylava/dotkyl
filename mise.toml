@@ -129,6 +129,51 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Pipfile' \
   || echo '⏭️ no Pipfile changes'
 """
 
+[tasks.npm]
+description = "Install global npm packages"
+run = '''
+# ...
+missing=false
+while read -r pkg; do
+  [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+  mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+done < setup/Npmfile.shared
+if [[ -n "$DOTKYL_HOST" && -f "setup/Npmfile.$DOTKYL_HOST" ]]; then
+  while read -r pkg; do
+    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
+  done < "setup/Npmfile.$DOTKYL_HOST"
+fi
+if $missing; then
+  echo "🔧 installing npm packages..."
+  pkgs=$(grep -vE '^\s*(#|$)' setup/Npmfile.shared | tr '\n' ' ')
+  mise exec node -- npm install -g --silent $pkgs
+  if [[ -n "$DOTKYL_HOST" && -f "setup/Npmfile.$DOTKYL_HOST" ]]; then
+    pkgs=$(grep -vE '^\s*(#|$)' "setup/Npmfile.$DOTKYL_HOST" | tr '\n' ' ')
+    mise exec node -- npm install -g --silent $pkgs
+  fi
+  mise reshim
+  echo "✅ done"
+else
+  echo "⏭️ already ok"
+fi
+rm -f .npm-outdated
+'''
+
+[tasks.npm-reminder]
+description = "Remind if Npmfile changed since last npm install"
+run = """
+# ...
+# Create marker if Npmfile changed in last merge
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Npmfile' \
+  && touch .npm-outdated
+
+# Remind until mise run npm clears the marker
+[[ -f .npm-outdated ]] \
+  && echo '👉 Npmfile changed — run: mise run npm' \
+  || echo '⏭️ no Npmfile changes'
+"""
+
 [tasks.claude-settings-reminder]
 description = "Remind to evaluate claude settings for symlinking"
 run = """
@@ -142,8 +187,8 @@ run = """
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "claude-settings-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-reminder"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "private-repo", "check-host"]
+depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host"]
