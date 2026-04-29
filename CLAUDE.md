@@ -1,7 +1,8 @@
 # CLAUDE.md
 
 Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
-Read `README.md` at the start of every conversation to understand the repo.
+
+@README.md
 
 ## Applying Changes
 
