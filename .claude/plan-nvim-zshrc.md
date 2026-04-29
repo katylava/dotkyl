@@ -119,7 +119,7 @@ NVIM=/tmp/fake.sock zsh -i   # no starship, no fzf-tab, aliases work, PATH corre
 unset NVIM; zsh -i            # normal shell unaffected
 ```
 
-**4. Optional — update nvim terminal mappings in `nvim/init.vim`:**
+**4. Optional — update nvim terminal mappings in `nvim/init/mappings.vim`:**
 
 Current mappings use `term://zsh -f` (bare shell, skips zshrc entirely). After this change,
 `term://zsh` will use the fast minimal config instead, giving aliases and correct PATH:

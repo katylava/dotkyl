@@ -1,7 +1,9 @@
 black
 docformatter
+flake8
 ipython
 pynvim
+pyright
 tabview
 termgraph
 urlwatch
