@@ -42,6 +42,10 @@ vim.lsp.config("pyright", {
 
 vim.lsp.enable({ "pyright", "ts_ls" })
 
+vim.api.nvim_create_user_command("LspLog", function()
+    vim.cmd("tabnew " .. vim.lsp.get_log_path())
+end, { desc = "Open the LSP log file" })
+
 -- Buffer-local LSP mappings (only when an LSP attaches)
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
