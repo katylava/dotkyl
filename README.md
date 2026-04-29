@@ -168,10 +168,9 @@ without thinking much:
 
 * The query_roam.py script was like 80% vibe coded. I needed results fast. I
   hope to refactor someday.
-* The palette switching in lib/002-colors.zsh was 100% written by Claude. It...
-  doesn't always work well, so consider it in progress.
-* When I'm ready to do the neovim vimscript->lua conversion, I think Claude
-  will be doing a lot work that I don't understand.
+* The palette switching in lib/002-colors.zsh was 95% written by Claude.
+* Claude converted my old CoC+vimscript Neovim config to Lua, porting most of
+  my customizations, but modernizing the plugins.
 
 There's other stuff in here that I didn't write and don't fully understand, but
 it was written by other humans in the pre-LLM era.
