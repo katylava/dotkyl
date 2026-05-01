@@ -51,7 +51,7 @@
     Staging earlier hides changes from `git diff`, which is how I review. The chunk loop is for review, not for shipping — committing is a separate, explicit step that I have to ask for.
 - Never amend a commit on a pushed branch unless I explicitly ask for it.
 - Keep commit message subject lines to 50 characters or less.
-- In commit messages, the author is me — don't refer to me in the third person ("Katy", "the user"). Either use first person or stay impersonal.
+- In commit messages, the author is the user — don't refer to the user in the third person ("Katy", "the user"). Write in the user's voice (first person) or stay impersonal.
 
 ## Writing markdown
 
