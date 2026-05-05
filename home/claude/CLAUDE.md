@@ -66,6 +66,12 @@
 - Prefer `jq` over python commands for extracting fields from JSON.
 - When making more than ~3 similar edits to a file (bulk deletions, renames, pattern replacements), use `sed` via Bash instead of multiple sequential Edit tool calls.
 
+# Shorthand
+
+Abbreviations the user will use and what they mean.
+
+- qnotc: question not challenge (or question not correction). Just answer the question, don't assume it is pushback or a change request.
+
 # Environment
 
 - Terminal: iTerm2
