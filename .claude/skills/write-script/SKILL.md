@@ -12,6 +12,10 @@ Follow these guidelines when writing or refactoring shell scripts in this repo.
 - Use `#!/usr/bin/env zsh` — this is a zsh-centric repo, no need for POSIX portability.
 - Use `yq` for parsing TOML/YAML/JSON. Never use Python for parsing.
 - Comment non-obvious zsh syntax (e.g., `${0:A:h}`, glob qualifiers, parameter expansion flags).
+- Use `python`/`pip`, not `python3`/`pip3` — same binary on this machine.
+- Use `ag` instead of `grep`.
+- Use `gsed` (GNU) instead of `sed` (BSD), and `gfind` instead of `find`. The GNU versions accept the syntax you already know.
+- `pbcopy` and `pbpaste` are available for reading from or writing to my clipboard.
 
 ## Script structure
 

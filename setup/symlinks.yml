@@ -5,10 +5,13 @@
 
 - source_glob: home/claude/*
   target_dir: ~/.claude
-  excludes: [skills]
+  excludes: [skills, hooks]
 
 - source_glob: home/claude/skills/*
   target_dir: ~/.claude/skills
+
+- source_glob: home/claude/hooks/*
+  target_dir: ~/.claude/hooks
 
 - source_glob: home/config/*
   target_dir: ~/.config

@@ -55,6 +55,7 @@ The area prefix should reflect what the change is **about**, not just which file
 Rules:
 - **Subject line**: `<area>: <description in imperative mood>`
 - **Subject length**: aim for ~50 characters. This is a soft target — clarity wins over brevity, but don't be wordy. Trim filler words, use short verbs (add, fix, rm, use, set, update).
+- **Voice**: imperative or first person. Never third person — git already records the author, so don't refer to them by name or as "the user".
 - **Body** (optional): include when the *why* behind the change isn't obvious from the subject and diff. When used, separate from subject with a blank line. Especially important when the subject was forced to be terse and that caused ambiguity.
 - **Co-Authored-By trailer**: if Claude helped write the changes being committed, include the Co-Authored-By trailer. Use whatever model name is current (check system prompt for the model ID). Always separated from body/subject by a blank line.
 
