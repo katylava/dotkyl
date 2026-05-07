@@ -1,0 +1,114 @@
+#!/usr/bin/env zsh
+#MISE description "Sync claude settings"
+#MISE
+#USAGE arg "[direction]" {
+#USAGE   help "Which config to overwrite, repo/host, or just show diff"
+#USAGE   long_help """
+#USAGE   diff      Just show the difference (default)
+#USAGE   to-host   Overwrite host settings with values from repo config
+#USAGE   to-repo   Replace repo config with values from host settings
+#USAGE
+#USAGE
+#USAGE   """
+#USAGE   default "diff"
+#USAGE   choices "diff" "to-host" "to-repo"
+#USAGE }
+
+set -e
+
+CONFIG=~/.dotkyl/setup/claude-settings.shared.toml
+# CLAUDE_SETTINGS_LIVE override is for fixture-based testing.
+LIVE=${CLAUDE_SETTINGS_LIVE:-~/.claude/settings.json}
+
+# --- Functions ---
+
+# Apply every config entry's set filter to $LIVE in a single yq -i pass,
+# expanding `$HOME` literals in each value beforehand. Filters whose result
+# matches the existing host value are no-ops.
+apply_all() {
+    CONFIG_JSON=$(yq -p toml -o=j -I=0 . "$CONFIG") \
+        yq -p json -o json -i '
+        (strenv(CONFIG_JSON) | from_json | .entries) as $entries
+        | $entries[] as $entry ireduce (.;
+            ($entry.value | tojson | sub("\$HOME"; env(HOME)) | from_json) as $value
+            | eval($entry.set)
+          )
+    ' "$LIVE"
+}
+
+# Remove inner hooks whose first-token absolute path doesn't exist on disk;
+# also drop matcher entries left with no inner hooks.
+clean_dead_hooks() {
+    local broken=() cmd first
+    while IFS= read -r cmd; do
+        [[ -z "$cmd" ]] && continue
+        first="${cmd%% *}"
+        [[ "$first" == /* ]] || continue
+        [[ -e "$first" ]] && continue
+        broken+=("$cmd")
+    done < <(yq -p json -oy '[.hooks[][].hooks[].command] | unique | .[]' "$LIVE")
+
+    (( ${#broken[@]} == 0 )) && return 0
+    BROKEN_LINES="${(F)broken}" yq -p json -o json -i '
+        (strenv(BROKEN_LINES) | split("\n") | map(select(. != ""))) as $broken
+        | .hooks |= map_values(
+            map(.hooks |= map(.command as $c | select($broken | contains([$c]) | not)))
+            | map(select(.hooks | length > 0))
+        )
+    ' "$LIVE"
+}
+
+cmd_diff() {
+    # Run the same pipeline against a copy and diff. Cheap because LIVE is small.
+    local original=$LIVE
+    local LIVE=$(mktemp "${original}.diff.XXXXXX")
+    cp "$original" "$LIVE"
+    apply_all
+    clean_dead_hooks
+    if cmp -s "$original" "$LIVE"; then
+        print "in sync"
+    else
+        diff -u "$original" "$LIVE" || true
+    fi
+    rm "$LIVE"
+}
+
+cmd_to_host() {
+    cp "$LIVE" "${LIVE}.bak"
+    apply_all
+    clean_dead_hooks
+    if cmp -s "${LIVE}.bak" "$LIVE"; then
+        rm "${LIVE}.bak"
+        print "no changes"
+        return 0
+    fi
+    diff -u "${LIVE}.bak" "$LIVE" || true
+    print "\n(backup at ${LIVE}.bak)"
+}
+
+cmd_to_repo() {
+    LIVE_PATH=$LIVE yq -p toml -o toml -P -i '
+        load(strenv(LIVE_PATH)) as $host
+        | .entries |= map(.read as $r | .value = ($host | eval($r)))
+    ' "$CONFIG"
+
+    # yq compresses multi-line strings on TOML output; restore """...""" form
+    # and substitute the actual home dir back to literal $HOME.
+    gsed -i \
+        -e '/\\n/ s/= "/= """\n/' \
+        -e '/\\n/ s/"$/"""/' \
+        -e 's/\\n/\n/g' \
+        -e '/"""/,/"""/ s/\\"/"/g' \
+        -e "s|$HOME/|\\\$HOME/|g" \
+        "$CONFIG"
+
+    git -C ~/.dotkyl diff -- "$CONFIG"
+}
+
+# --- Main ---
+
+case "${usage_direction:-}" in
+    ""|diff)   cmd_diff ;;
+    to-host)   cmd_to_host ;;
+    to-repo)   cmd_to_repo ;;
+esac

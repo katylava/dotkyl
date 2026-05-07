@@ -70,6 +70,26 @@ run = "brew install espanso && brew uninstall dash"
 run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
 ```
 
+### Claude Code Settings Sync
+
+A chosen subset of `~/.claude/settings.json` is kept in sync between machines
+via `setup/claude-settings.shared.toml` (the source of truth) and the
+`mise run claude-settings-sync` task. The TOML lists each synced key as an
+entry with `read`/`set` yq filter expressions and a `value`. Use literal
+`$HOME` in `value` for paths — the script substitutes the real home dir at
+apply time and back to `$HOME` at capture time.
+
+- `mise run claude-settings-sync` — show drift between repo and host (default)
+- `mise run claude-settings-sync to-host` — apply repo values to `~/.claude/settings.json`, and remove any hook entries whose absolute-path command is missing on disk
+- `mise run claude-settings-sync to-repo` — capture host values back into the TOML
+
+The diff is wired into `mise run sync`, so the post-merge hook surfaces drift.
+
+For a fixture-based test run, override the live file path:
+```sh
+CLAUDE_SETTINGS_LIVE=/tmp/some-fixture.json mise run claude-settings-sync to-host
+```
+
 ### Commits
 
 Always use the /commit skill for commits — never commit manually.
