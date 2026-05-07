@@ -66,9 +66,11 @@ cmd_diff() {
     apply_all
     clean_dead_hooks
     if cmp -s "$original" "$LIVE"; then
-        print "in sync"
+        print "⏭️ in sync"
     else
         diff -u "$original" "$LIVE" || true
+        print "👉 run `mise run claude-settings-sync to-host` to apply repo config to host"
+        print "👉   or `mise run claude-settings-sync to-repo` to update repo config with host values"
     fi
     rm "$LIVE"
 }
@@ -79,11 +81,12 @@ cmd_to_host() {
     clean_dead_hooks
     if cmp -s "${LIVE}.bak" "$LIVE"; then
         rm "${LIVE}.bak"
-        print "no changes"
+        print "✅ already in sync"
         return 0
     fi
     diff -u "${LIVE}.bak" "$LIVE" || true
     print "\n(backup at ${LIVE}.bak)"
+    print "✅ synced"
 }
 
 cmd_to_repo() {
@@ -103,6 +106,8 @@ cmd_to_repo() {
         "$CONFIG"
 
     git -C ~/.dotkyl diff -- "$CONFIG"
+
+    #TODO: add output like in cmd_to_host for "already in sync" vs "synced"
 }
 
 # --- Main ---
