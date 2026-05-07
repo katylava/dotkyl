@@ -174,20 +174,11 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Npmfile' \
   || echo '⏭️ no Npmfile changes'
 """
 
-[tasks.claude-settings-reminder]
-description = "Remind to evaluate claude settings for symlinking"
-run = """
-# ...
-[[ -L ~/.claude/settings.json ]] \
-  && true \
-  || echo "👉 Compare ~/.claude/settings.json across machines, then move to home/claude/ and symlink"
-"""
-
 # NOTE: sync and install share some deps (hook, symlinks, crontab).
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-reminder"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"

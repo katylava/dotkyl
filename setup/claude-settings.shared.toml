@@ -1,0 +1,69 @@
+# Synced subset of ~/.claude/settings.json. Each entry's read/set jq filters
+# encode how to find/update the live value at the target location.
+# `$HOME` literals in `value` are substituted by the sync script.
+
+[[entries]]
+description = "env: disable terminal title"
+read = '.env.CLAUDE_CODE_DISABLE_TERMINAL_TITLE'
+set  = '.env.CLAUDE_CODE_DISABLE_TERMINAL_TITLE = $value'
+value = "1"
+
+[[entries]]
+description = "hook: shell-conventions on Bash (PreToolUse)"
+read = '''
+[.hooks.PreToolUse[]?
+ | select(.matcher == "Bash")
+ | .hooks[]?
+ | select((.command // "") | contains("/shell-conventions/hook.sh"))][0]
+'''
+set = '''
+.hooks.PreToolUse |= (
+  (.[] |= with(select(.matcher == "Bash");
+    .hooks |= ((map(select((.command // "") | contains("/shell-conventions/hook.sh") | not))) + [$value])
+  ))
+  | with(select([.[] | .matcher == "Bash"] | any | not);
+      . = . + [{"matcher": "Bash", "hooks": [$value]}]
+    )
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/shell-conventions/hook.sh"
+timeout = 5
+
+[[entries]]
+description = "hook: tdd on Edit|Write (PreToolUse)"
+read = '''
+[.hooks.PreToolUse[]?
+ | select(.matcher == "Edit|Write")
+ | .hooks[]?
+ | select((.command // "") | contains("/tdd/hook.sh"))][0]
+'''
+set = '''
+.hooks.PreToolUse |= (
+  (.[] |= with(select(.matcher == "Edit|Write");
+    .hooks |= ((map(select((.command // "") | contains("/tdd/hook.sh") | not))) + [$value])
+  ))
+  | with(select([.[] | .matcher == "Edit|Write"] | any | not);
+      . = . + [{"matcher": "Edit|Write", "hooks": [$value]}]
+    )
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/tdd/hook.sh"
+timeout = 5
+
+[[entries]]
+description = "statusLine"
+read = '.statusLine'
+set  = '.statusLine = $value'
+[entries.value]
+type = "command"
+command = "claude-statusline"
+
+[[entries]]
+description = "autoMemoryEnabled"
+read = '.autoMemoryEnabled'
+set  = '.autoMemoryEnabled = $value'
+value = false
