@@ -81,7 +81,7 @@ cmd_to_host() {
     clean_dead_hooks
     if cmp -s "${LIVE}.bak" "$LIVE"; then
         rm "${LIVE}.bak"
-        print "✅ already in sync"
+        print "⏭️ already in sync"
         return 0
     fi
     diff -u "${LIVE}.bak" "$LIVE" || true
@@ -105,9 +105,12 @@ cmd_to_repo() {
         -e "s|$HOME/|\\\$HOME/|g" \
         "$CONFIG"
 
+    if git -C ~/.dotkyl diff --quiet -- "$CONFIG"; then
+        print "⏭️ already in sync"
+        return 0
+    fi
     git -C ~/.dotkyl diff -- "$CONFIG"
-
-    #TODO: add output like in cmd_to_host for "already in sync" vs "synced"
+    print "✅ synced"
 }
 
 # --- Main ---
