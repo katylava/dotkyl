@@ -66,7 +66,7 @@ cmd_diff() {
     apply_all
     clean_dead_hooks
     if cmp -s "$original" "$LIVE"; then
-        print "⏭️ in sync"
+        print "⏭️ already ok"
     else
         diff -u "$original" "$LIVE" || true
         print "👉 run `mise run claude-settings-sync to-host` to apply repo config to host"
