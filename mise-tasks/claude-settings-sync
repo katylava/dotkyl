@@ -69,8 +69,8 @@ cmd_diff() {
         print "⏭️ already ok"
     else
         diff -u "$original" "$LIVE" || true
-        print "👉 run `mise run claude-settings-sync to-host` to apply repo config to host"
-        print "👉   or `mise run claude-settings-sync to-repo` to update repo config with host values"
+        print '👉 run `mise run claude-settings-sync to-host` to apply repo config to host'
+        print '👉   or `mise run claude-settings-sync to-repo` to update repo config with host values'
     fi
     rm "$LIVE"
 }
