@@ -54,3 +54,7 @@ UI gets cut off.
 ## Amending
 
 Never amend a commit on a pushed branch without explicit permission.
+
+## Debugging
+
+Never use git worktree. Use temporary clones instead.
