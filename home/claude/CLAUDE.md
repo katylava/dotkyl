@@ -60,3 +60,4 @@ Abbreviations the user will use and what they mean.
 
 - Terminal: iTerm2
 - Editor: neovim
+- tmux is available for terminal emulation by the AI (user does not use it)
