@@ -66,7 +66,7 @@ local YQ_EXPR='{"source_glob": .source_glob,
     "target": .target_dir + "/" + (.prefix // ""),
     "excludes": ((.excludes // []) | join(","))}'
 
-while IFS= read -r -d '' entry; do
+while IFS= read -r entry; do
     eval "$(echo "$entry" | yq -o shell "$YQ_EXPR")"
 
     target=$~=target  # $~= expands globs and tildes in the variable value
@@ -75,6 +75,6 @@ while IFS= read -r -d '' entry; do
     # Auto-mirror private/ for home/ sources
     [[ "$source_glob" == home/* ]] && \
         process_glob "$DOTKYL/private/$source_glob" "$target" "$excludes"
-done < <(yq -o=j -I=0 --nul-output '.[]' "$MANIFEST")
+done < <(yq -o=j -I=0 '.[]' "$MANIFEST")
 
 $ok || return 1
