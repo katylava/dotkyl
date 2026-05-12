@@ -42,6 +42,7 @@ What this looks like in practice:
 # Workflow (in a git repo)
 
 - Before starting changes, pull latest main and create a feature branch. Don't edit on `main` directly.
+- Before starting a chunked task, run `git status`. If there are unstaged changes from earlier in the session, surface them for review and staging before making new edits — otherwise the next chunk's `git diff` will be polluted with prior work.
 - **Reviewing chunks.** Full flow per chunk:
     1. Make the edit. **Do not run `git add`.** **Do not commit.**
     2. Stop. Wait for me to come back with feedback or confirmation.
