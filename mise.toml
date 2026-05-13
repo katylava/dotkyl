@@ -160,6 +160,28 @@ fi
 rm -f .npm-outdated
 '''
 
+[tasks.claude-plugins]
+description = "Install Claude Code plugins from ClaudePlugins file"
+run = '''
+# ...
+file="setup/ClaudePlugins.shared"
+[[ -f "$file" ]] || exit 0
+while read -r source plugin marketplace _; do
+  [[ -z "$source" || "$source" == \#* ]] && continue
+  spec="${plugin}@${marketplace}"
+  if claude plugin marketplace list 2>/dev/null | ag "❯ ${marketplace}\$" >/dev/null; then
+    echo "⏭️ marketplace ${marketplace} already added"
+  else
+    claude plugin marketplace add "$source" >/dev/null && echo "✅ marketplace ${marketplace} added"
+  fi
+  if claude plugin list 2>/dev/null | ag "${spec}" >/dev/null; then
+    echo "⏭️ plugin ${spec} already installed"
+  else
+    claude plugin install "$spec" >/dev/null && echo "✅ plugin ${spec} installed"
+  fi
+done < "$file"
+'''
+
 [tasks.npm-reminder]
 description = "Remind if Npmfile changed since last npm install"
 run = """
@@ -178,8 +200,8 @@ git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Npmfile' \
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync", "claude-plugins"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host"]
+depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host", "claude-plugins"]

@@ -1,0 +1,4 @@
+# Claude Code plugins
+# format: <github-source>  <plugin>  <marketplace>
+tomasz-tomczyk/crit  crit  crit
+multica-ai/andrej-karpathy-skills  andrej-karpathy-skills  karpathy-skills
