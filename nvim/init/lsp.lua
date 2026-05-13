@@ -8,7 +8,7 @@
 --   nvim-lint                   - run linters (flake8, eslint_d)
 --
 -- LSP servers, formatters, and linters are installed via mise
--- (setup/Pipfile.shared, setup/Npmfile.shared) and resolved on PATH.
+-- (setup/Pipfile.shared, setup/NpmPackages.shared) and resolved on PATH.
 
 -- ----------------------------------------------------------------------------
 -- LSP servers (nvim 0.11+ vim.lsp.config API)
