@@ -239,7 +239,7 @@ require("lazy").setup({
     { "stevearc/conform.nvim" },
     { "mfussenegger/nvim-lint" },
     -- Tools (pyright, ts_ls, prettier, eslint_d, black, flake8) are installed
-    -- via mise (setup/Pipfile.shared, setup/Npmfile.shared) and resolved on PATH.
+    -- via mise (setup/Pipfile.shared, setup/NpmPackages.shared) and resolved on PATH.
 
     -- File tree
     {
