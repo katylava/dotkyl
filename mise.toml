@@ -137,19 +137,19 @@ missing=false
 while read -r pkg; do
   [[ -z "$pkg" || "$pkg" == \#* ]] && continue
   mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-done < setup/Npmfile.shared
-if [[ -n "$DOTKYL_HOST" && -f "setup/Npmfile.$DOTKYL_HOST" ]]; then
+done < setup/NpmPackages.shared
+if [[ -n "$DOTKYL_HOST" && -f "setup/NpmPackages.$DOTKYL_HOST" ]]; then
   while read -r pkg; do
     [[ -z "$pkg" || "$pkg" == \#* ]] && continue
     mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-  done < "setup/Npmfile.$DOTKYL_HOST"
+  done < "setup/NpmPackages.$DOTKYL_HOST"
 fi
 if $missing; then
   echo "🔧 installing npm packages..."
-  pkgs=$(grep -vE '^\s*(#|$)' setup/Npmfile.shared | tr '\n' ' ')
+  pkgs=$(grep -vE '^\s*(#|$)' setup/NpmPackages.shared | tr '\n' ' ')
   mise exec node -- npm install -g --silent $pkgs
-  if [[ -n "$DOTKYL_HOST" && -f "setup/Npmfile.$DOTKYL_HOST" ]]; then
-    pkgs=$(grep -vE '^\s*(#|$)' "setup/Npmfile.$DOTKYL_HOST" | tr '\n' ' ')
+  if [[ -n "$DOTKYL_HOST" && -f "setup/NpmPackages.$DOTKYL_HOST" ]]; then
+    pkgs=$(grep -vE '^\s*(#|$)' "setup/NpmPackages.$DOTKYL_HOST" | tr '\n' ' ')
     mise exec node -- npm install -g --silent $pkgs
   fi
   mise reshim
@@ -160,26 +160,48 @@ fi
 rm -f .npm-outdated
 '''
 
+[tasks.claude-plugins]
+description = "Install Claude Code plugins from ClaudePlugins file"
+run = '''
+# ...
+file="setup/ClaudePlugins.shared"
+[[ -f "$file" ]] || exit 0
+while read -r source plugin marketplace _; do
+  [[ -z "$source" || "$source" == \#* ]] && continue
+  spec="${plugin}@${marketplace}"
+  if claude plugin marketplace list 2>/dev/null | ag "❯ ${marketplace}\$" >/dev/null; then
+    echo "⏭️ marketplace ${marketplace} already added"
+  else
+    claude plugin marketplace add "$source" >/dev/null && echo "✅ marketplace ${marketplace} added"
+  fi
+  if claude plugin list 2>/dev/null | ag "${spec}" >/dev/null; then
+    echo "⏭️ plugin ${spec} already installed"
+  else
+    claude plugin install "$spec" >/dev/null && echo "✅ plugin ${spec} installed"
+  fi
+done < "$file"
+'''
+
 [tasks.npm-reminder]
-description = "Remind if Npmfile changed since last npm install"
+description = "Remind if NpmPackages changed since last npm install"
 run = """
 # ...
-# Create marker if Npmfile changed in last merge
-git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'Npmfile' \
+# Create marker if NpmPackages changed in last merge
+git diff HEAD@{1} --name-only 2>/dev/null | grep -q 'NpmPackages' \
   && touch .npm-outdated
 
 # Remind until mise run npm clears the marker
 [[ -f .npm-outdated ]] \
-  && echo '👉 Npmfile changed — run: mise run npm' \
-  || echo '⏭️ no Npmfile changes'
+  && echo '👉 NpmPackages changed — run: mise run npm' \
+  || echo '⏭️ no NpmPackages changes'
 """
 
 # NOTE: sync and install share some deps (hook, symlinks, crontab).
 # When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync"]
+depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync", "claude-plugins"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host"]
+depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host", "claude-plugins"]
