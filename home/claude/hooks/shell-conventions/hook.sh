@@ -1,43 +1,36 @@
 #!/usr/bin/env bash
-# PreToolUse Bash hook: block commands that violate shell conventions, forcing
-# Claude to retry with the preferred form.
+# PreToolUse Bash hook for shell conventions.
+# Non-blocking reminders only: ag is faster than grep; sed/find are BSD on
+# macOS and GNU versions are gsed/gfind.
 
 set -euo pipefail
 
 cmd=$(jq -r '.tool_input.command // ""')
 
-reasons=()
+notes=()
 
-# python3 / pip3 → python / pip
-if printf '%s' "$cmd" | grep -qE '(^|[^[:alnum:]_./-])(python3|pip3)([[:space:]]|$)'; then
-  reasons+=("Use \`python\`/\`pip\`, not \`python3\`/\`pip3\` — same binary on this machine.")
-fi
-
-# Plain grep → ag. Skip git grep, pgrep, etc. by anchoring on a word boundary.
+# Plain grep → reminder (non-blocking). Skip git grep, pgrep, etc. by
+# anchoring on a word boundary.
 if printf '%s' "$cmd" | grep -qE '(^|[^[:alnum:]_.-])grep[[:space:]]'; then
-  reasons+=("Use \`ag\` instead of \`grep\`.")
+  notes+=("\`ag\` (the_silver_searcher) is available and is faster than \`grep\` for large inputs — prefer it when scanning trees or big files.")
 fi
 
-# Plain sed → gsed (GNU sed; accepts the syntax you already know).
+# Plain sed → reminder (non-blocking). macOS ships BSD sed; GNU sed is `gsed`.
 if printf '%s' "$cmd" | grep -qE '(^|[^[:alnum:]_.-])sed[[:space:]]'; then
-  reasons+=("Use \`gsed\` (GNU) instead of \`sed\` (BSD).")
+  notes+=("\`sed\` on this machine is BSD sed, not GNU. GNU sed is available as \`gsed\` — use it if you need GNU-specific syntax (e.g. \`sed -i\` without an extension arg, \`\\b\` word boundaries, etc.).")
 fi
 
-# Plain find → gfind.
+# Plain find → reminder (non-blocking). macOS ships BSD find; GNU find is `gfind`.
 if printf '%s' "$cmd" | grep -qE '(^|[^[:alnum:]_.-])find[[:space:]]'; then
-  reasons+=("Use \`gfind\` (GNU) instead of \`find\` (BSD).")
+  notes+=("\`find\` on this machine is BSD find, not GNU. GNU find is available as \`gfind\` — use it if you need GNU-specific options.")
 fi
 
-if [[ ${#reasons[@]} -eq 0 ]]; then
-  exit 0
+if [[ ${#notes[@]} -gt 0 ]]; then
+  ctx=$(printf '%s\n' "${notes[@]}")
+  jq -n --arg c "$ctx" '{
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      additionalContext: $c
+    }
+  }'
 fi
-
-reason=$(printf '%s\n' "${reasons[@]}")
-
-jq -n --arg r "$reason" '{
-  hookSpecificOutput: {
-    hookEventName: "PreToolUse",
-    permissionDecision: "deny",
-    permissionDecisionReason: $r
-  }
-}'
