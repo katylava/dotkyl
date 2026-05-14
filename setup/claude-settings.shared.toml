@@ -55,6 +55,29 @@ command = "$HOME/.claude/hooks/tdd/hook.sh"
 timeout = 5
 
 [[entries]]
+description = "hook: python3-in-scripts on Edit|Write (PreToolUse)"
+read = '''
+[.hooks.PreToolUse[]?
+ | select(.matcher == "Edit|Write")
+ | .hooks[]?
+ | select((.command // "") | contains("/python3-in-scripts/hook.sh"))][0]
+'''
+set = '''
+.hooks.PreToolUse |= (
+  (.[] |= with(select(.matcher == "Edit|Write");
+    .hooks |= ((map(select((.command // "") | contains("/python3-in-scripts/hook.sh") | not))) + [$value])
+  ))
+  | with(select([.[] | .matcher == "Edit|Write"] | any | not);
+      . = . + [{"matcher": "Edit|Write", "hooks": [$value]}]
+    )
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/python3-in-scripts/hook.sh"
+timeout = 5
+
+[[entries]]
 description = "statusLine"
 read = '.statusLine'
 set  = '.statusLine = $value'
