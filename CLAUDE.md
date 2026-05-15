@@ -45,9 +45,17 @@ One-time per-machine install tasks get created in root `mise.toml`, then move
 into `setup/mise.toml` via `mise run stow <name>` after running on the second
 machine. Use the `add-install-task` skill to create new ones.
 
+Tasks are grouped by name prefix:
+- `setup:*` — shared infra (git-hook, symlinks, crontab, private-repo); runs in both `sync` and `install`
+- `sync:*` — fast checks/reminders; runs in `sync` only
+- `install:*` — slow real installs; runs in `install` only
+
+`sync` and `install` depend on these via wildcards (`sync:**`, `install:**`),
+so new tasks only need the right prefix — no depends-list edits.
+
 Each task uses inline check-or-run logic for idempotency:
 ```toml
-[tasks.example]
+[tasks."install:example"]
 run = "check-command || fix-command"
 ```
 
@@ -56,18 +64,18 @@ Echo output uses emoji to indicate state:
 
 **Confirm tasks must not be dependencies.** Mise's `confirm` field hides output from other
 parallel tasks. Instead, create two tasks: the confirm task itself (run manually), and a
-reminder task that `sync`/`install` depends on. The reminder should include a check so it
-only prints when the action hasn't been done yet.
+reminder task under the `sync:` prefix. The reminder should include a check so it only
+prints when the action hasn't been done yet.
 
 ```toml
-# The actual task (run manually: mise run migrate-espanso)
-[tasks.migrate-espanso]
+# The actual task (run manually: mise run install:migrate-espanso)
+[tasks."install:migrate-espanso"]
 confirm = "Export Dash snippets first (Dash → Preferences → Snippets → Export). Ready?"
 run = "brew install espanso && brew uninstall dash"
 
-# The reminder (safe to depend on)
-[tasks.migrate-espanso-reminder]
-run = "which espanso >/dev/null || echo '👉 Run: mise run migrate-espanso'"
+# The reminder (picked up by sync:** wildcard)
+[tasks."sync:migrate-espanso"]
+run = "which espanso >/dev/null || echo '👉 Run: mise run install:migrate-espanso'"
 ```
 
 ### Claude Code Settings Sync

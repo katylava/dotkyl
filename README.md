@@ -93,7 +93,7 @@ packages, crontab, git hooks, and more. Each task uses inline check-or-run
 logic so that passing checks result in a skip:
 
 ```toml
-[tasks.crontab]
+[tasks."setup:crontab"]
 run = """
 crontab -l 2>/dev/null | diff -q - crontab.txt >/dev/null \
   && echo "⏭️ already ok" \
