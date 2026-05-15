@@ -35,7 +35,7 @@ Install task and reminder task do essentially the same thing.
 Task template:
 
 ```toml
-[tasks.<name>]
+[tasks."install:<name>"]
 description = "Install <App Name> (manual, from App Store/etc.)"
 run = """
 # ...
@@ -57,7 +57,7 @@ user can run the installer/drag the app themselves.
 Task template:
 
 ```toml
-[tasks.<name>]
+[tasks."install:<name>"]
 description = "Download <App Name> installer"
 run = """
 # ...
@@ -79,7 +79,7 @@ installers or GitHub-release binary drops.
 Task template:
 
 ```toml
-[tasks.<name>]
+[tasks."install:<name>"]
 description = "Install <App Name>"
 run = """
 # ...
@@ -98,22 +98,21 @@ path-specific check for custom install locations.
 Reminder is the same across both branches:
 
 ```toml
-[tasks.<name>-reminder]
+[tasks."sync:<name>"]
 description = "Remind to install <App Name> if missing"
 run = """
 # ...
 [ -d "/Applications/<App Name>.app" ] \\
   && echo '⏭️ <App Name> already installed' \\
-  || echo '👉 Run: mise run <name>'
+  || echo '👉 Run: mise run install:<name>'
 """
 ```
 
 ## Step 4: Insert into root mise.toml
 
-Insert both blocks before the `# NOTE: sync and install share some deps` comment
-(i.e., before `[tasks.sync]`).
-
-Add `"<name>-reminder"` to the end of the `sync` task's `depends` array.
+Insert both blocks among the other task definitions, before `[tasks.sync]`.
+No depends-list edits needed — `sync` and `install` use `sync:**` / `install:**`
+wildcards.
 
 ## Step 5: Show the user and confirm
 

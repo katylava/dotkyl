@@ -1,7 +1,7 @@
 [settings]
 task.timings = false
 
-[tasks.git-hook]
+[tasks."setup:git-hook"]
 description = "Install git hooks"
 run = """
 # ...
@@ -15,7 +15,7 @@ for hook in setup/hooks/*; do
 done
 """
 
-[tasks.symlinks]
+[tasks."setup:symlinks"]
 description = "Symlink dotfiles into ~/"
 run = """
 # ...
@@ -24,7 +24,7 @@ setup/manage-symlinks --dry-run >/dev/null 2>&1 \
   || { setup/manage-symlinks && echo "✅ set up"; }
 """
 
-[tasks.crontab]
+[tasks."setup:crontab"]
 description = "Install crontab (shared + host-specific)"
 run = """
 # ...
@@ -38,7 +38,7 @@ crontab -l 2>/dev/null | diff -q - "$combined" >/dev/null \
 rm -f "$combined"
 """
 
-[tasks.brew]
+[tasks."install:brew"]
 description = "Install brew packages"
 run = """
 # ...
@@ -55,7 +55,7 @@ rm -f .brew-outdated
 true
 """
 
-[tasks.private-repo]
+[tasks."setup:private-repo"]
 description = "Clone or pull private dotfiles repo"
 run = """
 # ...
@@ -65,7 +65,7 @@ else
   git clone git@github.com:katylava/dotkyl-private.git private && echo "✅ cloned"
 fi
 """
-[tasks.check-host]
+[tasks."install:check-host"]
 description = "Verify hostname is configured"
 run = """
 # ...
@@ -73,11 +73,11 @@ bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
 
-[tasks.brew-reminder]
+[tasks."sync:brew"]
 description = "Remind if Brewfile changed since last brew install"
 run = "mise-tasks/check-marker Brewfile brew"
 
-[tasks.pip]
+[tasks."install:pip"]
 description = "Install pip packages"
 run = '''
 # ...
@@ -105,11 +105,11 @@ fi
 rm -f .pip-outdated
 '''
 
-[tasks.pip-reminder]
+[tasks."sync:pip"]
 description = "Remind if Pipfile changed since last pip install"
 run = "mise-tasks/check-marker Pipfile pip"
 
-[tasks.npm]
+[tasks."install:npm"]
 description = "Install global npm packages"
 run = '''
 # ...
@@ -140,7 +140,7 @@ fi
 rm -f .npm-outdated
 '''
 
-[tasks.claude-plugins]
+[tasks."install:claude-plugins"]
 description = "Install Claude Code plugins from ClaudePlugins file"
 run = '''
 # ...
@@ -163,20 +163,18 @@ done < "$file"
 rm -f .claude-plugins-outdated
 '''
 
-[tasks.claude-plugins-reminder]
+[tasks."sync:claude-plugins"]
 description = "Remind if ClaudePlugins.shared changed since last claude-plugins install"
 run = "mise-tasks/check-marker ClaudePlugins.shared claude-plugins"
 
-[tasks.npm-reminder]
+[tasks."sync:npm"]
 description = "Remind if NpmPackages changed since last npm install"
 run = "mise-tasks/check-marker NpmPackages npm"
 
-# NOTE: sync and install share some deps (hook, symlinks, crontab).
-# When adding a new fast task, add it to both.
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
-depends = ["git-hook", "symlinks", "crontab", "private-repo", "brew-reminder", "pip-reminder", "npm-reminder", "claude-settings-sync", "claude-plugins-reminder"]
+depends = ["setup:**", "sync:**", "claude-settings-sync"]
 
 [tasks.install]
 description = "Full machine setup (run manually)"
-depends = ["git-hook", "symlinks", "crontab", "brew", "pip", "npm", "private-repo", "check-host", "claude-plugins"]
+depends = ["setup:**", "install:**"]

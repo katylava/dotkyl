@@ -16,7 +16,7 @@ if git diff HEAD@{1} --name-only 2>/dev/null | grep -q "$PATTERN"; then
 fi
 
 if [[ -f "$MARKER" ]]; then
-  echo "👉 $PATTERN changed — run: mise run $TASK"
+  echo "👉 $PATTERN changed — run: mise run install:$TASK"
 else
   echo "⏭️ no $PATTERN changes"
 fi
