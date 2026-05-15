@@ -12,3 +12,4 @@ nvim/ftplugin/go/gocomplete.vim
 .claude/triage-step*.md
 .brew-outdated
 .pip-outdated
+.claude-plugins-outdated
