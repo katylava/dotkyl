@@ -115,8 +115,3 @@ some kind of manifest that mise run sync checks and reminds me to install on
 the other computer. ideally the shortcut would allow me to specify the download
 url, or at least website.
 
-
-## Nits
-
-- The claude plugins sync task is too verbose. I don't need it to list every
-  plugin when they are all up to date.
