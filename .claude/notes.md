@@ -116,10 +116,7 @@ the other computer. ideally the shortcut would allow me to specify the download
 url, or at least website.
 
 
-## Custom claude hooks
+## Nits
 
-Would like to track custom claude hooks in this repo, that get synced with mise
-run sync. Would like a hook for updating the tab title that overrides any other
-title updates, like from peon-ping or vibe island. Although vibe island's
-titles are good, it costs $15 per machine so I'm only going to have it
-installed on my work computer. So I need custom hooks that do what it does.
+- The claude plugins sync task is too verbose. I don't need it to list every
+  plugin when they are all up to date.
