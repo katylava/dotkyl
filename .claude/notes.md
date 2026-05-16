@@ -4,34 +4,6 @@ Reminders to self about things to talk to Claude about.
 
 ## new mise tasks
 
-### `mise run add-dotfile`
-
-Takes args:
-
-- current path
-- repo path
-- host (null for all)
-- private (default false)
-- secrets (default false)
-
-Instead of an inline script this script will live in setup and be called from
-the task.
-
-1. Copies current path to repo path, renames for host if necessary
-2. Handles secrets (somehow)
-3. Adds to symlinks.yml
-4. Commits and pushes (after user confirmation)
-5. Runs sub-task (mise run sync) to sync symlinks
-6. Verifies
-
-To handle secrets, use gitleaks cli to scan for secrets and notify the user.
-Ideally, the task itself would add all the secrets to 1password (with a
-distinct naming convention) with the op cli, then replace the secrets in the
-(copied) file with placeholders which include the 1password key or path. If
-not, it should list all the secrets for the user so they can do that manually.
-
-Note: Which 1password vault to use depends on the host value.
-
 ### `mise run pre-new-install`
 
 Runs on old computer. Uses a manifest like symlinks.yml (but not symlinks.yml),
