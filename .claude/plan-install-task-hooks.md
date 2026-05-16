@@ -2,11 +2,11 @@
 
 ## Status
 
-In progress.
+Complete. All four `install:*` tasks use `setup/apply-manifest.zsh`.
 
 - [x] Chunk 1 — write `setup/apply-manifest.zsh` + a temporary test task; verify in isolation
 - [x] Chunk 2 — convert `install:claude-plugins`; remove the test task
-- [ ] Chunk 3 — convert `install:brew`, `install:pip`, `install:npm` (combined)
+- [x] Chunk 3 — convert `install:brew`, `install:pip`, `install:npm` (combined)
 
 ## Problem
 
