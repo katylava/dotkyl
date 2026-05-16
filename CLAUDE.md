@@ -104,6 +104,13 @@ Always use the /commit skill for commits — never commit manually.
 
 ## Workflow
 
+- Default to committing directly to `main` for ordinary changes (fixes, tweaks, single-task
+  work). Do **not** create a feature branch for these — this overrides the global CLAUDE.md
+  "create a feature branch" workflow rule, which does not apply to routine work here. Day-to-day
+  history is linear on `main`; the only merges are pull-merges from syncing two machines.
+- Exception: a feature branch is warranted only when working from a written plan (e.g. a
+  `.claude/plan-*.md` file) whose scope is large. Ad-hoc work with no plan never needs a
+  branch. Confirm the branch with me when starting such a plan; don't branch unilaterally.
 - When making changes to this machine that should persist across machines (installing/removing
   packages, changing tool configs, modifying shell settings, etc.), update the corresponding
   tracked file in this repo (Brewfile, Pipfile, mise.toml, lib/*.zsh, etc.).
