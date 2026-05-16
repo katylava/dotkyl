@@ -142,26 +142,25 @@ rm -f .npm-outdated
 
 [tasks."install:claude-plugins"]
 description = "Install Claude Code plugins from ClaudePlugins file"
+shell = "zsh -c"
 run = '''
-# ...
-for file in setup/ClaudePlugins.shared "setup/ClaudePlugins.$DOTKYL_HOST"; do
-  [[ -f "$file" ]] || continue
-  while read -r source plugin marketplace _; do
-    [[ -z "$source" || "$source" == \#* ]] && continue
-    spec="${plugin}@${marketplace}"
-    if claude plugin marketplace list 2>/dev/null | ag "❯ ${marketplace}\$" >/dev/null; then
-      echo "⏭️ marketplace ${marketplace} already added"
-    else
-      claude plugin marketplace add "$source" >/dev/null && echo "✅ marketplace ${marketplace} added"
-    fi
-    if claude plugin list 2>/dev/null | ag "${spec}" >/dev/null; then
-      echo "⏭️ plugin ${spec} already installed"
-    else
-      claude plugin install "$spec" >/dev/null && echo "✅ plugin ${spec} installed"
-    fi
-  done < "$file"
-done
-rm -f .claude-plugins-outdated
+source ./setup/apply-manifest.zsh
+check_line() {
+  # split a manifest line "<source> <plugin> <marketplace>" into fields:
+  # the here-string (<<<) feeds "$1" to `read`, which splits on whitespace;
+  # the trailing _ absorbs any extra fields.
+  read -r source plugin marketplace _ <<<"$1"
+  claude plugin list 2>/dev/null | ag " $plugin@$marketplace$" >/dev/null
+}
+install_line() {
+  for line in "$@"; do
+    read -r source plugin marketplace _ <<<"$line"
+    claude plugin marketplace add "$source" >/dev/null 2>&1
+    claude plugin install "$plugin@$marketplace" >/dev/null \
+      && print -r -- "✅ plugin $plugin@$marketplace installed"
+  done
+}
+apply_manifest ClaudePlugins claude-plugins
 '''
 
 [tasks."sync:claude-plugins"]
@@ -171,23 +170,6 @@ run = "mise-tasks/check-marker ClaudePlugins claude-plugins"
 [tasks."sync:npm"]
 description = "Remind if NpmPackages changed since last npm install"
 run = "mise-tasks/check-marker NpmPackages npm"
-
-[tasks."_manifest-test"]
-description = "TEMP: verify apply-manifest driver (removed in chunk 2)"
-shell = "zsh -c"
-run = '''
-source ./setup/apply-manifest.zsh
-state=$(mktemp)
-check_line()   { grep -qxF "$1" "$state" }
-install_file() { print -r -- "install_file: $1" }
-install_line() { print -l -- "$@" >> "$state"; print -r -- "install_line: $*" }
-post_install() { print -r -- "post_install ran" }
-print -r -- "--- run 1 (lines missing) ---"
-apply_manifest _ManifestTest manifest-test
-print -r -- "--- run 2 (lines present) ---"
-apply_manifest _ManifestTest manifest-test
-rm -f "$state"
-'''
 
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"

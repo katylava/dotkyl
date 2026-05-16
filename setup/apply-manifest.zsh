@@ -34,5 +34,5 @@ apply_manifest() {
 
   post_install
   rm -f ".${marker}-outdated"
-  print -r -- "✅ $marker"
+  print -r -- "✅ done"
 }
