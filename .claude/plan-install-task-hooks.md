@@ -6,9 +6,7 @@ In progress.
 
 - [x] Chunk 1 — write `setup/apply-manifest.zsh` + a temporary test task; verify in isolation
 - [x] Chunk 2 — convert `install:claude-plugins`; remove the test task
-- [ ] Chunk 3 — convert `install:brew`
-- [ ] Chunk 4 — convert `install:pip`
-- [ ] Chunk 5 — convert `install:npm`
+- [ ] Chunk 3 — convert `install:brew`, `install:pip`, `install:npm` (combined)
 
 ## Problem
 
@@ -132,7 +130,6 @@ their chunk lands.
 2. Convert `install:claude-plugins` (`check_line` + `install_line`); delete
    its old block; remove the test task. Verify `mise run
    install:claude-plugins`.
-3. Convert `install:brew` (`install_file`). Verify.
-4. Convert `install:pip` (`install_file` + `post_install`). Verify.
-5. Convert `install:npm` (`check_line` + `install_line` + `post_install`).
-   Verify.
+3. Convert `install:brew` (`install_file`), `install:pip` (`install_file` +
+   `post_install`), and `install:npm` (`check_line` + `install_line` +
+   `post_install`) together. Verify each with `mise run install:<task>`.
