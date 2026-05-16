@@ -94,24 +94,15 @@ reminders to the manifest about those.
 Finally, pushes up any changes made to this repo during the process.
 
 
-## Separate install from sync commands
-
-find a way to separate things needing frequent sync and things needing
-one-time install/modification/uninstall... different mise.toml files if
-possible (maybe one in the install directory for installs, and the repo root
-one can be for frequent syncs. so the process for something to sync between two
-active computers, would be to put it in the sync file first, then after it is
-done on the other computer, move it to the install file. not sure if the moving
-it after syncing is something we can program into the mise tasks or if it needs
-to something claude knows to take care of, either from CLAUDE.md for this repo
-or from a skill
-
-
 ## Installed Applications on both computers
 
 apps installed via downloading from the web -- when i install an app on one
-computer that i want on the other, i need some kind of shortcut to add that to
-some kind of manifest that mise run sync checks and reminds me to install on
-the other computer. ideally the shortcut would allow me to specify the download
-url, or at least website.
+computer that i want on the other, i need a way to record it so a sync check
+reminds me to install it on the other computer. the shortcut for adding an
+entry should let me specify the download url, or at least the website.
+
+this is NOT solved by add-install-task. that skill writes one-time tasks into
+the root mise.toml, which gets messy fast. i want a SEPARATE process: its own
+manifest of web-downloaded apps, plus a dedicated task (or skill) that runs
+tasks from that separate manifest -- never touching the root mise.toml.
 
