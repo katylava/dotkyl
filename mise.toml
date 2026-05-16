@@ -172,6 +172,23 @@ run = "mise-tasks/check-marker ClaudePlugins claude-plugins"
 description = "Remind if NpmPackages changed since last npm install"
 run = "mise-tasks/check-marker NpmPackages npm"
 
+[tasks."_manifest-test"]
+description = "TEMP: verify apply-manifest driver (removed in chunk 2)"
+shell = "zsh -c"
+run = '''
+source ./setup/apply-manifest.zsh
+state=$(mktemp)
+check_line()   { grep -qxF "$1" "$state" }
+install_file() { print -r -- "install_file: $1" }
+install_line() { print -l -- "$@" >> "$state"; print -r -- "install_line: $*" }
+post_install() { print -r -- "post_install ran" }
+print -r -- "--- run 1 (lines missing) ---"
+apply_manifest _ManifestTest manifest-test
+print -r -- "--- run 2 (lines present) ---"
+apply_manifest _ManifestTest manifest-test
+rm -f "$state"
+'''
+
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
 depends = ["setup:**", "sync:**", "claude-settings-sync"]
