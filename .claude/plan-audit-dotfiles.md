@@ -98,6 +98,17 @@ Claude can only access one machine per session. To audit both:
 symlinks whole directories by default. For partial cases, add explicit per-file symlink logic
 to `setup/manage-symlinks`.
 
+## Relationship to `plan-add-dotfile.md`
+
+The `mise run add-dotfile` task (see `plan-add-dotfile.md`) automates the
+manual "Process for Adding Files" above. It is **blocked on this audit**:
+the audit's findings — how many untracked files are host-specific,
+contain secrets, or live in mixed directories — determine which
+`add-dotfile` features actually carry value, so building it before the
+audit would be guessing. This audit also owns the `symlinks.yml`
+host-conditional / per-file routing design (see below) that `add-dotfile`
+depends on. Do the audit first; let it scope the task.
+
 ## Host-Specific and Per-File Routing
 
 Some dotfiles need more nuance than "public vs private" — they vary per host, or a single
