@@ -40,20 +40,12 @@ rm -f "$combined"
 
 [tasks."install:brew"]
 description = "Install brew packages"
-run = """
-# ...
-host=$(bin/get-host 2>/dev/null)
-brew bundle check --file setup/Brewfile.shared >/dev/null \
-  && echo "⏭️ shared already ok" \
-  || { echo "🔧 installing shared packages..." && brew bundle --file setup/Brewfile.shared && echo "✅ shared done"; }
-[[ -n "$host" && -f "setup/Brewfile.$host" ]] && {
-  brew bundle check --file setup/Brewfile.$host >/dev/null \
-    && echo "⏭️ $host already ok" \
-    || { echo "🔧 installing $host packages..." && brew bundle --file setup/Brewfile.$host && echo "✅ $host done"; }
-}
-rm -f .brew-outdated
-true
-"""
+shell = "zsh -c"
+run = '''
+source ./setup/apply-manifest.zsh
+install_file() { brew bundle --file "$1" }
+apply_manifest Brewfile brew
+'''
 
 [tasks."setup:private-repo"]
 description = "Clone or pull private dotfiles repo"
@@ -79,30 +71,12 @@ run = "mise-tasks/check-marker Brewfile brew"
 
 [tasks."install:pip"]
 description = "Install pip packages"
+shell = "zsh -c"
 run = '''
-# ...
-missing=false
-while read -r pkg; do
-  [[ -z "$pkg" || "$pkg" == \#* ]] && continue
-  mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-done < setup/Pipfile.shared
-if [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]]; then
-  while read -r pkg; do
-    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
-    mise exec python -- pip show "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-  done < "setup/Pipfile.$DOTKYL_HOST"
-fi
-if $missing; then
-  echo "🔧 installing pip packages..."
-  mise exec python -- pip install -q -r setup/Pipfile.shared
-  [[ -n "$DOTKYL_HOST" && -f "setup/Pipfile.$DOTKYL_HOST" ]] && \
-    mise exec python -- pip install -q -r "setup/Pipfile.$DOTKYL_HOST"
-  mise reshim
-  echo "✅ done"
-else
-  echo "⏭️ already ok"
-fi
-rm -f .pip-outdated
+source ./setup/apply-manifest.zsh
+install_file() { mise exec python -- pip install -q -r "$1" }
+post_install() { mise reshim }
+apply_manifest Pipfile pip
 '''
 
 [tasks."sync:pip"]
@@ -111,33 +85,16 @@ run = "mise-tasks/check-marker Pipfile pip"
 
 [tasks."install:npm"]
 description = "Install global npm packages"
+shell = "zsh -c"
 run = '''
-# ...
-missing=false
-while read -r pkg; do
-  [[ -z "$pkg" || "$pkg" == \#* ]] && continue
-  mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-done < setup/NpmPackages.shared
-if [[ -n "$DOTKYL_HOST" && -f "setup/NpmPackages.$DOTKYL_HOST" ]]; then
-  while read -r pkg; do
-    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
-    mise exec node -- npm ls -g --depth=0 "$pkg" >/dev/null 2>&1 || { missing=true; break; }
-  done < "setup/NpmPackages.$DOTKYL_HOST"
-fi
-if $missing; then
-  echo "🔧 installing npm packages..."
-  pkgs=$(grep -vE '^\s*(#|$)' setup/NpmPackages.shared | tr '\n' ' ')
-  mise exec node -- npm install -g --silent $pkgs
-  if [[ -n "$DOTKYL_HOST" && -f "setup/NpmPackages.$DOTKYL_HOST" ]]; then
-    pkgs=$(grep -vE '^\s*(#|$)' "setup/NpmPackages.$DOTKYL_HOST" | tr '\n' ' ')
-    mise exec node -- npm install -g --silent $pkgs
-  fi
-  mise reshim
-  echo "✅ done"
-else
-  echo "⏭️ already ok"
-fi
-rm -f .npm-outdated
+source ./setup/apply-manifest.zsh
+check_line() { mise exec node -- npm ls -g --depth=0 "$1" >/dev/null 2>&1 }
+install_line() {
+  mise exec node -- npm install -g --silent "$@" \
+    && for pkg in "$@"; do print -r -- "✅ npm $pkg installed"; done
+}
+post_install() { mise reshim }
+apply_manifest NpmPackages npm
 '''
 
 [tasks."install:claude-plugins"]
