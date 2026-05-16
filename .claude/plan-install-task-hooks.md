@@ -2,10 +2,10 @@
 
 ## Status
 
-Not started.
+In progress.
 
-- [ ] Chunk 1 — write `setup/apply-manifest.zsh` + a temporary test task; verify in isolation
-- [ ] Chunk 2 — convert `install:claude-plugins`; remove the test task
+- [x] Chunk 1 — write `setup/apply-manifest.zsh` + a temporary test task; verify in isolation
+- [x] Chunk 2 — convert `install:claude-plugins`; remove the test task
 - [ ] Chunk 3 — convert `install:brew`
 - [ ] Chunk 4 — convert `install:pip`
 - [ ] Chunk 5 — convert `install:npm`
@@ -65,8 +65,9 @@ Each task in `mise.toml` sources the file, redefines only the hooks it needs
 - `install_line` is called once per file with that file's missing lines as
   `"$@"`, only when the per-line `check_line` found any. Tasks that install
   per-item loop `"$@"` internally.
-- The helper prints one `✅ <marker>` status line per the repo's emoji
-  convention. Item-level detail (which plugin/package) comes from the
+- The helper prints one generic `✅ done` status line (mise already prefixes
+  output with the task label, so the marker name would be redundant).
+  Item-level detail (which plugin/package) comes from the
   `install_line`/`install_file` hooks; no-op defaults are silent.
 - `post_install` runs once, after all files.
 - The helper reads each file directly (`done < "$f"`, not a pipe) so loop
