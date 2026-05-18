@@ -46,7 +46,8 @@ What this looks like in practice:
 - **Reviewing chunks.** Full flow per chunk:
     1. Make the edit. **Do not run `git add`.** **Do not commit.**
     2. Stop. Wait for me to come back with feedback or confirmation.
-    3. Once I confirm the chunk is good, `git add` it.
+    3. Once I confirm the chunk is good, `git add` it. **DO NOT SKIP THIS
+       STEP**.
     4. Start the next chunk.
 
     Staging earlier hides changes from `git diff`, which is how I review. The chunk loop is for review, not for shipping — committing is a separate, explicit step that I have to ask for.
