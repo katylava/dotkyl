@@ -122,8 +122,8 @@ lib/070-kubernetes--work.zsh     # work only
 
 `bin/get-host` maps the machine's hostname to a semantic name (`personal` or
 `work`). The zshrc loader uses this to skip files not meant for the current
-host. Brew packages follow the same pattern with `setup/Brewfile.shared`,
-`setup/Brewfile.work`, and `setup/Brewfile.personal`.
+host. Brew packages follow the same pattern with `setup/manifests/Brewfile.shared`,
+`setup/manifests/Brewfile.work`, and `setup/manifests/Brewfile.personal`.
 
 ### Private configuration
 

@@ -145,7 +145,7 @@ so iTerm should show only what the shell's `title` function sets and nothing els
 ### iTerm dynamic profiles location
 
 Profiles are defined in `/Users/kyl/.dotkyl/iterm/*.json` and symlinked to
-`~/Library/Application Support/iTerm2/DynamicProfiles/` via `setup/symlinks.yml`.
+`~/Library/Application Support/iTerm2/DynamicProfiles/` via `setup/manifests/symlinks.yml`.
 Host-specific profiles (`--personal`/`--work`) use the same profile name but different
 font sizes; only the matching host's file is symlinked.
 iTerm picks up dynamic profile changes automatically (no restart needed).

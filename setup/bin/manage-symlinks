@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
 #
-# Create or check symlinks defined in setup/symlinks.yml.
+# Create or check symlinks defined in setup/manifests/symlinks.yml.
 # Usage: manage-symlinks [--dry-run]
 #   --dry-run  Show what would change; exit 1 if anything needs updating.
 #   (default)  Create/update symlinks.
 #
 
 local DOTKYL="${0:A:h:h}"    # ${0:A:h:h} = this script's grandparent dir
-local MANIFEST="$DOTKYL/setup/symlinks.yml"
+local MANIFEST="$DOTKYL/setup/manifests/symlinks.yml"
 local HANDLER=apply_link
 local HOST=$($DOTKYL/bin/get-host 2>/dev/null)
 

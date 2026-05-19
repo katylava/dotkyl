@@ -7,7 +7,7 @@ Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
 ## Applying Changes
 
 - Reload shell after edits: open a new terminal tab
-- Apply symlinks: `setup/manage-symlinks` (supports `--dry-run`)
+- Apply symlinks: `setup/bin/manage-symlinks` (supports `--dry-run`)
 
 ## Conventions
 
@@ -25,7 +25,7 @@ crontab files and Brewfiles.
 
 ### Dotfile Symlinking
 
-Symlinks are declared in `setup/symlinks.yml` and applied by `setup/manage-symlinks`.
+Symlinks are declared in `setup/manifests/symlinks.yml` and applied by `setup/bin/manage-symlinks`.
 The `private/` submodule mirrors the `home/` structure for sensitive files.
 
 ### Shell Scripts
@@ -81,7 +81,7 @@ run = "which espanso >/dev/null || echo '👉 Run: mise run install:migrate-espa
 ### Claude Code Settings Sync
 
 A chosen subset of `~/.claude/settings.json` is kept in sync between machines
-via `setup/claude-settings.shared.toml` (the source of truth) and the
+via `setup/manifests/claude-settings.shared.toml` (the source of truth) and the
 `mise run claude-settings-sync` task. The TOML lists each synced key as an
 entry with `read`/`set` yq filter expressions and a `value`. Use literal
 `$HOME` in `value` for paths — the script substitutes the real home dir at

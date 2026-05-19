@@ -1,8 +1,8 @@
 # Common scaffolding for the install:* mise tasks.
 #
 # A task sources this file, redefines only the hooks it needs, and calls
-# `apply_manifest <Stem> <marker>`. The helper resolves setup/<Stem>.shared
-# and setup/<Stem>.$DOTKYL_HOST, runs the hooks over each, and clears the
+# `apply_manifest <Stem> <marker>`. The helper resolves setup/manifests/<Stem>.shared
+# and setup/manifests/<Stem>.$DOTKYL_HOST, runs the hooks over each, and clears the
 # .<marker>-outdated reminder marker.
 
 # No-op hook defaults. Tasks override the ones they need; the rest stay inert
@@ -15,8 +15,8 @@ post_install() { : }
 apply_manifest() {
   local stem=$1 marker=$2
   local -a files
-  files=("setup/$stem.shared")
-  [[ -n $DOTKYL_HOST ]] && files+=("setup/$stem.$DOTKYL_HOST")
+  files=("setup/manifests/$stem.shared")
+  [[ -n $DOTKYL_HOST ]] && files+=("setup/manifests/$stem.$DOTKYL_HOST")
 
   local f line
   for f in "${files[@]}"; do

@@ -19,9 +19,9 @@ done
 description = "Symlink dotfiles into ~/"
 run = """
 # ...
-setup/manage-symlinks --dry-run >/dev/null 2>&1 \
+setup/bin/manage-symlinks --dry-run >/dev/null 2>&1 \
   && echo "⏭️ already ok" \
-  || { setup/manage-symlinks && echo "✅ set up"; }
+  || { setup/bin/manage-symlinks && echo "✅ set up"; }
 """
 
 [tasks."setup:crontab"]
@@ -42,7 +42,7 @@ rm -f "$combined"
 description = "Install brew packages"
 shell = "zsh -c"
 run = '''
-source ./setup/apply-manifest.zsh
+source ./setup/bin/apply-manifest.zsh
 install_file() { brew bundle --file "$1" }
 apply_manifest Brewfile brew
 '''
@@ -67,13 +67,13 @@ bin/get-host >/dev/null 2>&1 \
 
 [tasks."sync:brew"]
 description = "Remind if Brewfile changed since last brew install"
-run = "mise-tasks/check-marker Brewfile brew"
+run = "setup/bin/check-marker Brewfile brew"
 
 [tasks."install:pip"]
 description = "Install pip packages"
 shell = "zsh -c"
 run = '''
-source ./setup/apply-manifest.zsh
+source ./setup/bin/apply-manifest.zsh
 install_file() { mise exec python -- pip install -q -r "$1" }
 post_install() { mise reshim }
 apply_manifest Pipfile pip
@@ -81,13 +81,13 @@ apply_manifest Pipfile pip
 
 [tasks."sync:pip"]
 description = "Remind if Pipfile changed since last pip install"
-run = "mise-tasks/check-marker Pipfile pip"
+run = "setup/bin/check-marker Pipfile pip"
 
 [tasks."install:npm"]
 description = "Install global npm packages"
 shell = "zsh -c"
 run = '''
-source ./setup/apply-manifest.zsh
+source ./setup/bin/apply-manifest.zsh
 check_line() { mise exec node -- npm ls -g --depth=0 "$1" >/dev/null 2>&1 }
 install_line() {
   mise exec node -- npm install -g --silent "$@" \
@@ -101,7 +101,7 @@ apply_manifest NpmPackages npm
 description = "Install Claude Code plugins from ClaudePlugins file"
 shell = "zsh -c"
 run = '''
-source ./setup/apply-manifest.zsh
+source ./setup/bin/apply-manifest.zsh
 check_line() {
   # split a manifest line "<source> <plugin> <marketplace>" into fields:
   # the here-string (<<<) feeds "$1" to `read`, which splits on whitespace;
@@ -122,11 +122,11 @@ apply_manifest ClaudePlugins claude-plugins
 
 [tasks."sync:claude-plugins"]
 description = "Remind if ClaudePlugins changed since last claude-plugins install"
-run = "mise-tasks/check-marker ClaudePlugins claude-plugins"
+run = "setup/bin/check-marker ClaudePlugins claude-plugins"
 
 [tasks."sync:npm"]
 description = "Remind if NpmPackages changed since last npm install"
-run = "mise-tasks/check-marker NpmPackages npm"
+run = "setup/bin/check-marker NpmPackages npm"
 
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
