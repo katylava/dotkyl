@@ -39,7 +39,9 @@ What this looks like in practice:
 - When the auto-mode classifier blocks a tool call ("not authorized by your plan execution"), tell me what was blocked and ask if I approve. Once I say yes, retry — the classifier learns from my approval and allows it on the retry. Don't retry without asking, and don't fall back to asking me to perform the action manually.
 - When you attribute a view, claim, framing, or mental model to someone else ("the other Claude said X", "your model assumes Y", "the PR is arguing Z"), you are making a falsifiable claim about what the source actually contains. If I push back on that attribution — in any form, including just restating my own point differently or quoting the source at you — stop and re-read the source verbatim before responding. Compare what it literally says against what you've been arguing against. If you introduced a distinction, taxonomy, or framing the source didn't contain, name that explicitly and drop it.
 
-# Workflow (in a git repo)
+# Workflow
+
+_This applies to generated output in a git repo. Do not use this workflow when copying or moving text or files around, or when working in a non-git directory._
 
 - Before starting changes, pull latest main and create a feature branch. Don't edit on `main` directly.
 - Before starting a chunked task, run `git status`. If there are unstaged changes from earlier in the session, surface them for review and staging before making new edits — otherwise the next chunk's `git diff` will be polluted with prior work.
