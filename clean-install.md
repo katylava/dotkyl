@@ -16,6 +16,8 @@ up the following to an external drive under
 - `~/Documents` and `~/Desktop` if non-empty
 - Useful hidden files/dirs from `~/` (scan and pick)
 - `~/.histfile`
+- `~/.memento/` — Memento app local database, if anything in it isn't
+  cloud-synced. Worth scanning for other app dirs with local DBs too.
 - iStat Menus preferences (File → Export settings)
 
 Check for uncommitted changes in git repos and dotfiles.
