@@ -11,10 +11,10 @@
 #   5. mise + 1Password CLI:  brew install mise 1password-cli
 #
 # Usage (after cloning):
-#   setup/bootstrap
+#   setup/bin/bootstrap
 #
 # Or fetch and run before cloning:
-#   curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bootstrap | zsh
+#   curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bin/bootstrap | zsh
 #
 
 set -e

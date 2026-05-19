@@ -88,15 +88,15 @@ Claude can only access one machine per session. To audit both:
 **To main repo:**
 1. Confirm no secrets: `grep -i 'token\|secret\|password\|key\|auth' <file>`
 2. Confirm no internal hostnames or org-specific details
-3. Copy to `home/` or `home/config/`, delete original, run `setup/manage-symlinks`, verify, commit
+3. Copy to `home/` or `home/config/`, delete original, run `setup/bin/manage-symlinks`, verify, commit
 
 **To private repo:**
 1. Copy to `~/.dotkyl/private/home/` or `~/.dotkyl/private/lib/`
-2. Delete original, `setup/manage-symlinks` handles it (processes both repos), verify, commit to `dotkyl-private`
+2. Delete original, `setup/bin/manage-symlinks` handles it (processes both repos), verify, commit to `dotkyl-private`
 
-**Partial-directory case** (e.g. `gh/config.yml` without `hosts.yml`): `setup/manage-symlinks`
+**Partial-directory case** (e.g. `gh/config.yml` without `hosts.yml`): `setup/bin/manage-symlinks`
 symlinks whole directories by default. For partial cases, add explicit per-file symlink logic
-to `setup/manage-symlinks`.
+to `setup/bin/manage-symlinks`.
 
 ## Relationship to `plan-add-dotfile.md`
 
@@ -122,7 +122,7 @@ either machine can be set up from scratch.
   symlink task that picks the right one based on `$DOTKYL_HOST`
 - Option B: A shared base `home/ssh/config` with host-specific `Include` directives
   pointing to `~/.ssh/config.d/work` or `~/.ssh/config.d/personal`
-- The symlinks system (`setup/manage-symlinks` + `symlinks.yml`) may need to support
+- The symlinks system (`setup/bin/manage-symlinks` + `symlinks.yml`) may need to support
   host-conditional entries for cases like this.
 
 **`~/.edgerc`** — private, work-only. Goes in `dotkyl-private/home/edgerc` and should
@@ -133,12 +133,12 @@ only be symlinked on the work machine.
 - Some are work-only (public repo, `--work` suffix or conditional symlink)
 - Some are both (public repo, no suffix)
 - Some are private (dotkyl-private)
-- Current `setup/symlinks.yml` symlinks whole directories. Need per-file or per-subdirectory
+- Current `setup/manifests/symlinks.yml` symlinks whole directories. Need per-file or per-subdirectory
   routing for `.claude/skills/`.
 
 ### Implication for symlink tooling
 
-The current `setup/manage-symlinks` + `symlinks.yml` system handles:
+The current `setup/bin/manage-symlinks` + `symlinks.yml` system handles:
 - Whole-directory symlinks (`home/config/*` → `~/.config/`)
 - No host-awareness or per-file routing
 

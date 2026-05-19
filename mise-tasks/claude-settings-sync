@@ -16,7 +16,7 @@
 
 set -e
 
-CONFIG=~/.dotkyl/setup/claude-settings.shared.toml
+CONFIG=~/.dotkyl/setup/manifests/claude-settings.shared.toml
 # CLAUDE_SETTINGS_LIVE override is for fixture-based testing.
 LIVE=${CLAUDE_SETTINGS_LIVE:-~/.claude/settings.json}
 

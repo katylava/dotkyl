@@ -66,7 +66,7 @@ external drive go untouched, but in practice there's always something.
 Run this — it fetches via curl before the repo is cloned:
 
 ```zsh
-curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bootstrap | zsh
+curl -fsSL https://raw.githubusercontent.com/katylava/dotkyl/main/setup/bin/bootstrap | zsh
 ```
 
 It generates an SSH key, registers it with GitHub via 1Password, clones
