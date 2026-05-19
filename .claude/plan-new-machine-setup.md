@@ -100,10 +100,12 @@ Verbatim from `notes.md`:
   (`Brewfile.*`, `mise.toml`, etc.). Treat each unmatched entry as a
   decision: add to manifest / install-once task / skip / install
   manually on new machine.
-- **Overlap with `clean-install.md`.** The existing doc already covers
-  the prerequisite/bootstrap sequence on the new machine. These tasks
-  extend the *old-machine* side and the *post-bootstrap* side. Worth
-  cross-linking once built.
+- **Old `clean-install.md` reference.** A pre-existing
+  `clean-install.md` doc (out of date, deleted alongside this plan
+  update) had a backup + bootstrap sequence for setting up a new
+  machine. Worth scanning before designing the new flow. Last present
+  at HEAD `7107e00`; retrieve with
+  `git show 7107e00:clean-install.md`.
 - **Relationship to `mise run install`.** Existing `install` handles
   the "given a populated manifest, set the machine up" path. These new
   tasks handle "discover what should be in the manifest by surveying

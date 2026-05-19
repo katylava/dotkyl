@@ -71,12 +71,6 @@ re-figure out on clean install.
 [Unrelated](https://www.youtube.com/watch?v=r7ANZ8Osnz4).
 
 
-## Install
-
-See [clean-install.md](clean-install.md) for backup, clean install, and
-bootstrap instructions.
-
-
 ## How It Works
 
 *This section was written by Claude (Opus 4.6).*
