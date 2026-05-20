@@ -170,3 +170,4 @@ sep="${fg_dim} · ${reset}"
 printf "${seg_dir}${git_info}\n"
 printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${seg_vim}\n"
 [[ -n "$seg_service" ]] && printf "${seg_service}\n"
+exit 0
