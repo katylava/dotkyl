@@ -71,6 +71,35 @@ fi
 
 cost=$(printf '%.3f' "$cost_usd")
 
+# ── Claude service status (only shown during incidents) ───────────────────────
+
+_cache="$HOME/.cache/claude-statusline.cache"
+_cache_ttl=300  # 5 minutes
+
+mkdir -p "$HOME/.cache"
+
+_mtime=$(stat -f %m "$_cache" 2>/dev/null)
+if (( $(date +%s) - ${_mtime:-0} > _cache_ttl )); then
+    (curl -sf --max-time 5 'https://status.claude.com/history.rss' > "${_cache}.tmp" 2>/dev/null \
+        && mv "${_cache}.tmp" "$_cache") &!
+fi
+
+seg_service=""
+if [[ -f "$_cache" ]]; then
+    # Extract first <item> block
+    _item=$(awk '/<item>/{f=1} f{print} f && /<\/item>/{exit}' "$_cache")
+    # Plain title (no CDATA on this feed)
+    _title=$(printf '%s' "$_item" | awk '/<title>/{gsub(/.*<title>/,""); gsub(/<\/title>.*/,""); print; exit}')
+    # Most recent status is the first <strong> in the HTML-encoded description
+    _status=$(printf '%s' "$_item" | grep -o '&lt;strong&gt;[^&]*&lt;/strong&gt;' | head -1 \
+              | sed 's/&lt;strong&gt;//;s/&lt;\/strong&gt;//')
+    case "$_status" in
+        Investigating|Identified|Monitoring)
+            seg_service="${fg_red} ${reset}${fg_yellow}${_title}${reset}"
+            ;;
+    esac
+fi
+
 # ── Vim mode ─────────────────────────────────────────────────────────────────
 
 seg_vim=""
@@ -117,7 +146,7 @@ if git_root=$(GIT_OPTIONAL_LOCKS=0 git -C "$cwd" rev-parse --show-toplevel 2>/de
         behind="${ab##*	}"
     fi
 
-    git_info=" ${fg_green}${fg_dim}${reset}${fg_green} ${branch}${reset}"
+    git_info=" ${fg_green} ${reset}${fg_green}${branch}${reset}"
 
     flags=""
     (( staged    > 0 )) && flags+="${fg_yellow}✚${staged}${reset}"
@@ -131,16 +160,13 @@ fi
 
 # ── Assemble the line ─────────────────────────────────────────────────────────
 
-# Left segment: model
 seg_model="${model_colour}${model_icon}${model_short}${reset}"
-
-# Middle segment: context bar + cost
 seg_ctx="${fg_dim}󰾺 ${reset}${context_colour}${context_bar}${reset} ${fg_dim}${context_label}${reset}"
 seg_cost="${fg_dim}\$${reset}${fg_white}${cost}${reset}"
-
-# Right segment: git + cwd
-seg_dir="${fg_cyan} ${reset}${fg_white}${display_cwd}${reset}"
+seg_dir="${fg_white}󰚝 ${display_cwd}${reset}"
 
 sep="${fg_dim} · ${reset}"
 
-printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${sep}${seg_dir}${git_info}${seg_vim}\n"
+printf "${seg_dir}${git_info}\n"
+printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${seg_vim}\n"
+[[ -n "$seg_service" ]] && printf "${seg_service}\n"
