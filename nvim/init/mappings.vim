@@ -58,6 +58,11 @@ nnoremap <C-w>m :call WindowSwapping()<CR>
 map ,d :NvimTreeToggle<CR>
 map ,e :NvimTreeFindFile<CR>
 
+" Show diagnostic under cursor (same as <C-w>d)
+nnoremap <silent> ,x <Cmd>lua vim.diagnostic.open_float()<CR>
+" Copy diagnostic messages on current line to system clipboard
+nnoremap <silent> ,X <Cmd>lua vim.fn.setreg("+", table.concat(vim.tbl_map(function(d) return d.message end, vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })), "\n"))<CR>
+
 " Fuzzy finder (fzf.vim, with command_prefix='Fzf')
 map ,f :FzfFiles<CR>
 map ,m :FzfHistory<CR>

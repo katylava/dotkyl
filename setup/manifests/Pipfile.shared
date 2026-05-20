@@ -1,6 +1,7 @@
 black
 docformatter
 flake8
+Flake8-pyproject
 ipython
 pynvim
 pyright
