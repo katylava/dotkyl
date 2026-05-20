@@ -83,6 +83,25 @@ Claude can only access one machine per session. To audit both:
 4. Pay special attention to files that exist on one machine but not the other —
    these are likely host-specific and need conditional symlinking
 
+### Status
+
+- **Personal host:** done (2026-05-19). Result: **nothing new to manage**.
+  Every unmanaged candidate was dead config (clasp/flameshot uninstalled,
+  `~/.config/git/ignore` unused because `core.excludesfile=~/.gitignore`),
+  app data not config (Logseq, Timetrace, Memento), or trivially
+  re-creatable on a new machine (gcloud/gh/copilot/op auth, all behind a
+  one-command login). `.ssh/` is the one open thread — its handling is
+  owned by the `Host-Specific and Per-File Routing` section below, not
+  "add to repo".
+- **Work host:** not yet captured.
+
+If the work-host capture also surfaces nothing new to add, the audit's
+output is essentially "the symlink set is already complete" and the
+`add-dotfile` plan's scope collapses: there's no backlog of files for
+it to handle, and it would only matter for *future* dotfiles. That
+would push `plan-add-dotfile.md` from "blocked" to "not currently
+needed" — revisit when a real candidate shows up.
+
 ## Process for Adding Files
 
 **To main repo:**
