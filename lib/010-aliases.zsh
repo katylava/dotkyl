@@ -13,6 +13,7 @@ alias exa='exa -F --icons'
 
 # frequently edited files
 alias edit.aliases='nvim ~/.dotkyl/lib/*aliases.zsh'
+alias edit.cm='nvim .git/CLAUDE_COMMIT_MSG'
 alias edit.npmrc='nvim ~/.npmrc'
 alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
