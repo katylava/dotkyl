@@ -6,10 +6,15 @@
 #   (default)  Create/update symlinks.
 #
 
-local DOTKYL="${0:A:h:h}"    # ${0:A:h:h} = this script's grandparent dir
+local DOTKYL=$(git -C "${0:A:h}" rev-parse --show-toplevel)
 local MANIFEST="$DOTKYL/setup/manifests/symlinks.yml"
 local HANDLER=apply_link
 local HOST=$($DOTKYL/bin/get-host 2>/dev/null)
+
+[[ -f "$MANIFEST" ]] || {
+    print -u2 "manage-symlinks: manifest not found at $MANIFEST"
+    return 1
+}
 
 local ok=true
 
