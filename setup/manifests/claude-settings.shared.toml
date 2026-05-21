@@ -55,6 +55,29 @@ command = "$HOME/.claude/hooks/tdd/hook.sh"
 timeout = 5
 
 [[entries]]
+description = "hook: cross-repo-git-guard on Bash (PreToolUse)"
+read = '''
+[.hooks.PreToolUse[]?
+ | select(.matcher == "Bash")
+ | .hooks[]?
+ | select((.command // "") | contains("/cross-repo-git-guard/hook.sh"))][0]
+'''
+set = '''
+.hooks.PreToolUse |= (
+  (.[] |= with(select(.matcher == "Bash");
+    .hooks |= ((map(select((.command // "") | contains("/cross-repo-git-guard/hook.sh") | not))) + [$value])
+  ))
+  | with(select([.[] | .matcher == "Bash"] | any | not);
+      . = . + [{"matcher": "Bash", "hooks": [$value]}]
+    )
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/cross-repo-git-guard/hook.sh"
+timeout = 5
+
+[[entries]]
 description = "hook: python3-in-scripts on Edit|Write (PreToolUse)"
 read = '''
 [.hooks.PreToolUse[]?
