@@ -102,6 +102,38 @@ CLAUDE_SETTINGS_LIVE=/tmp/some-fixture.json mise run claude-settings-sync to-hos
 
 Always use the /commit skill for commits — never commit manually.
 
+**Subject format**: `<area>: <description in imperative mood>`. Multiple areas
+can be comma-separated: `zsh, iterm: ...`. The area prefix should reflect
+what the change is **about**, not just which files were touched — a `.gitignore`
+change in service of the zsh lib loader is `zsh:`, not `zsh, git:`. Ask
+"what is this change in service of?" to pick the right prefix.
+
+If the right area isn't obvious, ask before guessing.
+
+**Common area prefixes**:
+- `zsh` — anything in lib/*.zsh, shell config
+- `nvim` — neovim config
+- `bin` — scripts in bin/
+- `git` — git-related config (gitconfig, gitignore, etc.)
+- `alias` — alias changes (in lib/010-aliases.zsh)
+- `crontab` — cron jobs
+- `claude` — .claude/ config, CLAUDE.md (but see `skills` below)
+- `skills` — Claude skills (under `home/claude/skills/` or `.claude/skills/`)
+- `home` — files in home/ (symlinkable dotfiles)
+- `iterm` — iTerm2 profiles/config
+- `urlwatch` — urlwatch config
+- `cheatsheets` — cheatsheet files
+- `setup` — setup scripts (manage-symlinks, etc.)
+- `docs` — fallback for documentation-only changes (README, plan files, etc.) that aren't tied to a more specific area
+
+**Examples**:
+
+    zsh: Remove unused GREP_COLORS export
+    nvim: Add claudecode and diffview plugins
+    bin: Fix query_roam so LLM can use --help
+    zsh, iterm: Add light mode support
+    git: Ignore .claude/settings.local.json
+
 ## Workflow
 
 - Default to committing directly to `main` for ordinary changes (fixes, tweaks, single-task

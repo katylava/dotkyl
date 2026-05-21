@@ -8,6 +8,7 @@ autocmd BufRead .npmrc set commentstring=#\ %s
 
 autocmd BufRead requirements.txt set filetype=text sw=2 ts=2
 autocmd BufRead requirements/*.txt set filetype=text sw=2 ts=2
+autocmd BufRead,BufNewFile CLAUDE_COMMIT_MSG set filetype=gitcommit
 
 " Filetype-specific settings
 autocmd FileType cfg setlocal tabstop=4 shiftwidth=4 textwidth=0 commentstring=#\ %s
