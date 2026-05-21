@@ -10,6 +10,12 @@ description: Conventions for git commands. Use whenever you are about to commit,
 - **Subject length**: aim for ~50 characters. This is a soft target — clarity
   wins over brevity, but don't be wordy. Trim filler words, use short verbs
   (add, fix, rm, use, set, update).
+- **Subject case**: sentence case. Capitalize the first word, lowercase the
+  rest (except proper nouns).
+- **Extrapolating style from repo history**: filter `git log` to the current
+  user's commits (`git log --author="$(git config user.email)"`). Other
+  authors' commits may use conventions the user has moved away from or that
+  the repo doesn't require.
 - **Voice**: imperative or first person. Never third person — git already
   records the author, so don't refer to them by name or as "the user".
 - **Body** (optional): include when the *why* behind the change isn't obvious
