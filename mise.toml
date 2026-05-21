@@ -65,10 +65,6 @@ bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
 
-[tasks."sync:brew"]
-description = "Remind if Brewfile changed since last brew install"
-run = "setup/bin/check-marker Brewfile brew"
-
 [tasks."install:pip"]
 description = "Install pip packages"
 shell = "zsh -c"
@@ -78,10 +74,6 @@ install_file() { mise exec python -- pip install -q -r "$1" }
 post_install() { mise reshim }
 apply_manifest Pipfile pip
 '''
-
-[tasks."sync:pip"]
-description = "Remind if Pipfile changed since last pip install"
-run = "setup/bin/check-marker Pipfile pip"
 
 [tasks."install:npm"]
 description = "Install global npm packages"
@@ -120,13 +112,16 @@ install_line() {
 apply_manifest ClaudePlugins claude-plugins
 '''
 
-[tasks."sync:claude-plugins"]
-description = "Remind if ClaudePlugins changed since last claude-plugins install"
-run = "setup/bin/check-marker ClaudePlugins claude-plugins"
-
-[tasks."sync:npm"]
-description = "Remind if NpmPackages changed since last npm install"
-run = "setup/bin/check-marker NpmPackages npm"
+[tasks."sync:list-installation-reminders"]
+description = "Remind if any manifest changed since its last install task ran"
+run = '''
+while read -r pattern task; do
+  [[ -z $pattern || $pattern == \#* ]] && continue
+  if [[ -f ".$task-outdated" ]]; then
+    echo "👉 $pattern changed — run: mise run install:$task"
+  fi
+done < setup/manifests/bulk-manifest-installations
+'''
 
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"

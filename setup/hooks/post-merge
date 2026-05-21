@@ -1,3 +1,12 @@
 #!/usr/bin/env zsh
 cd ~/.dotkyl
+
+# Touch install-task markers for any manifests changed by this merge.
+# Markers persist until the matching `install:*` task clears them.
+changed=$(git diff HEAD@{1} HEAD --name-only 2>/dev/null || true)
+while read -r pattern task; do
+  [[ -z $pattern || $pattern == \#* ]] && continue
+  print -r -- "$changed" | grep -q "$pattern" && touch ".$task-outdated"
+done < setup/manifests/bulk-manifest-installations
+
 mise run sync

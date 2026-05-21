@@ -1,0 +1,8 @@
+# pattern → install task name
+# Each row is one installation handled in bulk by the post-merge hook
+# (creates a marker if the manifest changed) and by
+# sync:list-installation-reminders (prints a reminder if the marker exists).
+Brewfile         brew
+Pipfile          pip
+NpmPackages      npm
+ClaudePlugins    claude-plugins
