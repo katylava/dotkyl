@@ -1,12 +1,21 @@
 #!/usr/bin/env zsh
-cd ~/.dotkyl
 
-# Touch install-task markers for any manifests changed by this merge.
-# Markers persist until the matching `install:*` task clears them.
-changed=$(git diff HEAD@{1} HEAD --name-only 2>/dev/null || true)
-while read -r pattern task; do
-  [[ -z $pattern || $pattern == \#* ]] && continue
-  print -r -- "$changed" | grep -q "$pattern" && touch ".$task-outdated"
-done < setup/manifests/bulk-manifest-installations
+# Wrapped in a brace group so zsh parses the whole body before executing it.
+# Otherwise, `mise run sync` (which reinstalls this hook via setup:git-hook)
+# can rewrite this file mid-execution and zsh keeps reading from the new
+# bytes — leading to spurious commands and a second `mise run sync`.
+{
+  cd ~/.dotkyl
 
-mise run sync
+  # Touch install-task markers for any manifests changed by this merge.
+  # Markers persist until the matching `install:*` task clears them.
+  changed=$(git diff HEAD@{1} HEAD --name-only 2>/dev/null || true)
+  while read -r pattern task; do
+    [[ -z $pattern || $pattern == \#* ]] && continue
+    print -r -- "$changed" | grep -q "$pattern" && touch ".$task-outdated"
+  done < setup/manifests/bulk-manifest-installations
+
+  mise run sync
+
+  exit
+}
