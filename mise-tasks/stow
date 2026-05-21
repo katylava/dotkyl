@@ -8,7 +8,7 @@
 set -euo pipefail
 
 name=${1:?Usage: mise run stow <name>}
-repo_root=${0:A:h:h}  # script: mise-tasks/stow → parent → parent = repo root
+repo_root=$(git -C "${0:A:h}" rev-parse --show-toplevel)
 root_toml=$repo_root/mise.toml
 setup_toml=$repo_root/setup/mise.toml
 src_header="[tasks.\"install:$name\"]"
