@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Create git commits following the workflow and message conventions. Use whenever the user asks to commit, make a commit, save changes, or any variation of committing work. Always use this skill instead of the default commit behavior.
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(mv .git/COMMIT_EDITMSG:*), Bash(rm .git/CLAUDE_COMMIT_MSG:*), Edit, Read
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(cat .git/COMMIT_EDITMSG:*), Bash(rm .git/CLAUDE_COMMIT_MSG:*), Bash(rm .git/COMMIT_EDITMSG:*), Write
 ---
 
 # Commit
@@ -60,15 +60,15 @@ template to `.git/COMMIT_EDITMSG` (message area + file list + diff),
 then aborts because `false` exits non-zero. The `|| true` suppresses
 that expected non-zero exit so it isn't surfaced as a tool error.
 
-Then move it:
+## Step 6: Build the review file
 
-    mv .git/COMMIT_EDITMSG .git/CLAUDE_COMMIT_MSG
+Use the Write tool to write the drafted subject, body, and co-author
+trailer to `.git/CLAUDE_COMMIT_MSG`. Then append the verbose template:
 
-## Step 6: Insert the drafted message
+    cat .git/COMMIT_EDITMSG >> .git/CLAUDE_COMMIT_MSG
 
-The template starts with an empty message area before the `#`-prefixed
-status lines. Use the Edit tool to insert the drafted subject, body, and
-co-author trailer at the top.
+Don't use Edit on `.git/CLAUDE_COMMIT_MSG` — exact-match against the
+template's empty message area is fragile and leaves stray blank lines.
 
 ## Step 7: Wait for review
 
@@ -80,8 +80,9 @@ The user may:
 
 - Edit the file directly.
 - Ask questions about the message or the diff.
-- Ask you to rewrite the message — if so, overwrite the message portion
-  (leaving the `#`-prefixed template intact) and wait again.
+- Ask you to rewrite the message — if so, repeat Step 6: Write the new
+  message to `.git/CLAUDE_COMMIT_MSG` (this clobbers the appended
+  template too), then re-append `.git/COMMIT_EDITMSG`. Then wait again.
 - Say go ahead.
 
 Don't assume the next user message is a go-ahead. Wait for explicit
@@ -97,8 +98,8 @@ Commit:
 
 Then:
 
-- Delete `.git/CLAUDE_COMMIT_MSG` so a stale message isn't reused next
-  time.
+- Delete `.git/CLAUDE_COMMIT_MSG` and `.git/COMMIT_EDITMSG` so stale
+  files aren't reused next time.
 - Run `git status` to verify success. If the branch is ahead of its
   remote tracking branch, tell the user explicitly how many commits
   are unpushed — they need the nudge since this skill doesn't prompt
