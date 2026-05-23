@@ -60,7 +60,6 @@ fi
 [tasks."install:check-host"]
 description = "Verify hostname is configured"
 run = """
-# ...
 bin/get-host >/dev/null 2>&1 \
   || echo "👉 Add $(hostname) to bin/get-host and re-run mise run install"
 """
@@ -115,6 +114,7 @@ apply_manifest ClaudePlugins claude-plugins
 [tasks."sync:list-installation-reminders"]
 description = "Remind if any manifest changed since its last install task ran"
 run = '''
+# ...
 while read -r pattern task; do
   [[ -z $pattern || $pattern == \#* ]] && continue
   if [[ -f ".$task-outdated" ]]; then
