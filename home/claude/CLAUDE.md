@@ -46,13 +46,13 @@ _This applies to generated output in a git repo. Do not use this workflow when c
 - Before starting changes, pull latest main and create a feature branch. Don't edit on `main` directly.
 - Before starting a chunked task, run `git status`. If there are unstaged changes from earlier in the session, surface them for review and staging before making new edits — otherwise the next chunk's `git diff` will be polluted with prior work.
 - **Reviewing chunks.** Full flow per chunk:
-    1. Make the edit. **Do not run `git add`.** **Do not commit.**
-    2. Stop. Wait for me to come back with feedback or confirmation.
-    3. Once I confirm the chunk is good, `git add` it. **DO NOT SKIP THIS
-       STEP**.
-    4. Start the next chunk.
+    1. `git add` the previous chunk. Skip only if there is nothing to stage. If there are untracked files, stop and ask me what to do — don't guess whether they're part of the previous chunk. **DO NOT SKIP THIS STEP** when there is tracked work to stage — staging the previous chunk is how the next `git diff` stays clean. This is not a separate step that earns its own pause.
+    2. Make the edit for the current chunk. **Do not run `git add` on it.** **Do not commit.**
+    3. Stop. Wait for me to come back with feedback or confirmation, then loop back to step 1.
 
-    Staging earlier hides changes from `git diff`, which is how I review. The chunk loop is for review, not for shipping — committing is a separate, explicit step that I have to ask for.
+    I review each chunk with `git diff`, and I need that diff to show only the new chunk — not the new chunk plus any prior chunks that I already approved. Staging the previous chunks is what keeps them out of the next `git diff`. Skipping it forces me to mentally separate the current chunk from prior chunks in a cumulative diff, which defeats the whole point of chunked review.
+
+    Announcing the stage as its own turn ("Staged. Ready for the next chunk.") is wasted output — once I confirm a chunk, stage it and proceed into the next edit in the same turn. The chunk loop is for review, not for shipping — committing is a separate, explicit step that I have to ask for.
 
 # Shorthand
 
