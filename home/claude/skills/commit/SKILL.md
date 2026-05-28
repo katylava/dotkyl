@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Create git commits following the workflow and message conventions. Use whenever the user asks to commit, make a commit, save changes, or any variation of committing work. Always use this skill instead of the default commit behavior.
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(cat .git/COMMIT_EDITMSG:*), Bash(rm .git/CLAUDE_COMMIT_MSG:*), Bash(rm .git/COMMIT_EDITMSG:*), Write
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(cat "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG":*), Bash(rm "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG":*), Write
 ---
 
 # Commit
@@ -63,9 +63,11 @@ that expected non-zero exit so it isn't surfaced as a tool error.
 ## Step 6: Build the review file
 
 Use the Write tool to write the drafted subject, body, and co-author
-trailer to `.git/CLAUDE_COMMIT_MSG`. Then append the verbose template:
+trailer to the review file. Give Write the absolute path —
+`<root>/.git/CLAUDE_COMMIT_MSG`, where `<root>` is `git rev-parse
+--show-toplevel`. Then append the verbose template:
 
-    cat .git/COMMIT_EDITMSG >> .git/CLAUDE_COMMIT_MSG
+    cat "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG" >> "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG"
 
 Don't use Edit on `.git/CLAUDE_COMMIT_MSG` — exact-match against the
 template's empty message area is fragile and leaves stray blank lines.
@@ -94,7 +96,7 @@ Re-run `git status` first in case staging changed during the wait.
 
 Commit:
 
-    git commit -F .git/CLAUDE_COMMIT_MSG -v --cleanup=strip
+    git commit -F "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG" -v --cleanup=strip
 
 `git commit` reports success or failure through its exit code and the
 short summary it prints. That output is the confirmation. If it exits 0,
@@ -110,8 +112,10 @@ amending. The committed message is whatever the file said; leave it.
 
 Then:
 
-- Delete `.git/CLAUDE_COMMIT_MSG` and `.git/COMMIT_EDITMSG` so stale
-  files aren't reused next time.
+- Delete the review file and template so stale files aren't reused next
+  time:
+
+      rm "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG" "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG"
 - Run `git status` **only** to check whether the branch is ahead of its
   remote tracking branch. This is not for verifying the commit — it's so
   that if there are unpushed commits, you can tell the user how many,
