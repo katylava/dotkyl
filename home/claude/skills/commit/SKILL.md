@@ -96,12 +96,25 @@ Commit:
 
     git commit -F .git/CLAUDE_COMMIT_MSG -v --cleanup=strip
 
+`git commit` reports success or failure through its exit code and the
+short summary it prints. That output is the confirmation. If it exits 0,
+the commit worked — do **not** run `git log`, `git cat-file`, `git show`,
+or any other command to re-verify the commit contents. That's wasted
+tokens.
+
+Do not compare the committed message against what was drafted. The user
+edits `.git/CLAUDE_COMMIT_MSG` directly — that's the entire point of the
+review file. A subject, body, or prefix that differs from your draft is
+the user's deliberate edit, never a bug to investigate or "fix" by
+amending. The committed message is whatever the file said; leave it.
+
 Then:
 
 - Delete `.git/CLAUDE_COMMIT_MSG` and `.git/COMMIT_EDITMSG` so stale
   files aren't reused next time.
-- Run `git status` to verify success. If the branch is ahead of its
-  remote tracking branch, tell the user explicitly how many commits
-  are unpushed — they need the nudge since this skill doesn't prompt
-  for pushing.
+- Run `git status` **only** to check whether the branch is ahead of its
+  remote tracking branch. This is not for verifying the commit — it's so
+  that if there are unpushed commits, you can tell the user how many,
+  since this skill doesn't prompt for pushing. If the branch isn't ahead,
+  there's nothing to report.
 - Don't push unless explicitly asked.
