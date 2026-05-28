@@ -75,20 +75,27 @@ template's empty message area is fragile and leaves stray blank lines.
 ## Step 7: Wait for review
 
 Tell the user the message is ready for review. Mention the file path
-(`.git/CLAUDE_COMMIT_MSG`) and the `edit.cm` alias (opens it in nvim).
+(`.git/CLAUDE_COMMIT_MSG`) and the `edit.cm` alias (opens it in nvim). End
+with the two ways to continue:
+
+> Reply `lgcc` to commit as-is, or `upcc` if you edited the file.
+
 Stop.
 
 The user may:
 
+- Reply `lgcc` ("looks good, commit as-is") or `upcc` ("I updated it,
+  commit my version") — both are go-aheads. Proceed to Step 8. Either way
+  you commit whatever the file now contains; the two differ only in what
+  the user is telling you they did, not in what you do.
 - Edit the file directly.
 - Ask questions about the message or the diff.
 - Ask you to rewrite the message — if so, repeat Step 6: Write the new
   message to `.git/CLAUDE_COMMIT_MSG` (this clobbers the appended
   template too), then re-append `.git/COMMIT_EDITMSG`. Then wait again.
-- Say go ahead.
 
-Don't assume the next user message is a go-ahead. Wait for explicit
-confirmation.
+Don't assume the next user message is a go-ahead. Wait for `lgcc`, `upcc`,
+or another explicit confirmation.
 
 ## Step 8: Commit
 
