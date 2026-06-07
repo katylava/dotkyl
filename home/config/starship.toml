@@ -23,6 +23,7 @@ $status\
 $cmd_duration\
 $git_branch\
 $git_status\
+${custom.dotkyl_status}\
 $time\
 $line_break\
 $character
@@ -39,6 +40,32 @@ $character
     style = "fg:red bg:alert"
     format = "[](bg:separator fg:alert)[ $duration ]($style)[](bg:alert fg:separator)"
     min_time = 1_000
+
+[custom.dotkyl_status]
+    description = "Warn when ~/.dotkyl/private has uncommitted, unpushed, or unpulled changes (invisible to the parent prompt since it's gitignored)"
+    # ✽ = uncommitted/untracked. `rev-list --left-right --count HEAD...@{u}` prints
+    # "<ahead> <behind>" vs upstream → ↑ unpushed, ↓ behind (as of the last fetch).
+    when = '''
+p="$HOME/.dotkyl/private"
+case "$PWD" in "$HOME/.dotkyl"*) ;; *) exit 1 ;; esac
+[ -d "$p/.git" ] || exit 1  # prevent git error when bootstrapping repo
+[ -n "$(git -C "$p" status --porcelain)" ] && exit 0
+set -- $(git -C "$p" rev-list --left-right --count HEAD...@{u} 2>/dev/null)
+{ [ "${1:-0}" -gt 0 ] || [ "${2:-0}" -gt 0 ]; } && exit 0
+exit 1
+'''
+    command = '''
+p="$HOME/.dotkyl/private"
+out=""
+[ -n "$(git -C "$p" status --porcelain)" ] && out="${out}✽"
+set -- $(git -C "$p" rev-list --left-right --count HEAD...@{u} 2>/dev/null)
+[ "${1:-0}" -gt 0 ] && out="${out}↑"
+[ "${2:-0}" -gt 0 ] && out="${out}↓"
+echo "$out"
+'''
+    symbol = "🔒"
+    style = "bg:alert fg:black"
+    format = "[](bg:separator fg:alert)[ $symbol $output ]($style)[](bg:alert fg:separator)"
 
 [custom.etc_host]
     description = "Shows if oreilly.[com|review] is in /etc/hosts"
