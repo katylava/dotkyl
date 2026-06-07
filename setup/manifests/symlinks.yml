@@ -21,3 +21,12 @@
 
 - source_glob: iterm/*.json
   target_dir: ~/Library/Application Support/iTerm2/DynamicProfiles
+
+- source_glob: espanso/config/*
+  target_dir: ~/Library/Application Support/espanso/config
+
+- source_glob: espanso/match/*
+  target_dir: ~/Library/Application Support/espanso/match
+
+- source_glob: private/espanso/match/*
+  target_dir: ~/Library/Application Support/espanso/match
