@@ -3,7 +3,8 @@ eval "$(starship init zsh)"
 function _mypwd {
 
     local dir_limit="2"
-    local truncation="⋯"
+    local path_truncation="⋯"
+    local name_truncation="⁎"
     local trunc_part=""
     local part_count=0
     local formatted_cwd=""
@@ -25,7 +26,7 @@ function _mypwd {
         [[ $part == $first_dir ]] && continue
         # then truncate really long directory names
         len="${#part}"
-        [[ len -gt 15 ]] && part=${part:0:7}⁎${part:$len-7:7}
+        [[ len -gt 15 ]] && part=${part:0:7}$name_truncation${part:$len-7:7}
         # and append this part to the string we are building up for the prompt
         formatted_cwd="$formatted_cwd$dir_sep$part"
     done
@@ -36,12 +37,12 @@ function _mypwd {
     # directory, where the second condition would get the number of chars in the
     # bookmark name instead of the number of directories in the path.
     [[ $part != $first_dir ]] && [[ ${#${(s:/:)${(%):-%~}}} -gt 4 ]] \
-      && trunc_part=$dir_sep$truncation
+      && trunc_part=$dir_sep$path_truncation
 
     # For directories NOT under ~ or a bookmark, we pulled the real first
     # directory off of it, so we need to truncate at 3 instead of 4.
     [[ $first_dir == "/" ]] && [[ ${#${(s:/:)${(%):-%~}}} -gt 3 ]] \
-      && trunc_part=$dir_sep$truncation
+      && trunc_part=$dir_sep$path_truncation
 
     export MYPWD="$first_dir$trunc_part$formatted_cwd"
 }
