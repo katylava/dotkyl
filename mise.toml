@@ -19,6 +19,8 @@ done
 description = "Symlink dotfiles into ~/"
 run = """
 # ...
+# TEMP HACK: back up espanso before its first symlink run (remove after work machine syncs).
+esp="$HOME/Library/Application Support/espanso"; [[ -d "$esp" && ( ! -L "$esp/config/default.yml" || ! -L "$esp/match/base.yml" ) ]] && { mkdir -p ~/.dotkyl/backups && cp -R "$esp" ~/.dotkyl/backups/espanso && echo "📦 backed up espanso to ~/.dotkyl/backups/espanso"; }
 setup/bin/manage-symlinks --dry-run >/dev/null 2>&1 \
   && echo "⏭️ already ok" \
   || { setup/bin/manage-symlinks && echo "✅ set up"; }
