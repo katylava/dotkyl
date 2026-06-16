@@ -10,8 +10,10 @@ recommend, or hint at them in response to open-ended "what's next" /
 
 ## Active candidates
 
-_(none right now — propose new ideas as they come up, or surface
-existing repo issues the user hasn't called out)_
+- **`plan-private-submodule.md`** — convert `private/` to a git submodule
+  so a plain main-repo `git pull` reliably propagates private-only changes
+  (content + symlinks) to the other machine. Next planned improvement;
+  high-level case is written, implementation deferred to a later session.
 
 ## User-driven only — do not suggest
 
