@@ -22,6 +22,9 @@ Run in parallel:
   current user's recent style. Filter to the user's own commits — other
   authors may use conventions the user has moved away from or that the
   repo doesn't require.
+- `git rev-parse --show-toplevel` to get the repo root, `<root>`. Use it
+  rather than assuming the cwd is the root — sometimes the cwd is a
+  subdirectory.
 
 ## Step 2: Decide what to stage
 
@@ -63,9 +66,9 @@ that expected non-zero exit so it isn't surfaced as a tool error.
 ## Step 6: Build the review file
 
 Use the Write tool to write the drafted subject, body, and co-author
-trailer to the review file. Give Write the absolute path —
-`<root>/.git/CLAUDE_COMMIT_MSG`, where `<root>` is `git rev-parse
---show-toplevel`. Then append the verbose template:
+trailer to the review file at `<root>/.git/CLAUDE_COMMIT_MSG` (the
+Step 1 `<root>` with `/.git/CLAUDE_COMMIT_MSG` joined on — not the cwd,
+not a bare `/.git/...`). Then append the verbose template:
 
     cat "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG" >> "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG"
 
