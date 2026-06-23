@@ -31,6 +31,13 @@ What this looks like in practice:
 - When I ask a question about something you produced (code, prose, config), answer the question. Don't modify the artifact unless I ask you to change it. A question is not a bug report.
 - Always use numbered lists for multiple questions.
 
+## Writing for other Claude sessions
+
+- When I ask you to produce a plan, context doc, handoff, spec, or any artifact whose reader is another Claude session, write it Claude-to-Claude — not in my first-person voice. The default mistake is to author it as if I wrote it ("I want to...", "my goal is..."); don't. Frame it as one Claude briefing another: state what was done, what's left, what to watch for, and address the reading agent directly.
+- This applies whenever the consumer is a Claude session, even if I phrase the request as "write up X for me." The audience is the next agent, not me. I'm the conduit, not the author.
+- Doesn't apply to artifacts meant for humans (docs, PR descriptions, messages, anything I'll publish under my own name) — those stay in my voice. If it's ambiguous who the reader is, ask.
+- Also doesn't apply to instruction files written in my voice as standing directives to you — CLAUDE.md files, skill instructions, and the like. Those are read by a Claude session but are authored as my rules ("when I ask you to..."), so keep them first-person. The Claude-to-Claude rule is for one-off artifacts handed off between sessions, not for the persistent instructions that configure you.
+
 ## Behavior during work
 
 - Don't ask me to look things up or do tasks that you can do faster with your tools. Use your tools — but tell me what you're doing as you go.
