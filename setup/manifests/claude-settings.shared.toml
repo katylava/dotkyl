@@ -113,3 +113,43 @@ description = "autoMemoryEnabled"
 read = '.autoMemoryEnabled'
 set  = '.autoMemoryEnabled = $value'
 value = false
+
+[[entries]]
+description = "hook: say-notify on Notification"
+read = '''
+[.hooks.Notification[]?
+ | .hooks[]?
+ | select((.command // "") | contains("/say-notify/hook.sh"))][0]
+'''
+set = '''
+.hooks.Notification |= (
+  (map(.hooks |= map(select((.command // "") | contains("/say-notify/hook.sh") | not)))
+   | map(select(.hooks | length > 0)))
+  + [{"matcher": "", "hooks": [$value]}]
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/say-notify/hook.sh"
+timeout = 10
+async = true
+
+[[entries]]
+description = "hook: say-notify on PermissionRequest"
+read = '''
+[.hooks.PermissionRequest[]?
+ | .hooks[]?
+ | select((.command // "") | contains("/say-notify/hook.sh"))][0]
+'''
+set = '''
+.hooks.PermissionRequest |= (
+  (map(.hooks |= map(select((.command // "") | contains("/say-notify/hook.sh") | not)))
+   | map(select(.hooks | length > 0)))
+  + [{"matcher": "", "hooks": [$value]}]
+)
+'''
+[entries.value]
+type = "command"
+command = "$HOME/.claude/hooks/say-notify/hook.sh"
+timeout = 10
+async = true
