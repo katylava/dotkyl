@@ -89,6 +89,27 @@ Spare does not mean context-free. The reader-mental-state lens still applies at
 full strength: clipped prose with a forward reference or an unexplained term is
 worse than warm prose without one.
 
+## Expose structure with labels
+
+When you strip fluency, you also strip the connective prose that used to carry
+the structure ("rather than...", "but then...", "what's interesting here is...").
+Labels carry it instead. Mark each block with the role it plays:
+`Prior behavior:`, `Cause:`, `Fix:`, `Side effect:`, `Problem:`, `Test 1:`,
+`Shows:`. A label that tells the reader what they will see before they read it
+(a Datadog link followed by `shows ...`) is the same move applied to evidence.
+
+Two reasons this earns its place:
+
+- A reader skimming for one part jumps straight to it. The label states each
+  block's role before they commit to reading it.
+- Writing the label forces you to know the role. If you can't name what a block
+  is doing, it may not belong — or it's two blocks wearing one.
+
+Match the label to the content. Don't force a fixed template where plain prose
+is clearer, and don't invent a taxonomy for parts that don't have distinct
+roles. Labels work when the content genuinely separates — state vs. cause vs.
+fix, claim vs. evidence, link vs. what-it-shows.
+
 ## Lead with the answer; let the hedge follow
 
 State the conclusion or recommendation first, then the support, then the
