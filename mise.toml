@@ -111,6 +111,25 @@ install_line() {
 apply_manifest ClaudePlugins claude-plugins
 '''
 
+# say-notify speaks approval/question alerts, so peon-ping's matching sound is
+# muted to avoid doubling up. peon's config.json is per-machine (not tracked
+# here), so this re-applies the mute on each machine. Idempotent.
+[tasks."install:peon-mute-approvals"]
+description = "Mute peon-ping's approval sound (say-notify speaks those instead)"
+run = '''
+cfg="$HOME/.claude/hooks/peon-ping/config.json"
+if [ ! -f "$cfg" ]; then
+  echo "⏭️ peon-ping not installed"
+elif [ "$(jq -r '.categories."input.required"' "$cfg")" = "false" ]; then
+  echo "⏭️ already muted"
+else
+  tmp=$(mktemp)
+  jq '.categories."input.required" = false' "$cfg" > "$tmp" && mv "$tmp" "$cfg" \
+    && echo "✅ muted peon input.required" \
+    || echo "❌ failed to mute"
+fi
+'''
+
 [tasks."sync:list-installation-reminders"]
 description = "Remind if any manifest changed since its last install task ran"
 run = '''
@@ -121,6 +140,15 @@ while read -r pattern task; do
     echo "👉 $pattern changed — run: mise run install:$task"
   fi
 done < setup/manifests/bulk-manifest-installations
+'''
+
+[tasks."sync:peon-mute-approvals"]
+description = "Remind to mute peon-ping's approval sound (say-notify speaks those)"
+run = '''
+cfg="$HOME/.claude/hooks/peon-ping/config.json"
+if [ -f "$cfg" ] && [ "$(jq -r '.categories."input.required"' "$cfg")" != "false" ]; then
+  echo "👉 Run: mise run install:peon-mute-approvals"
+fi
 '''
 
 [tasks.sync]
