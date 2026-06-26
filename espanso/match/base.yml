@@ -10,7 +10,16 @@
 
 # yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
 
+# NOTE: This file is symlinked into ~/Library/Application Support/espanso/.
+# Espanso's auto-reload does NOT detect edits made through the symlink (its
+# file watcher sees the watched dir, not the symlink's external target). After
+# editing, run `espanso restart` to apply changes.
+
 matches:
+  # Roam: literal # plus a zero-width space (U+200B) so it doesn't start a tag
+  - trigger: "##--"
+    replace: "#​"
+
   # Print the current date
   # - trigger: ":date"
   #   replace: "{{mydate}}"
