@@ -11,6 +11,11 @@
 # To make customization easier, this file contains some of the commonly used
 # parameters. Feel free to uncomment and tune them to fit your needs!
 
+# NOTE: This file is symlinked into ~/Library/Application Support/espanso/.
+# Espanso's auto-reload does NOT detect edits made through the symlink (its
+# file watcher sees the watched dir, not the symlink's external target). After
+# editing, run `espanso restart` to apply changes.
+
 search_shortcut: ALT+SHIFT+SPACE
 
 # --- Clipboard threshold
