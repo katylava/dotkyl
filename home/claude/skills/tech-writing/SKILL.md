@@ -40,9 +40,13 @@ keep an active model of the reader:
 - What did they expect this section to contain when they clicked the heading?
 
 You cannot write assuming they know nothing, and you cannot write assuming they
-read every prior sentence. Re-ask these questions per paragraph. When a later
-principle says "don't reference before you introduce" or "name what will
-surprise them," it is just this lens applied to a specific case.
+read every prior sentence. Re-ask these questions per paragraph. Apply the lens
+hardest to your own framing and section-intro sentences: by their nature they
+describe the document's shape — its parts and how they relate — which a reader
+arriving linearly hasn't seen yet, so they are where you most easily assume
+knowledge the reader lacks. When a later principle says "don't reference before
+you introduce" or "name what will surprise them," it is just this lens applied to
+a specific case.
 
 ## Default to a spare register — write like a robot
 
@@ -77,6 +81,16 @@ sounded. The fluency-performing version is the one that reads as the machine.
 
 The "after" is less obviously authored, carries more information per word, and
 is easier to check against the code.
+
+**Metaphors supplement facts; they never carry them alone.** State what the thing
+is in plain words first, then add the metaphor as a compact handle on it — most
+useful when the plain statement is long or hard to hold. Test: can you delete the
+metaphor and still have an account of what the thing *is*? "The queue is a shock
+absorber for the pipeline" fails — delete "shock absorber" and nothing about what
+the queue does remains. "The queue holds bursts of incoming events so downstream
+stages read at a steady rate — a shock absorber for the pipeline" passes: the
+plain fact stands, and "shock absorber" gives the reader a memorable grip on that
+mouthful.
 
 **Default to robot; add warmth deliberately.** It is easier to add warmth back
 than to take it away. So start at the declarative end and add warmth only where the
@@ -131,11 +145,33 @@ qualification; never manufacture one to round out the shape.
   thing to understand is." They promise a point instead of making it. Delete the
   announcer and state the point.
 - **Pep:** "Great question," "Awesome." Not for this reader.
+- **Orienting scaffolding:** a whole sentence that only organizes, previews, or
+  cross-references, with no fact of its own — "This section covers the rollout
+  plan," "The rest of this doc is organized as follows." The heading and the
+  content stand without it; cut it and let the content start.
+
+## Carry the meaning, not the source's vocabulary
+
+Almost everything you write transmits information that started somewhere else — a
+proposal, a design doc, an existing system, a conversation — and that's true
+whether you're rewriting, summarizing, or drafting fresh. When the source names
+something with a coined term or metaphor ("substrate," "walking skeleton"), the
+failure is carrying the word across while leaving its meaning behind. The word
+is the source's packaging; your reader needs its content. Test: can you state
+what the thing is without the source's term? If you can, and the
+term is standard for this audience, keep it as shorthand. If you can't, you're
+relaying a token you haven't decoded — go find the meaning before you pass it on.
 
 ## Introduce before you reference; attribute precisely
 
 Define a term, tool, or concept the first time it appears, or link to where it
 is defined. A reader who meets an undefined term either guesses or stops.
+
+Naming a term is not introducing it. "The platform has four stages: ingestion,
+enrichment, storage, serving" names the parts and stops. Introducing them says
+what each does: ingestion accepts raw events, enrichment joins them against
+reference data, storage persists the result, serving answers queries against it.
+The names alone hand the reader none of that.
 
 Be precise about *whose* system a behavior lives in. When you describe a
 mechanism, the reader needs to know whether it is your code, a dependency, or the
@@ -148,6 +184,14 @@ another system, another author — you are making a checkable statement about wh
 that source actually contains. Don't dress an inference as an established fact.
 If you reasoned it out rather than read it, say so, or go read it.
 
+Naming a source is not citing it. When the reference itself says what the source
+is — "per Google's SRE guidance" — that's enough. When it's an opaque label —
+"per [Dapper](url)" — the reader can't place it (a tool? a person? a standard?),
+can't weigh it, and can't tell what a click will get them. Give the name its
+nature and provenance: "following Dapper, Google's research paper on distributed
+request tracing, which showed one propagated trace ID can stitch a request's path
+across every service it touches."
+
 ## Numbers and claims carry their reasons; don't invent or overclaim
 
 A number without a reason gets copied blindly into the next config or overridden
@@ -155,6 +199,13 @@ at random. Pair each one with why it's that value ("evaluation delay: 900s, to
 cover metric-collection lag"). If you don't have a real reason — it was just
 picked — say that, or omit the rationale. Invented rationale is worse than none,
 because the reader trusts it and propagates it.
+
+Invented detail is the same failure. Reaching for concreteness, it's easy to take
+a claim you only know in general and split it into particulars you're guessing
+at: "the API supports several auth methods" becomes "supports OAuth, API keys,
+and SAML," inventing the three when all you had was "several." Enumerate only the
+parts you can back; otherwise leave the concept at the level you can support —
+here, "several auth methods."
 
 The same restraint applies to confidence. Don't write past what you can back up,
 especially when the human reviewing your output can't easily check it. If you're
@@ -180,6 +231,18 @@ Real service names, real field names, real values. `placeholder-topic` and
 teaches it. This matters most where conventions are implicit — the example is
 where the reader learns them.
 
+## When revising, write the end state, not the change to it
+
+Revising a text across passes leaves residue that only makes sense against a
+version the reader never saw. "The new endpoint," "the config now lives in the
+environment," "we switched this to JSON" all frame the current state as a change
+from a prior one — but the reader arrives with no history, so "new" and "now"
+point at a "before" they don't have. They can't tell whether the old way still
+matters, and may go hunting for it. State what is true now, flat: "the endpoint
+returns JSON." Keep the delta only when the change itself is the reader's
+business — a changelog, a migration guide, or a note on why the code isn't the
+obvious way.
+
 ## Re-explaining a confusing explanation
 
 When you're handed prose that isn't landing (often another session's
@@ -202,9 +265,15 @@ job is to find the gap and state it plainly.
 
 Reread once with the reader-mental-state lens, checking specifically for:
 
-- **Forward references** — a term, file, or concept used before it's introduced
-  or linked.
+- **Forward references** — a pointer to later material ("covered below," "see
+  the deploy section"). It earns its place only when it answers a question the
+  reader already has *at that line*; when they have no such question yet, it
+  raises a concern that wasn't there and sends them looking for nothing. (A term
+  used before it's defined, when the reader needs it *now*, is a different
+  problem — a gap you fix by introducing the term, not a forward reference.)
 - **Jargon outside the audience** — anything this reader might not have.
+- **Delta language** — "new," "now," "used to," "we moved/switched X" that frames
+  the text as a change from a version the reader never saw (revisions only).
 - **Vague applicability** — "sometimes," "rare," "in some cases" where you could
   name who's affected.
 - **Invented rationale** — any "because X" you don't actually know to be the
