@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-#MISE description "Sync claude settings"
+#MISE description="Sync claude settings"
 #MISE
 #USAGE arg "[direction]" {
 #USAGE   help "Which config to overwrite, repo/host, or just show diff"
