@@ -48,6 +48,46 @@ knowledge the reader lacks. When a later principle says "don't reference before
 you introduce" or "name what will surprise them," it is just this lens applied to
 a specific case.
 
+## Before you draft: name the audience, then prune scope
+
+Decide who the reader is, what they already know, and what they are trying to do
+— before any structure or prose. The audience drives every other decision:
+scope, ordering, register, what to omit, what to cross-link. If you can't say in
+one sentence who this is for, you're not ready to write; drafting first and
+back-fitting the audience produces writing that doesn't quite fit anyone.
+
+A piece can serve more than one reader only if they're closely related — same
+rough goal, same rough prior knowledge. If the readers diverge sharply
+(different goals, different starting knowledge, different next steps), that's two
+pieces of writing, not one.
+
+Then prune. Most writing fails by being too inclusive. List what could go in,
+then cut everything outside the audience's goal and link to it instead of
+absorbing it. The careless move is to include everything adjacent "in case they
+need it"; the reader pays by scrolling past three things that aren't their
+question to reach the one that is.
+
+## Order for the reader
+
+When the writing has parts to sequence — sections, steps, a list of cases —
+order them by what costs the reader the least, not by what's most interesting to
+you. Three dimensions:
+
+- **Applicability:** required → common → edge cases.
+- **Generality:** general → specific.
+- **Foundation:** concepts first → what builds on them → applications.
+
+Simple writing needs only one; a single linear procedure just needs
+applicability order. When the dimensions conflict, pick the one that most
+reduces the reader's work, and notice the compromise instead of ordering by
+habit. Whichever dimension you pick applies independently at each level:
+top-level sections go required-to-rare, and the subsections inside each one do
+the same.
+
+The move to avoid: leading with the most sophisticated part because it's the
+most interesting to write. A reader looking up the common case has to scroll
+past it to reach what they came for.
+
 ## Default to a spare register — write like a robot
 
 The instinct to "sound human" makes technical writing worse. The blunt fix:
@@ -56,12 +96,26 @@ in declarative sentences, and let the structure show (prior behavior → cause �
 fix → side effect) instead of dissolving it into prose.
 
 What you drop is everything you add to sound human: balanced two-clause
-sentences, decorative em-dash asides, vivid verbs ("carries," "races," "quietly
-overwrites"), rhetorical turns ("rather than fight it, the fix..."), and
-transitional cushioning ("it's worth noting that"). That smoothing is
+sentences, decorative em-dash asides, expressive words with no precise meaning
+("hammers the database"), rhetorical turns ("rather than fight it, the
+fix..."), and transitional cushioning ("it's worth noting that"). That smoothing is
 fluency-performance. It is the layer that reads as machine-generated, and it is
 what a technical reader has to wade through to reach the state and causation they
 came for.
+
+Transitions that state a relationship are not cushioning. "Because," "so,"
+"but," "unless" assert causation, consequence, contrast, condition — the exact
+content the reader came for. The test: delete the transition. If nothing is
+lost ("it's worth noting that," "with that said"), it was cushioning. If the
+two statements it joined now sit side by side with their relationship gone, it
+was a claim — keep it.
+
+Spare means fewer claims, fully stated — not compressed grammar. Cut content,
+not syntax: subjects, verbs, and conjunctions are never the fat. "A sidebar, a
+search hit, a pasted link" saves nothing over "a sidebar, a search hit, or a
+pasted link" and drops the signal that the items are alternatives — that's
+cadence, not economy. If a sentence reads like notes toward a sentence, write
+the sentence.
 
 The effect is counterintuitive but reliable: the robot version reads as *more*
 human — like a person who stated the facts and didn't fuss over how they
@@ -92,12 +146,28 @@ stages read at a steady rate — a shock absorber for the pipeline" passes: the
 plain fact stands, and "shock absorber" gives the reader a memorable grip on that
 mouthful.
 
+**Judge a word by precision, not plainness.** An expressive word stays only
+when it is a domain term or when cutting it loses information: "the writes
+race," "the handler leaks a connection," "the pod thrashes" have defined
+meanings, and flattening them ("the connection is not closed") drops the claim.
+Any other expressive word goes — keeping it is betting that the reader decodes
+it the way you meant, and you can't check that bet. "The retries hammer the
+database" sounds concrete but decodes differently for every reader — how much
+load, causing what harm? In a technical document that looseness is confusion, not
+flavor; state the fact instead. A second failure often rides in the same words:
+a claim you never verified, like "quietly" (nobody noticed — did you check?) or
+"a massive spike" (all you measured was a spike). In "each retry quietly leaks
+a connection, and the pool bleeds dry": "leaks" stays — precise domain term;
+"quietly" goes — unverified claim; "bleeds dry" goes — a metaphor carrying the
+fact alone, which the metaphor rule above forbids; state the fact ("after about
+200 consecutive failures the pool is exhausted").
+
 **Default to robot; add warmth deliberately.** It is easier to add warmth back
-than to take it away. So start at the declarative end and add warmth only where the
-job needs it — bringing a reluctant reader along, onboarding, persuading. A PR
-description, a commit body, an incident write-up, a comment: keep them spare. (A
-genuine hands-on tutorial wants more warmth, but that is a different job; see the
-note on scope in the description.)
+than to take it away. So start at the declarative end and add warmth only where
+the job needs it — bringing a reluctant reader along, onboarding, persuading. A
+PR description, a commit body, an incident write-up, a comment: keep them spare.
+(A genuine hands-on tutorial wants more warmth, but that is a different job; see
+the note on scope in the description.)
 
 Spare does not mean context-free. The reader-mental-state lens still applies at
 full strength: clipped prose with a forward reference or an unexplained term is
@@ -123,6 +193,48 @@ Match the label to the content. Don't force a fixed template where plain prose
 is clearer, and don't invent a taxonomy for parts that don't have distinct
 roles. Labels work when the content genuinely separates — state vs. cause vs.
 fix, claim vs. evidence, link vs. what-it-shows.
+
+## Notice when prose is the wrong medium
+
+Some content is a structure — a grid, a graph, syntax — that prose can only
+serialize, leaving the reader to rebuild it while reading. You draft fluently
+even when the medium is wrong, so the result passes every word-level check in
+this skill. Catch it after drafting by rereading for what the sentences are
+doing:
+
+- **The same sentence shape repeats with different values** ("X defaults to A,
+  to cover B. Y defaults to C, to cover D.") — a grid written one cell at a
+  time. Make it a table: one row per item, one column per attribute. If the
+  items don't share attributes, they aren't parallel — keep prose.
+- **The sentences are an edge list** ("A calls B. B forwards to C. C also
+  reads from A.") — a serialized graph. Make it a diagram, and label every
+  edge with the actual relationship ("publishes to," "polls") — an arrow that
+  says "uses" or nothing makes the reader guess the one thing the diagram
+  exists to show.
+- **The prose dictates tokens** — exact names, argument order, "then call X
+  with the result of Y" — code transliterated into English. Show what the
+  reader must reproduce exactly; summarize what they must understand ("the
+  handler logs the timeout and re-raises" is a summary doing its job).
+
+## Headings are read without their sections
+
+A skimming reader reads only the headings; a deep-linked or searching reader
+meets one heading with no doc around it. Both get only what the heading alone
+carries.
+
+- **Match the heading's form to the doc's job.** In a how-to, headings are the
+  reader's tasks, verb-first: "Create the topic," not "Topic creation." In an
+  explanation, design doc, or incident write-up, the heading carries the
+  section's claim — "Retries cause duplicate sends," not "Retries" — so the
+  headings alone give a skimmer the argument. In reference material, a plain
+  noun heading is right: the section is a lookup key ("Naming conventions").
+- **A heading that only works mid-read is broken.** "Going further," "Putting
+  it all together," "Other considerations" mean nothing in a sidebar, a search
+  hit, or a pasted link. Name the content.
+- **The heading is a promise.** The section holds what the heading says — all
+  of it, nothing else. A reader who skips the section is trusting the
+  heading's word for what's in it. If the content has outgrown the heading,
+  rename or split.
 
 ## Lead with the answer; let the hedge follow
 
@@ -158,9 +270,9 @@ whether you're rewriting, summarizing, or drafting fresh. When the source names
 something with a coined term or metaphor ("substrate," "walking skeleton"), the
 failure is carrying the word across while leaving its meaning behind. The word
 is the source's packaging; your reader needs its content. Test: can you state
-what the thing is without the source's term? If you can, and the
-term is standard for this audience, keep it as shorthand. If you can't, you're
-relaying a token you haven't decoded — go find the meaning before you pass it on.
+what the thing is without the source's term? If you can, and the term is standard
+for this audience, keep it as shorthand. If you can't, you're relaying a token
+you haven't decoded — go find the meaning before you pass it on.
 
 ## Introduce before you reference; attribute precisely
 
@@ -213,12 +325,31 @@ unsure, surface the uncertainty rather than smoothing over it with an
 authoritative tone. A confident sentence the reviewer has to fact-check or delete
 costs more than an honest "I'm not certain of this."
 
+Underclaiming fails the same reader: the weasel word. "This may improve
+throughput" and "this can cause issues" are compatible with every outcome —
+nothing to check, nothing to act on — yet still read as information. Hedging
+is not honesty; stating the uncertainty's shape is. "This usually helps; it
+made no difference on CPU-bound handlers" tells the reader when the claim
+holds. If you can't say when it holds and when it doesn't, you don't have a
+claim yet — find out, or say plainly that you don't know.
+
 ## Anticipate the reader
 
 - **Name what will surprise them.** When the actual behavior contradicts the
   assumption the reader walks in with, say so out loud and say why. Listing the
   surface behavior and letting them discover the conflict by failing is the
   costliest path for them.
+- **Push back on misconceptions explicitly.** When there's a wrong belief worth
+  correcting, name the belief and say why it's wrong — don't just state the truth
+  and hope they infer the correction. Readers also copy from existing code, often
+  trusting a working example over prose guidance. If a known-wrong-but-common
+  pattern is out there, say it's wrong by name, or they'll grep for it, find it,
+  and replicate it.
+- **Bridge from what they know.** When the reader is coming from a related tool
+  or prior context, name the analogy — even "this is like X, but..." speeds
+  comprehension. This works only when you know the reader shares that context
+  (e.g. a migration audience moving off a specific tool). For a general audience
+  that may not, teach from first principles instead.
 - **Make applicability concrete.** When a section applies to only some readers,
   give a concrete test for whether it applies to *this* one ("if your handler
   makes HTTP calls...") rather than a vague label ("in rare cases..."). Vague
@@ -229,7 +360,17 @@ costs more than an honest "I'm not certain of this."
 Real service names, real field names, real values. `placeholder-topic` and
 `<your_value_here>` make the reader guess at the actual shape; a real example
 teaches it. This matters most where conventions are implicit — the example is
-where the reader learns them.
+where the reader learns them. Let the example look like a real artifact, not a
+scrubbed ideal: if the real thing carries a legacy field or a deprecated flag,
+show it, because that's what the reader will actually meet.
+
+## Code comments explain why, not what
+
+A comment on a line of code should explain the choice, not restate the operation.
+The operation is already in the code; the reason for it is not. `# call ack on
+the message` adds nothing. `# ack messages that will fail again on retry —
+nacking would just loop them forever` teaches the policy. This is the same rule
+as "numbers carry their reasons," applied to code.
 
 ## When revising, write the end state, not the change to it
 
@@ -279,10 +420,15 @@ Reread once with the reader-mental-state lens, checking specifically for:
 - **Invented rationale** — any "because X" you don't actually know to be the
   reason.
 - **Words that perform instead of inform** — fluff, marketing, announcers, pep.
-- **Performed fluency** — cadence, decorative asides, and vivid verbs that
-  smooth the prose without adding information. If a sentence reads as "written
-  to sound good," flatten it.
+- **Performed fluency** — cadence, decorative asides, and expressive words
+  whose meaning the reader has to interpret. If a sentence reads as "written to
+  sound good," flatten it.
+- **Structure serialized into prose** — repeated sentence shapes (make a
+  table), edge-list sentences (make a diagram), token-dictating prose (show
+  the code).
 - **Confidence past your knowledge** — anything authoritative you can't point to
   a source for.
+- **Weasel words** — "may," "can," "generally" leaving a sentence compatible
+  with every outcome. State when the claim holds, or say you don't know.
 
 Fix what the pass turns up before handing the writing off.
