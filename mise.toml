@@ -151,24 +151,6 @@ if [ -f "$cfg" ] && [ "$(jq -r '.categories."input.required"' "$cfg")" != "false
 fi
 '''
 
-# The tech-writing skill moved to tech-writing--personal, so it's only symlinked
-# on the personal host. manage-symlinks creates/relinks but never removes, so the
-# old ~/.claude/skills/tech-writing symlink lingers (now broken) on other hosts.
-# Prune it when broken, and keep reminding to delete this task until it's gone.
-[tasks."sync:prune-stale-tech-writing-symlink"]
-description = "Remove the stale tech-writing skill symlink left by the --personal rename"
-run = '''
-link="$HOME/.claude/skills/tech-writing"
-# -e is false for both a broken symlink (pre-prune) and an absent path
-# (post-prune); a valid symlink on personal makes it true and skips the block.
-if [ ! -e "$link" ]; then
-  if [ -L "$link" ]; then
-    rm "$link" && echo "✅ removed stale tech-writing symlink" || echo "❌ failed to remove $link"
-  fi
-  echo "👉 tech-writing cleanup done on this machine — delete the sync:prune-stale-tech-writing-symlink task from mise.toml"
-fi
-'''
-
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
 depends = ["setup:**", "sync:**", "claude-settings-sync"]
