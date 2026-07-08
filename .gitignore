@@ -13,3 +13,4 @@ nvim/ftplugin/go/gocomplete.vim
 .brew-outdated
 .pip-outdated
 .claude-plugins-outdated
+.claude/skills/sync-tech-writing/.last-synced
