@@ -3,21 +3,24 @@ name: tech-writing
 description: >-
   Guidance for writing technical prose for an engineering audience — PR
   descriptions, commit message bodies, design docs and RFCs, technical
-  explanations, code comments, incident write-ups, and any explanation of how a
-  system behaves. Use this skill whenever you draft or revise writing whose
-  reader is another engineer, even if the user only says "write up X", "explain
-  this", "draft a PR description", or "add a comment". Also use it when asked to
+  explanations, multi-sentence code comments, incident write-ups, and any
+  explanation of how a system behaves. Use this skill whenever you draft or
+  revise writing whose reader is another engineer, even if the user only says
+  "write up X", "explain this", "draft a PR description", or "write a comment
+  block". Also use it when asked to
   re-explain or clarify a confusing technical explanation — including phrasings
   like "I don't understand what this means", "explain this more clearly",
   "rewrite this so it makes sense", "explain it to me like a robot", "pretend
   you're a robot and explain again", or "robotify that". These robot-voice and
   re-explain requests should trigger the skill even when you're restating
-  something you said earlier in the same conversation. The core idea: write for
-  the reader's mental state, and default to a spare, declarative register — the
+  something you said earlier in the same conversation. This skill governs
+  full-prose writing: for code comments and commit messages it applies to the
+  prose body — a multi-sentence comment block, a commit message body — not to a
+  one-line comment or a commit subject. The core idea: write for the reader's
+  mental state, and default to a spare, declarative register — the
   fluency you add to "sound human" is the thing that reads as machine-generated.
-  Do NOT use this for documentation in a dedicated docs repo (the devdocs-author
-  skill covers that when present), and beyond these explicit requests it does not
-  govern your default conversational chat voice.
+  Beyond these explicit requests it does not govern your default conversational
+  chat voice.
 ---
 
 # Technical writing
@@ -165,7 +168,8 @@ fact alone, which the metaphor rule above forbids; state the fact ("after about
 **Default to robot; add warmth deliberately.** It is easier to add warmth back
 than to take it away. So start at the declarative end and add warmth only where
 the job needs it — bringing a reluctant reader along, onboarding, persuading. A
-PR description, a commit body, an incident write-up, a comment: keep them spare.
+PR description, a commit body, an incident write-up, a multi-sentence comment:
+keep them spare.
 (A genuine hands-on tutorial wants more warmth, but that is a different job; see
 the note on scope in the description.)
 
@@ -366,11 +370,25 @@ show it, because that's what the reader will actually meet.
 
 ## Code comments explain why, not what
 
-A comment on a line of code should explain the choice, not restate the operation.
-The operation is already in the code; the reason for it is not. `# call ack on
-the message` adds nothing. `# ack messages that will fail again on retry —
-nacking would just loop them forever` teaches the policy. This is the same rule
-as "numbers carry their reasons," applied to code.
+A comment on a block of code should explain the choice, not restate the
+operations. The operations are already in the code; the reasons for them are
+not. A comment that narrates what the code does —
+
+```
+# Run the validator. On failure, ack the message instead of nacking it.
+```
+
+adds nothing the reader can't get from the code itself. A comment that explains
+why the code is shaped this way teaches what the code can't show:
+
+```
+# Ack messages that fail validation; don't nack them. A nacked message is
+# redelivered, and a validation failure recurs on every redelivery, so nacking
+# loops the message forever. Acking removes it from the queue; the dead-letter
+# handler downstream catches it for inspection.
+```
+
+This is the same rule as "numbers carry their reasons," applied to code.
 
 ## When revising, write the end state, not the change to it
 
