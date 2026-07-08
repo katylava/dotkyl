@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Create git commits following the workflow and message conventions. Use whenever the user asks to commit, make a commit, save changes, or any variation of committing work. Always use this skill instead of the default commit behavior.
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(cat "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG":*), Bash(rm "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG":*), Write
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(GIT_EDITOR=false git commit:*), Bash(git push:*), Bash(cat "$(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG":*), Bash(rm "$(git rev-parse --show-toplevel)/.git/CLAUDE_COMMIT_MSG":*), Write, Read(~/.dotkyl/home/claude/skills/tech-writing--personal/SKILL.md)
 ---
 
 # Commit
@@ -46,7 +46,9 @@ handle it. Don't guess.
 - **Body** (optional): include when the *why* behind the change isn't
   obvious from the subject and diff. Separate from the subject with a
   blank line. Especially important when the subject was forced to be
-  terse and that caused ambiguity.
+  terse and that caused ambiguity. When you write a body, first Read
+  `~/.dotkyl/home/claude/skills/tech-writing--personal/SKILL.md` and apply
+  its guidance to the body prose.
 - **Co-Authored-By trailer**: if Claude helped write the changes,
   include the trailer with the current model name (check the system
   prompt for the model ID). Separate from body/subject with a blank
