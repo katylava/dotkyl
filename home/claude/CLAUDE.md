@@ -1,5 +1,7 @@
 # General
 
+When you invoke a skill, its instructions override any rule in this file they conflict with. Global rules that don't conflict still apply.
+
 ## Preflight (before starting a non-trivial task)
 
 - If I reference an external source (ticket, PR, link, design doc, Slack thread, etc.) and don't paste the contents, fetch and read it before doing any work. If you can't access it, ask me for the contents. The reference is part of the spec — don't infer the spec from the one-line ask.
