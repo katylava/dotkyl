@@ -65,6 +65,20 @@ template to `.git/COMMIT_EDITMSG` (message area + file list + diff),
 then aborts because `false` exits non-zero. The `|| true` suppresses
 that expected non-zero exit so it isn't surfaced as a tool error.
 
+Git prints this to stderr:
+
+    error: there was a problem with the editor 'false'
+
+**That is the success case.** The template was already written before
+the editor ran, so the step did its job. The word "error" and the
+non-zero exit are both expected and mean nothing went wrong.
+
+Do not treat it as a failure. Do not retry the command, do not switch
+editors, and above all do not substitute `git commit --dry-run` — its
+output is uncommented, so writing it over `.git/COMMIT_EDITMSG`
+replaces a valid template with text that git will commit verbatim.
+This command is the only way to produce the template.
+
 ## Step 6: Build the review file
 
 Use the Write tool to write the drafted subject, body, and co-author
