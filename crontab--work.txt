@@ -1,5 +1,8 @@
 */10 * * * * fetchwork > /dev/null 2>&1
 59 11 * * 1-4 say "Don't forget about standup"
-05 12 * * * gcloud components update 2>&1 | grep -v "All components are up to date" | grep -v '^$'
+# PIP_INDEX_URL override: gcloud's post-update `components update-macos-python`
+# step pip-installs binary modules, and ~/.config/pip/pip.conf points pip at the
+# work Artifact Registry, which 401s under cron and dumps a traceback.
+05 12 * * * env PIP_INDEX_URL=https://pypi.org/simple/ gcloud components update --quiet 2>&1 | grep -v "All components are up to date" | grep -v '^$'
 
 # vim: ft=crontab
