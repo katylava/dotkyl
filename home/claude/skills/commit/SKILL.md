@@ -94,8 +94,13 @@ template's empty message area is fragile and leaves stray blank lines.
 ## Step 7: Wait for review
 
 Tell the user the message is ready for review. Mention the file path
-(`.git/CLAUDE_COMMIT_MSG`) and the `edit.cm` alias (opens it in nvim). End
-with the two ways to continue:
+(`.git/CLAUDE_COMMIT_MSG`) and the `edit.cm` alias (opens it in nvim).
+
+Do **not** print the drafted message — not the subject, not the body, not
+a summary of it. The user reads it in the review file; repeating it in
+chat is wasted context.
+
+End with the two ways to continue:
 
 > Reply `lgcc` to commit as-is, or `upcc` if you edited the file.
 
