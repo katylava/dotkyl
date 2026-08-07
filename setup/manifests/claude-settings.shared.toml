@@ -153,3 +153,9 @@ type = "command"
 command = "$HOME/.claude/hooks/say-notify/hook.sh"
 timeout = 10
 async = true
+
+[[entries]]
+description = "output style: blunt"
+read = '.outputStyle'
+set  = '.outputStyle = $value'
+value = "Blunt"
