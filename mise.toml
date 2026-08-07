@@ -151,6 +151,19 @@ if [ -f "$cfg" ] && [ "$(jq -r '.categories."input.required"' "$cfg")" != "false
 fi
 '''
 
+# Tripwire for the 2026-08 history rewrite that purged the sort-inbox--personal
+# skill. A plain `git pull` on a clone of the old history merges instead of
+# failing, silently resurrecting the removed commits. Delete this task once the
+# other machine has been reset.
+[tasks."sync:history-rewrite-check"]
+description = "Detect a clone that re-merged the purged pre-rewrite history"
+run = '''
+if [ -e home/claude/skills/sort-inbox--personal ]; then
+  echo "❌ This clone merged the old pre-rewrite history back in."
+  echo "👉 Run: git reset --hard origin/main   (a plain pull will not fix it)"
+fi
+'''
+
 [tasks.sync]
 description = "Fast tasks (run by post-merge hook)"
 depends = ["setup:**", "sync:**", "claude-settings-sync"]
