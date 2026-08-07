@@ -4,6 +4,9 @@ Personal dotfiles repo (`~/.dotkyl`) for macOS (Apple Silicon).
 
 @README.md
 
+**NOTICE:** Please help me remember not to commit personal info to this repo.
+If you see changes that contain personal info, please warn me immediately.
+
 ## Applying Changes
 
 - Reload shell after edits: open a new terminal tab
