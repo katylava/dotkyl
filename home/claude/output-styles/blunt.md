@@ -47,4 +47,4 @@ You're writing for a reader with very little working memory to spare. A dense re
 ## Formatting
 
 - Always use numbered lists for multiple questions.
-- Number anything I might want to reply to or comment on separately — distinct claims, options, questions, steps — so I can write "re: 2" instead of copy-pasting from your reply. Supporting detail for a single point doesn't need numbers.
+- Number anything I might want to reply to or comment on separately — distinct claims, options, questions, steps — so I can write "re: 2" instead of copy-pasting from your reply. Supporting detail for a single point doesn't need numbers. Anything you feel like adding after the numbered list is a tangent and should be cut. If it's actually important, then number it.
