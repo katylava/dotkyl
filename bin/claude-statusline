@@ -71,6 +71,71 @@ fi
 
 cost=$(printf '%.3f' "$cost_usd")
 
+# ── Spend limit (undocumented /api/oauth/usage endpoint) ─────────────────────
+# Renders nothing unless the account has a spend limit configured. Decoration
+# only, not load-bearing: the endpoint can change or vanish on any CLI update.
+
+_usage_cache="$HOME/.cache/claude-statusline-usage.json"
+_usage_ttl=300  # 5 minutes
+
+_usage_mtime=$(stat -f %m "$_usage_cache" 2>/dev/null)
+if (( $(date +%s) - ${_usage_mtime:-0} > _usage_ttl )); then
+    (
+        _usage_token=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null \
+            | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
+        [[ -n "$_usage_token" ]] && curl -sf --max-time 10 \
+            -H "Authorization: Bearer $_usage_token" \
+            -H "Content-Type: application/json" \
+            -H "anthropic-beta: oauth-2025-04-20" \
+            https://api.anthropic.com/api/oauth/usage > "${_usage_cache}.tmp" 2>/dev/null \
+            && mv "${_usage_cache}.tmp" "$_usage_cache"
+    ) &!
+fi
+
+seg_usage=""
+_usage_enabled=$(jq -r 'if .spend.enabled then "1" else "" end' "$_usage_cache" 2>/dev/null)
+_usage_limit=$(jq -r '.spend.limit.amount_minor // empty' "$_usage_cache" 2>/dev/null)
+
+if [[ -n "$_usage_enabled" && -n "$_usage_limit" && "$_usage_limit" != "null" ]]; then
+    _usage_used=$(jq -r '.spend.used.amount_minor // 0' "$_usage_cache")
+    _usage_exp=$(jq -r '.spend.used.exponent // 2' "$_usage_cache")
+    _usage_pct=$(jq -r '.spend.percent // 0' "$_usage_cache")
+    _usage_pct_int=$(printf '%.0f' "$_usage_pct")
+    _usage_divisor=$(( 10 ** _usage_exp ))
+    _usage_used_fmt=$(awk -v u="$_usage_used" -v d="$_usage_divisor" 'BEGIN { printf "%.2f", u / d }')
+    _usage_limit_fmt=$(awk -v l="$_usage_limit" -v d="$_usage_divisor" 'BEGIN { printf "%.0f", l / d }')
+
+    if   (( _usage_pct_int >= 90 )); then _usage_colour="$fg_red"
+    elif (( _usage_pct_int >= 70 )); then _usage_colour="$fg_yellow"
+    else                                  _usage_colour="$fg_green"
+    fi
+
+    _usage_bar=""
+    _usage_filled=$(( _usage_pct_int > 100 ? 10 : _usage_pct_int * 10 / 100 ))
+    for (( i=0; i<_usage_filled; i++ )); do _usage_bar+="█"; done
+    for (( i=_usage_filled; i<10; i++ )); do _usage_bar+="░"; done
+
+    # Reset is the next UTC month boundary; the API doesn't return one.
+    _usage_reset_month=$(( 10#$(date -u +%m) + 1 ))
+    _usage_reset_year=$(date -u +%Y)
+    if (( _usage_reset_month > 12 )); then
+        _usage_reset_month=1
+        (( _usage_reset_year++ ))
+    fi
+    _usage_reset_epoch=$(date -u -j -f "%Y-%m-%d %H:%M:%S" \
+        "$(printf '%04d-%02d-01 00:00:00' "$_usage_reset_year" "$_usage_reset_month")" +%s 2>/dev/null)
+    _usage_reset_delta=$(( _usage_reset_epoch - $(date +%s) ))
+    if   (( _usage_reset_delta >= 86400 )); then
+        _usage_reset_label="$(( _usage_reset_delta / 86400 ))d$(( _usage_reset_delta % 86400 / 3600 ))h"
+    elif (( _usage_reset_delta >= 3600 )); then
+        _usage_reset_label="$(( _usage_reset_delta / 3600 ))h$(( _usage_reset_delta % 3600 / 60 ))m"
+    else
+        _usage_reset_label="$(( _usage_reset_delta / 60 ))m"
+    fi
+
+    seg_usage="${fg_dim} · ${reset}${_usage_colour}spend ${_usage_bar}${reset} ${fg_dim}${_usage_pct_int}%% (\$${_usage_used_fmt}/\$${_usage_limit_fmt}) ↻${_usage_reset_label}${reset}"
+fi
+
 # ── Claude service status (only shown during incidents) ───────────────────────
 
 _cache="$HOME/.cache/claude-statusline.cache"
@@ -168,6 +233,6 @@ seg_dir="${fg_white}󰚝 ${display_cwd}${reset}"
 sep="${fg_dim} · ${reset}"
 
 printf "${seg_dir}${git_info}\n"
-printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${seg_vim}\n"
+printf "${seg_model}${sep}${seg_ctx}  ${seg_cost}${seg_usage}${seg_vim}\n"
 [[ -n "$seg_service" ]] && printf "${seg_service}\n"
 exit 0
