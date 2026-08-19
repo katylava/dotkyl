@@ -6,7 +6,7 @@ PATH=$HOME/.dotkyl/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:
 02 12 * * * cd ~/.dotkyl && git fetch && git -C private fetch
 01 13 * * * run-backups
 0 14 25 * * brew cleanup --prune=90
-30 15 * * * brew update
+30 15 * * * brew update -q
 45 17 * * 1-5 say -r 250 "Well I got five forty-five and its five forty-five"
 
 # vim: ft=crontab
