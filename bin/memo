@@ -1,0 +1,119 @@
+#!/usr/bin/env zsh
+# Leave yourself a timestamped note tied to the current directory, and
+# read them back later. See usage() below for the full set of flags.
+
+local -r DOTKYL_ROOT="${0:A:h:h}"     # bin/ is directly under the repo root
+local -r MEMO_DIR="$DOTKYL_ROOT/memo"
+local -r SEPARATOR='___'
+local -r HEADER_LINES=4                # blank, separator, timestamp/cwd, blank
+
+usage() {
+    print -- "usage: memo [\"text\"]"
+    print -- "  memo \"text\"   append a note to this directory's memo"
+    print -- "  memo -e       write a note in \$EDITOR"
+    print -- "  memo -r       print this directory's memo (default with no args)"
+    print -- "  memo -a       pick any directory's memo with fzf and print it"
+    exit 0
+}
+
+path_slug() {
+    local slug="${1/#$HOME/}"
+    slug="${slug//\//_}"
+    print -- "${slug:-_}"
+}
+
+# Filenames encode the cwd lossily (a real "_" is indistinguishable from an
+# encoded "/"), so recover the real path from the first entry's header
+# instead of decoding the filename.
+first_path() {
+    local timestamp_width=21   # "YYYY-MM-DD HH:MM:SS" + two spaces
+    local line="$(sed -n '3p' "$1")"
+    print -- "${line[timestamp_width+1,-1]}"
+}
+
+memo_file() {
+    print -- "$MEMO_DIR/$(path_slug "$PWD").md"
+}
+
+read_current() {
+    local file="$(memo_file)"
+    if [[ ! -s "$file" ]]; then
+        print -u2 -- "memo: no notes for $PWD"
+        return 1
+    fi
+    ${=${PAGER:-cat}} "$file"
+}
+
+pick_any() {
+    local -a files
+    files=("$MEMO_DIR"/*.md(N))
+    if (( ${#files} == 0 )); then
+        print -u2 -- "memo: no notes yet"
+        return 1
+    fi
+
+    local selection
+    selection=$(
+        for f in "${files[@]}"; do
+            print -- "$(first_path "$f")	$f"
+        done | fzf --delimiter=$'\t' --with-nth=1 --preview='cat {2}'
+    )
+    [[ -z "$selection" ]] && return 1
+    ${=${PAGER:-cat}} "${selection##*$'\t'}"
+}
+
+entry_header() {
+    print
+    print -- "$SEPARATOR"
+    print -- "$(date '+%Y-%m-%d %H:%M:%S')  $PWD"
+    print
+}
+
+append_message() {
+    local file="$1" message="$2"
+    {
+        entry_header
+        print -- "$message"
+    } >>| "$file"
+}
+
+edit_message() {
+    local file="$1"
+    local tmp="$(mktemp)"
+    { entry_header; print } >> "$tmp"   # trailing blank line is the cursor target
+    ${=${EDITOR:-nvim}} + "$tmp"
+
+    local added="$(tail -n +$((HEADER_LINES + 1)) "$tmp")"
+    if [[ -z "${added//[[:space:]]/}" ]]; then
+        print -u2 -- "memo: no message entered, discarding"
+        rm -f "$tmp"
+        return 1
+    fi
+
+    cat "$tmp" >>| "$file"
+    rm -f "$tmp"
+}
+
+main() {
+    mkdir -p "$MEMO_DIR"
+
+    case "$1" in
+        -h|--help)
+            usage
+            ;;
+        -e|--edit)
+            edit_message "$(memo_file)"
+            ;;
+        -r|--read|"")
+            read_current
+            ;;
+        -a|--all)
+            pick_any
+            ;;
+        *)
+            append_message "$(memo_file)" "$*"
+            ;;
+    esac
+}
+
+main "$@"
