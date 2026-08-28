@@ -16,6 +16,7 @@ usage() {
     print -- "usage: memo [\"text\"]"
     print -- "  memo \"text\"   append a note to this directory's memo"
     print -- "  memo -e       write a note in \$EDITOR"
+    print -- "  memo -o       open this directory's memo file in \$EDITOR"
     print -- "  memo -r       print this directory's memo (default with no args)"
     print -- "  memo -a       pick any directory's memo with fzf and print it"
     print -- "  memo -s KEY   print the single note named KEY"
@@ -165,7 +166,19 @@ edit_message() {
     start_file "$file"
     local tmp="$(mktemp)"
     { entry_header "$(new_keyword "$file")"; print } >> "$tmp"   # trailing blank line is the cursor target
-    ${=${EDITOR:-nvim}} + "$tmp"
+
+    local editor="${EDITOR:-nvim}"
+    if [[ "${editor:t}" == nvim ]]; then
+        # Vertical split: new note on the left, existing notes (read-only) on
+        # the right for reference. wincmd calls are absolute (l/h), not
+        # relative, so this lands correctly regardless of which window -O
+        # focuses by default.
+        nvim -O "$tmp" "$file" \
+            -c "wincmd l" -c "setlocal readonly nomodifiable" \
+            -c "wincmd h" -c "normal! G"
+    else
+        ${=editor} + "$tmp"
+    fi
 
     local added="$(tail -n +$((HEADER_LINES + 1)) "$tmp")"
     if [[ -z "${added//[[:space:]]/}" ]]; then
@@ -187,6 +200,9 @@ main() {
             ;;
         -e|--edit)
             edit_message "$(memo_file)"
+            ;;
+        -o|--open)
+            ${=${EDITOR:-nvim}} "$(memo_file)"
             ;;
         -r|--read|"")
             read_current
