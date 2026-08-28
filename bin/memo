@@ -15,8 +15,8 @@ local -r HEADER_LINES=5                # blank, keyword, blank, timestamp, blank
 usage() {
     print -- "usage: memo [\"text\"]"
     print -- "  memo \"text\"   append a note to this directory's memo"
-    print -- "  memo -e       write a note in \$EDITOR"
-    print -- "  memo -o       open this directory's memo file in \$EDITOR"
+    print -- "  memo -n       write a new note in \$EDITOR"
+    print -- "  memo -e       open this directory's memo file in \$EDITOR"
     print -- "  memo -r       print this directory's memo (default with no args)"
     print -- "  memo -a       pick any directory's memo with fzf and print it"
     print -- "  memo -s KEY   print the single note named KEY"
@@ -198,10 +198,10 @@ main() {
         -h|--help)
             usage
             ;;
-        -e|--edit)
+        -n|--new)
             edit_message "$(memo_file)"
             ;;
-        -o|--open)
+        -e|--edit)
             ${=${EDITOR:-nvim}} "$(memo_file)"
             ;;
         -r|--read|"")
