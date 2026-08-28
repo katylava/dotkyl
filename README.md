@@ -165,6 +165,9 @@ without thinking much:
 * The palette switching in lib/002-colors.zsh was 95% written by Claude.
 * Claude converted my old CoC+vimscript Neovim config to Lua, porting most of
   my customizations, but modernizing the plugins.
+* The `memo` command was written by Claude. I did review it but I actually
+  liked what Claude did for a change, so I didn't iterate on its implementation
+  details (just the user experience).
 
 There's other stuff in here that I didn't write and don't fully understand, but
 it was written by other humans in the pre-LLM era.

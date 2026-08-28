@@ -1,11 +1,16 @@
 #!/usr/bin/env zsh
 # Leave yourself a timestamped note tied to the current directory, and
 # read them back later. See usage() below for the full set of flags.
+#
+# A memo file is markdown: an H1 with the directory path, then one H2 per
+# note. Each note's heading is a random keyword you can use to refer to it
+# from another note.
 
 local -r DOTKYL_ROOT="${0:A:h:h}"     # bin/ is directly under the repo root
 local -r MEMO_DIR="$DOTKYL_ROOT/memo"
-local -r SEPARATOR='___'
-local -r HEADER_LINES=4                # blank, separator, timestamp/cwd, blank
+local -r WORDS_FILE="$MEMO_DIR/words.txt"
+local -r KEYWORD_LENGTH=3              # words per keyword
+local -r HEADER_LINES=5                # blank, keyword, blank, timestamp, blank
 
 usage() {
     print -- "usage: memo [\"text\"]"
@@ -13,6 +18,8 @@ usage() {
     print -- "  memo -e       write a note in \$EDITOR"
     print -- "  memo -r       print this directory's memo (default with no args)"
     print -- "  memo -a       pick any directory's memo with fzf and print it"
+    print -- "  memo -s KEY   print the single note named KEY"
+    print -- "  memo -d [KEY] delete a note, picking it with fzf if KEY is omitted"
     exit 0
 }
 
@@ -22,17 +29,28 @@ path_slug() {
     print -- "${slug:-_}"
 }
 
-# Filenames encode the cwd lossily (a real "_" is indistinguishable from an
-# encoded "/"), so recover the real path from the first entry's header
-# instead of decoding the filename.
-first_path() {
-    local timestamp_width=21   # "YYYY-MM-DD HH:MM:SS" + two spaces
-    local line="$(sed -n '3p' "$1")"
-    print -- "${line[timestamp_width+1,-1]}"
-}
-
 memo_file() {
     print -- "$MEMO_DIR/$(path_slug "$PWD").md"
+}
+
+# The directory the memos were written from. Filenames encode it lossily (a real
+# "_" is indistinguishable from an encoded "/"), so read it back from the H1.
+memo_cwd() {
+    sed -n '1s/^# //p' "$1"
+}
+
+keyword_taken() {
+    local file="$1" keyword="$2"
+    [[ -e "$file" ]] && ag -U "^## $keyword\$" "$file" >/dev/null
+}
+
+new_keyword() {
+    local file="$1" keyword
+    while true; do
+        keyword="$(shuf -n $KEYWORD_LENGTH "$WORDS_FILE" | paste -sd- -)"
+        keyword_taken "$file" "$keyword" || break
+    done
+    print -- "$keyword"
 }
 
 read_current() {
@@ -55,32 +73,98 @@ pick_any() {
     local selection
     selection=$(
         for f in "${files[@]}"; do
-            print -- "$(first_path "$f")	$f"
+            print -- "$(memo_cwd "$f")	$f"
         done | fzf --delimiter=$'\t' --with-nth=1 --preview='cat {2}'
     )
     [[ -z "$selection" ]] && return 1
     ${=${PAGER:-cat}} "${selection##*$'\t'}"
 }
 
-entry_header() {
+# An entry runs from its own H2 to the next one, or to the end of the file.
+print_entry() {
+    local file="$1" keyword="$2"
+    awk -v heading="## $keyword" '
+        $0 == heading { found = 1 }
+        found && NR > 1 && $0 ~ /^## / && $0 != heading { exit }
+        found
+    ' "$file"
+}
+
+delete_entry() {
+    local file="$1" keyword="$2"
+    # Every entry but the named one. Command substitution also eats the blank
+    # lines it left behind at the end of the file.
+    local other_entries="$(awk -v heading="## $keyword" '
+        $0 == heading { skipping = 1; next }
+        /^## / { skipping = 0 }
+        !skipping
+    ' "$file")"
+
+    # Nothing but the H1 left means the memo is empty now.
+    if ! ag '^## ' <<< "$other_entries" >/dev/null; then
+        rm -f "$file"
+        return
+    fi
+    print -r -- "$other_entries" >| "$file"
+}
+
+pick_keyword_to_delete() {
+    local file="$1"
+    ag -U --nonumbers '^## ' "$file" \
+        | cut -c4- \
+        | fzf --preview="$0 -s {}" --preview-window=wrap
+}
+
+remove_note() {
+    local file="$(memo_file)" keyword="$1"
+    if [[ ! -s "$file" ]]; then
+        print -u2 -- "memo: no notes for $PWD"
+        return 1
+    fi
+
+    keyword="${keyword:-$(pick_keyword_to_delete "$file")}"
+    if [[ -z "$keyword" ]]; then
+        return 1
+    elif ! keyword_taken "$file" "$keyword"; then
+        print -u2 -- "memo: no note named $keyword"
+        return 1
+    fi
+
+    print_entry "$file" "$keyword"
+    read -q "?delete this note? [y/N] " || { print; return 1 }
     print
-    print -- "$SEPARATOR"
-    print -- "$(date '+%Y-%m-%d %H:%M:%S')  $PWD"
+    delete_entry "$file" "$keyword"
+}
+
+start_file() {
+    local file="$1"
+    [[ -s "$file" ]] && return
+    print -- "# $PWD" >| "$file"
+}
+
+entry_header() {
+    local keyword="$1"
+    print
+    print -- "## $keyword"
+    print
+    print -- "$(date '+%Y-%m-%d %H:%M:%S')"
     print
 }
 
 append_message() {
     local file="$1" message="$2"
+    start_file "$file"
     {
-        entry_header
+        entry_header "$(new_keyword "$file")"
         print -- "$message"
     } >>| "$file"
 }
 
 edit_message() {
     local file="$1"
+    start_file "$file"
     local tmp="$(mktemp)"
-    { entry_header; print } >> "$tmp"   # trailing blank line is the cursor target
+    { entry_header "$(new_keyword "$file")"; print } >> "$tmp"   # trailing blank line is the cursor target
     ${=${EDITOR:-nvim}} + "$tmp"
 
     local added="$(tail -n +$((HEADER_LINES + 1)) "$tmp")"
@@ -109,6 +193,12 @@ main() {
             ;;
         -a|--all)
             pick_any
+            ;;
+        -s|--show)
+            print_entry "$(memo_file)" "$2"
+            ;;
+        -d|--delete)
+            remove_note "$2"
             ;;
         *)
             append_message "$(memo_file)" "$*"
