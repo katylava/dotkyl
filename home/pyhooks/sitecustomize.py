@@ -1,6 +1,7 @@
 # ~/pyhooks/sitecustomize.py
 import subprocess
 import os
+import sys
 
 class LoggedPopen(subprocess.Popen):
     def __init__(self, args, *a, **kw):
@@ -24,11 +25,15 @@ class LoggedPopen(subprocess.Popen):
         env_summary = ", ".join(f"{k}={v!r}" for k, v in changes.items())
         env_log = f"ENV: {env_summary}" if changes else "ENV: (inherited)"
 
-        print("\n=== subprocess command ===")
-        print(f"CMD: {cmd_str}")
-        print(f"CWD: {cwd}")
-        print(f"{env_log}")
-        print("==========================\n", flush=True)
+        # Log to stderr, not stdout: some subprocesses (e.g. docker's
+        # credential helper, which execs gcloud) have their stdout read as a
+        # machine-parsed protocol by their caller. Printing to stdout here
+        # corrupts that when this hook cascades into grandchild processes.
+        print("\n=== subprocess command ===", file=sys.stderr)
+        print(f"CMD: {cmd_str}", file=sys.stderr)
+        print(f"CWD: {cwd}", file=sys.stderr)
+        print(f"{env_log}", file=sys.stderr)
+        print("==========================\n", file=sys.stderr, flush=True)
 
         super().__init__(args, *a, **kw)
 
