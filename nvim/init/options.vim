@@ -3,9 +3,8 @@ let mapleader='\'
 let g:python3_host_prog = exepath('python')
 
 " File handling
-set binary
+set nofixeol
 set fileencoding=utf-8 ff=unix
-set fixeol
 set modeline
 set hidden
 
