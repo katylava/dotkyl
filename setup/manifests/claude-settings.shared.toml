@@ -159,3 +159,11 @@ description = "output style: blunt"
 read = '.outputStyle'
 set  = '.outputStyle = $value'
 value = "Blunt"
+
+[[entries]]
+description = "attribution: keep co-author trailer, drop session URL"
+read = '.attribution'
+set  = '.attribution = $value'
+[entries.value]
+commitTrailers = true
+sessionUrl = false
