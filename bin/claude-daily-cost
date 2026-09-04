@@ -1,0 +1,469 @@
+#!/usr/bin/env python
+"""
+Confirmed daily Claude Code cost, from Claude Code's own records.
+
+Unlike ccusage, this reads the cost Claude Code itself recorded instead of
+recomputing cost from token counts against a third-party pricing table.
+
+Claude Code writes a cumulative "cost-state" checkpoint each time a session
+exits (so a session you pick up again later, even days later, gets one
+checkpoint per sitting, not one for the whole multi-day history). The delta
+between consecutive checkpoints is the exact, confirmed cost of that one
+sitting. Only when a single sitting itself spans midnight does that cost
+still need to be split across days -- and then it's split by each message's
+token count within just that sitting, not the whole session.
+
+Whatever happened after the last checkpoint (a session still open right
+now, or resumed since its last exit) has no confirmed cost yet. This
+derives real per-token-type prices (input/output/cache-write/cache-read)
+per model from your own recent confirmed sittings -- see RateModel for
+how -- and applies that rate only to the unconfirmed tail. Days containing
+such a tail are marked, since part of their total is an estimate, not a
+recorded fact. For the live, up-to-the-minute real total, see
+claude-account-spend.
+"""
+
+import argparse
+import glob
+import json
+import os
+from collections import defaultdict, namedtuple
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+
+import numpy as np
+from rich.console import Console
+from rich.table import Table
+
+CLAUDE_PROJECTS_DIR = os.path.expanduser("~/.claude/projects")
+
+# Our own canonical names for the four token types. Only SessionFile ever
+# maps these to Claude's actual field names (in a message's "usage" dict,
+# or a cost-state checkpoint's "modelUsage" breakdown) -- everything past
+# that point works only with these names, never Claude's, so a schema
+# change on Claude's side is a fix confined to SessionFile.
+TOKEN_FIELDS = ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+
+
+def total_tokens(token_counts):
+    return sum(token_counts.values())
+
+
+# One assistant reply (a "type":"assistant" JSONL line), with its tokens
+# already translated into our own TOKEN_FIELDS shape. User messages have
+# no usage field of their own -- whatever you sent is already folded into
+# this turn's input/cache-read tokens, so there's nothing separate to
+# track for them.
+AssistantTurn = namedtuple("AssistantTurn", "date timestamp model token_counts")
+
+# One continuous stretch of a session between two checkpoints -- from
+# session start (or your last exit) until you exit again, whenever that
+# next cost-state checkpoint gets written. Resuming a session later starts
+# a new sitting in the same file.
+ConfirmedSitting = namedtuple("ConfirmedSitting", "model timestamp cost token_counts")
+
+SessionUsage = namedtuple(
+    "SessionUsage",
+    "project cost_by_date tokens_by_date_and_model confirmed_sittings unconfirmed_turns",
+)
+
+
+class SessionFile:
+    """Finds Claude Code session .jsonl files and reads one into a
+    SessionUsage: confirmed sittings (checkpoint-backed, real cost) and
+    unconfirmed turns (no checkpoint for them yet)."""
+
+    @staticmethod
+    def discover(projects_dir=CLAUDE_PROJECTS_DIR):
+        for path in glob.glob(os.path.join(projects_dir, "**", "*.jsonl"), recursive=True):
+            if not SessionFile._is_subagent_transcript(path):
+                yield path
+
+    @staticmethod
+    def _is_subagent_transcript(path):
+        # <session>/subagents/agent-*.jsonl has no cost-state of its own --
+        # its cost is already rolled into the parent session's total, so
+        # counting it separately would double-count tokens.
+        return f"{os.sep}subagents{os.sep}" in path
+
+    # Maps our own TOKEN_FIELDS names to Claude's actual field names in a
+    # cost-state checkpoint's "modelUsage" breakdown, for
+    # _model_usage_from_raw() below. A message's "usage" dict already
+    # happens to use our exact names, so _token_counts_from_usage() needs
+    # no such mapping.
+    _MODEL_USAGE_FIELD_NAMES = {
+        "input_tokens": "inputTokens",
+        "output_tokens": "outputTokens",
+        "cache_creation_input_tokens": "cacheCreationInputTokens",
+        "cache_read_input_tokens": "cacheReadInputTokens",
+    }
+
+    @staticmethod
+    def _token_counts_from_usage(usage):
+        return {field: usage.get(field, 0) for field in TOKEN_FIELDS}
+
+    @staticmethod
+    def _model_usage_from_raw(raw_model_usage):
+        """Translates one checkpoint's raw "modelUsage" (keyed by model,
+        Claude's camelCase token fields plus "costUSD") into our own
+        canonical shape: {model: {"cost": ..., <TOKEN_FIELDS>: ...}}."""
+        return {
+            model: {
+                "cost": raw.get("costUSD", 0.0),
+                **{field: raw.get(raw_field, 0) for field, raw_field in SessionFile._MODEL_USAGE_FIELD_NAMES.items()},
+            }
+            for model, raw in raw_model_usage.items()
+        }
+
+    @staticmethod
+    def _parse_events(path):
+        """The only place that reads a raw JSONL line and knows what
+        Claude Code's fields mean. Translates the file into our own
+        vocabulary -- (project, events) -- and nothing past this point
+        ever looks at an "entry" dict or a raw field name again.
+
+        Each event is, in file order: ("turn", AssistantTurn) for an
+        assistant message, or ("checkpoint", cumulative_total_cost_usd,
+        cumulative_model_usage) for a cost-state record.
+        """
+        project = None
+        events = []
+
+        with open(path, "r", errors="ignore") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+                if project is None and entry.get("cwd"):
+                    project = os.path.basename(entry["cwd"])
+
+                if entry.get("type") == "cost-state":
+                    cumulative_cost = entry.get("totalCostUSD")
+                    if cumulative_cost is not None:
+                        model_usage = SessionFile._model_usage_from_raw(entry.get("modelUsage", {}))
+                        events.append(("checkpoint", cumulative_cost, model_usage))
+                elif entry.get("type") == "assistant":
+                    message = entry.get("message", {})
+                    usage = message.get("usage")
+                    model = message.get("model")
+                    timestamp = entry.get("timestamp")
+                    if usage and model and timestamp:
+                        turn = AssistantTurn(timestamp[:10], timestamp, model, SessionFile._token_counts_from_usage(usage))
+                        events.append(("turn", turn))
+
+        return project or "(unknown)", events
+
+    @staticmethod
+    def read(path):
+        # Everything below here works only with AssistantTurn/checkpoint
+        # events -- our own vocabulary -- and encodes our interpretation of
+        # them (a checkpoint ends a sitting; cost is cumulative since
+        # session start), not Claude Code's raw log structure. If that
+        # meaning itself changes, this is where to update it; if only the
+        # raw fields change, _parse_events() above is the only place to
+        # touch instead.
+        project, events = SessionFile._parse_events(path)
+
+        cost_by_date = defaultdict(float)
+        tokens_by_date_and_model = defaultdict(lambda: defaultdict(int))
+        confirmed_sittings = []
+
+        sitting_turns = []
+        cost_confirmed_so_far = 0.0
+        model_usage_confirmed_so_far = {}
+        for event in events:
+            if event[0] == "turn":
+                turn = event[1]
+                sitting_turns.append(turn)
+                tokens_by_date_and_model[turn.date][turn.model] += total_tokens(turn.token_counts)
+            else:
+                _, cumulative_cost, cumulative_model_usage = event
+                sitting_cost = cumulative_cost - cost_confirmed_so_far
+                SessionFile._distribute_sitting_cost(sitting_turns, sitting_cost, cost_by_date)
+
+                if sitting_turns:
+                    confirmed_sittings.extend(
+                        SessionFile._model_usage_deltas(
+                            model_usage_confirmed_so_far, cumulative_model_usage, sitting_turns[-1].timestamp
+                        )
+                    )
+
+                cost_confirmed_so_far = cumulative_cost
+                model_usage_confirmed_so_far = cumulative_model_usage
+                sitting_turns = []
+
+        # Anything after the last checkpoint (or, for a session with no
+        # checkpoint at all, the whole thing) hasn't been confirmed yet.
+        unconfirmed_turns = sitting_turns
+
+        return SessionUsage(project, cost_by_date, tokens_by_date_and_model, confirmed_sittings, unconfirmed_turns)
+
+    @staticmethod
+    def _distribute_sitting_cost(sitting_turns, sitting_cost, cost_by_date):
+        """Attribute one sitting's confirmed cost to the day(s) it
+        touched, splitting by token count only in the rare case where the
+        sitting itself spans midnight."""
+        if not sitting_turns:
+            return  # a checkpoint with no new turns since the last one
+
+        total_token_count = sum(total_tokens(turn.token_counts) for turn in sitting_turns)
+        if total_token_count == 0:
+            cost_by_date[sitting_turns[-1].date] += sitting_cost
+            return
+
+        token_count_by_date = defaultdict(int)
+        for turn in sitting_turns:
+            token_count_by_date[turn.date] += total_tokens(turn.token_counts)
+        for date, token_count in token_count_by_date.items():
+            cost_by_date[date] += sitting_cost * (token_count / total_token_count)
+
+    @staticmethod
+    def _model_usage_deltas(previous_model_usage, current_model_usage, timestamp):
+        """Figures out what one sitting actually cost, per model -- the
+        raw material RateModel later learns real $/token prices from."""
+        sittings = []
+        for model, current in current_model_usage.items():
+            previous = previous_model_usage.get(model, {})
+            cost = current.get("cost", 0.0) - previous.get("cost", 0.0)
+            token_counts = {field: current.get(field, 0) - previous.get(field, 0) for field in TOKEN_FIELDS}
+            if cost or any(token_counts.values()):
+                sittings.append(ConfirmedSitting(model, timestamp, cost, token_counts))
+        return sittings
+
+
+@dataclass
+class Ledger:
+    """Everything SessionFile.read() found, aggregated across every
+    session file -- the shared state the rest of the pipeline works from."""
+
+    cost_by_date_and_project: dict = field(default_factory=lambda: defaultdict(lambda: defaultdict(float)))
+    tokens_by_date_project_and_model: dict = field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    )
+    confirmed_sittings_by_model: dict = field(default_factory=lambda: defaultdict(list))
+    unconfirmed_turns_by_project: dict = field(default_factory=lambda: defaultdict(list))
+    estimated_date_projects: set = field(default_factory=set)
+
+    @classmethod
+    def build(cls, paths):
+        ledger = cls()
+        for path in paths:
+            session_usage = SessionFile.read(path)
+            project = session_usage.project
+            for date, cost in session_usage.cost_by_date.items():
+                ledger.cost_by_date_and_project[date][project] += cost
+            for date, tokens_by_model in session_usage.tokens_by_date_and_model.items():
+                for model, tokens in tokens_by_model.items():
+                    ledger.tokens_by_date_project_and_model[date][project][model] += tokens
+            for sitting in session_usage.confirmed_sittings:
+                ledger.confirmed_sittings_by_model[sitting.model].append(sitting)
+            ledger.unconfirmed_turns_by_project[project].extend(session_usage.unconfirmed_turns)
+        return ledger
+
+    def apply_rate_estimates(self):
+        """Fills in a cost for every unconfirmed turn, using each model's
+        own RateModel, and marks which (date, project) rows that touched."""
+        rate_model = RateModel(self.confirmed_sittings_by_model)
+        for project, turns in self.unconfirmed_turns_by_project.items():
+            for turn in turns:
+                self.cost_by_date_and_project[turn.date][project] += rate_model.estimate_cost(
+                    turn.model, turn.token_counts
+                )
+                self.estimated_date_projects.add((turn.date, project))
+
+
+class RateModel:
+    """Real $/token prices per model, learned from your own recent
+    confirmed sittings, so it stays current as pricing or your usage mix
+    changes."""
+
+    def __init__(self, confirmed_sittings_by_model, min_sittings=4, max_sittings=8):
+        self._min_sittings = min_sittings
+        self._max_sittings = max_sittings
+        self._rates_by_model = {
+            model: self._derive(sittings) for model, sittings in confirmed_sittings_by_model.items()
+        }
+
+    def estimate_cost(self, model, token_counts):
+        rates = self._rates_by_model.get(model) or {}
+        return sum(token_counts.get(field, 0) * rates.get(field, 0.0) for field in TOKEN_FIELDS)
+
+    def _derive(self, sittings):
+        """The real $/token price for each token type (input/output/
+        cache-write/cache-read), derived from this model's own most recent
+        confirmed sittings.
+
+        Each sitting is one equation (its token counts) -> (its cost).
+        With at least `min_sittings` of those, solve the whole 4-unknown
+        system by least squares over the `max_sittings` most recent ones,
+        so distinct per-type prices fall out instead of one blended
+        average. With less data than that (a rarely-used model), or if the
+        fit produces a nonsensical negative price, fall back to a single
+        blended rate applied to all four types -- still derived from real
+        data, just less precise.
+
+        Returns a dict of {usage_field_name: price_per_token}, or None if
+        there's no confirmed data at all for this model.
+        """
+        recent = sorted(sittings, key=lambda s: s.timestamp, reverse=True)[: self._max_sittings]
+        if not recent:
+            return None
+
+        total_cost = sum(s.cost for s in recent)
+        total_token_count = sum(total_tokens(s.token_counts) for s in recent)
+        blended_rate = total_cost / total_token_count if total_token_count else 0.0
+        blended_rates = {field: blended_rate for field in TOKEN_FIELDS}
+
+        if len(recent) < self._min_sittings:
+            return blended_rates
+
+        token_count_matrix = np.array([[s.token_counts[field] for field in TOKEN_FIELDS] for s in recent], dtype=float)
+        cost_vector = np.array([s.cost for s in recent], dtype=float)
+        solved_rates, *_ = np.linalg.lstsq(token_count_matrix, cost_vector, rcond=None)
+
+        if (solved_rates < 0).any():
+            return blended_rates  # unstable/ill-conditioned fit -- a real price can't be negative
+
+        return dict(zip(TOKEN_FIELDS, solved_rates))
+
+
+class Report:
+    """Renders a Ledger as a rich table, grouped by date or by project."""
+
+    def __init__(self, ledger, args):
+        self.ledger = ledger
+        self.args = args
+
+    def render(self):
+        date_projects = self._date_projects()
+        console = Console()
+
+        if not date_projects:
+            console.print("No usage data found.")
+            return
+
+        # The primary key drives grouping (shown once per group, with a
+        # rule between groups); the secondary key is shown on every row.
+        if self.args.group_by == "date":
+            primary_header, secondary_header = "Date", "Project"
+            rows = sorted(date_projects)
+        else:
+            primary_header, secondary_header = "Project", "Date"
+            rows = sorted((project, date) for date, project in date_projects)
+
+        table = Table(title="Claude Code Cost")
+        table.add_column(primary_header)
+        table.add_column(secondary_header)
+        table.add_column("Total Tokens", justify="right")
+        table.add_column("Cost (USD)", justify="right")
+        table.add_column("Models", overflow="fold")
+
+        # One detail row per (date, project), each showing its own real
+        # numbers, plus a bright group-total row per group -- distinct
+        # colors so a total is never mistaken for a detail row.
+        groups = []
+        for primary_value, secondary_value in rows:
+            if not groups or groups[-1][0] != primary_value:
+                groups.append((primary_value, []))
+            groups[-1][1].append(secondary_value)
+
+        grand_total_tokens = 0
+        grand_total_cost = 0.0
+        for group_index, (primary_value, secondary_values) in enumerate(groups):
+            if group_index > 0:
+                table.add_section()
+
+            group_total_tokens = 0
+            group_total_cost = 0.0
+            detail_rows = []
+            for secondary_value in secondary_values:
+                date, project = (
+                    (primary_value, secondary_value) if self.args.group_by == "date" else (secondary_value, primary_value)
+                )
+                tokens_by_model = self.ledger.tokens_by_date_project_and_model[date][project]
+                models = ", ".join(sorted(m for m in tokens_by_model if not m.startswith("<")))
+                token_count = sum(tokens_by_model.values())
+                cost = self.ledger.cost_by_date_and_project[date][project]
+                group_total_tokens += token_count
+                group_total_cost += cost
+
+                is_estimated = (date, project) in self.ledger.estimated_date_projects
+                secondary_cell = f"{secondary_value}~" if is_estimated else secondary_value
+                detail_rows.append((secondary_cell, f"{token_count:,}", f"${cost:.2f}", models))
+
+            grand_total_tokens += group_total_tokens
+            grand_total_cost += group_total_cost
+
+            table.add_row(
+                primary_value, "", f"{group_total_tokens:,}", f"${group_total_cost:.2f}", "", style="bold bright_cyan",
+            )
+            if len(detail_rows) > 1:
+                for secondary_cell, token_count, cost, models in detail_rows:
+                    table.add_row("", secondary_cell, token_count, cost, models)
+
+        table.add_section()
+        table.add_row("Total", "", f"{grand_total_tokens:,}", f"${grand_total_cost:.2f}", "", style="bold bright_cyan")
+
+        console.print(table)
+
+        console.print("[dim]This reads Claude Code's own local session logs, not your real bill.[/dim]")
+
+        if self.ledger.estimated_date_projects:
+            console.print(
+                "[dim]~ indicates a currently open session, so its cost is a guess based on your past "
+                "sessions, not the real number yet.[/dim]"
+            )
+
+        console.print(
+            "[dim]Even the confirmed numbers can be a little low: if you ever cancel Claude mid-response, "
+            "that still costs money but doesn't show up in these logs.[/dim]"
+        )
+
+    def _date_projects(self):
+        date_projects = sorted(
+            {
+                (date, project)
+                for date, by_project in self.ledger.cost_by_date_and_project.items()
+                for project in by_project
+            }
+            | {
+                (date, project)
+                for date, by_project in self.ledger.tokens_by_date_project_and_model.items()
+                for project in by_project
+            }
+        )
+        if self.args.since:
+            date_projects = [(d, p) for d, p in date_projects if d >= self.args.since]
+        if self.args.until:
+            date_projects = [(d, p) for d, p in date_projects if d <= self.args.until]
+        return date_projects
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])
+    parser.add_argument(
+        "-s", "--since", default=datetime.now(timezone.utc).strftime("%Y-%m-01"),
+        help="filter from date (YYYY-MM-DD), UTC (default: first of the current month)",
+    )
+    parser.add_argument("-u", "--until", help="filter until date (YYYY-MM-DD, inclusive), UTC")
+    parser.add_argument(
+        "-g", "--group-by", choices=["date", "project"], default="date",
+        help="primary grouping/sort order (default: date)",
+    )
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    ledger = Ledger.build(SessionFile.discover())
+    ledger.apply_rate_estimates()
+    Report(ledger, args).render()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,73 @@
+#!/usr/bin/env zsh
+# Print Anthropic's own account-wide Claude Code spend for the current
+# billing cycle. This is the real, up-to-the-minute total (it includes
+# still-running sessions), unlike claude-daily-cost which only counts
+# sessions that have ended.
+#
+# Shares its cache file with bin/claude-statusline, so the two split one
+# fetch instead of each hitting the endpoint on their own schedule.
+
+set -euo pipefail
+
+cache_file="$HOME/.cache/claude-statusline-usage.json"
+cache_ttl=300
+
+# No cache file yet counts as infinitely stale, so the caller always
+# refreshes on first run instead of having to special-case "missing".
+cache_age_seconds() {
+    local mtime
+    mtime=$(stat -f %m "$cache_file" 2>/dev/null) || { echo $(( cache_ttl + 1 )); return; }
+    echo $(( $(date +%s) - mtime ))
+}
+
+# The installed Claude CLI binary literally contains this header value --
+# pulling it from there instead of hardcoding it means it tracks whatever
+# the real CLI is using, with no manual updates needed as it changes.
+oauth_beta_header() {
+    local claude_bin
+    claude_bin=$(readlink -f "$(command -v claude)" 2>/dev/null) || claude_bin=$(command -v claude 2>/dev/null)
+    [[ -n "$claude_bin" ]] || return 1
+    strings -a "$claude_bin" 2>/dev/null | grep -oE 'oauth-[0-9]{4}-[0-9]{2}-[0-9]{2}' | sort -u | tail -1
+}
+
+refresh_cache_if_stale() {
+    local age
+    age=$(cache_age_seconds)
+    (( age > cache_ttl )) || return 0
+
+    local token oauth_beta
+    token=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null \
+        | jq -r '.claudeAiOauth.accessToken // empty')
+    [[ -n "$token" ]] || return 1
+    oauth_beta=$(oauth_beta_header) || oauth_beta="oauth-2025-04-20"  # fallback if extraction fails
+
+    mkdir -p "$HOME/.cache"
+    curl -sf --max-time 10 \
+        -H "Authorization: Bearer $token" \
+        -H "Content-Type: application/json" \
+        -H "anthropic-beta: $oauth_beta" \
+        https://api.anthropic.com/api/oauth/usage > "${cache_file}.tmp" \
+        && mv "${cache_file}.tmp" "$cache_file"
+}
+
+refresh_cache_if_stale || true
+
+if [[ ! -f "$cache_file" ]]; then
+    echo "Account spend unavailable: no cached data and the refresh fetch failed." >&2
+    exit 1
+fi
+
+if [[ "$(jq -r '.spend.enabled // false' "$cache_file")" != "true" ]]; then
+    echo "Account spend tracking is not enabled for this account."
+    exit 0
+fi
+
+used_amount=$(jq -r '.spend.used.amount_minor / pow(10; .spend.used.exponent)' "$cache_file")
+limit_amount=$(jq -r '.spend.limit.amount_minor / pow(10; .spend.limit.exponent)' "$cache_file")
+percent_used=$(jq -r '.spend.percent' "$cache_file")
+
+bold_cyan='\033[1;36m'
+reset='\033[0m'
+
+printf "Account spend (current billing cycle, per Anthropic): \$${bold_cyan}%.2f${reset} of \$${bold_cyan}%.2f${reset} (${bold_cyan}%s%%${reset})\n" \
+    "$used_amount" "$limit_amount" "$percent_used"

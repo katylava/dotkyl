@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+# Print confirmed daily Claude Code cost alongside the real account spend
+# total. See claude-daily-cost and claude-account-spend for what each half
+# actually measures and why they can differ.
+
+set -euo pipefail
+
+claude-daily-cost "$@"
+echo
+claude-account-spend

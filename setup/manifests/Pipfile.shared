@@ -3,8 +3,10 @@ docformatter
 flake8
 Flake8-pyproject
 ipython
+numpy
 pynvim
 pyright
+rich
 tabview
 termgraph
 urlwatch
