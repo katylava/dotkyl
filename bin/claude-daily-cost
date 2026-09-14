@@ -402,9 +402,8 @@ class Report:
             table.add_row(
                 primary_value, "", f"{group_total_tokens:,}", f"${group_total_cost:.2f}", "", style="bold bright_cyan",
             )
-            if len(detail_rows) > 1:
-                for secondary_cell, token_count, cost, models in detail_rows:
-                    table.add_row("", secondary_cell, token_count, cost, models)
+            for secondary_cell, token_count, cost, models in detail_rows:
+                table.add_row("", secondary_cell, token_count, cost, models)
 
         table.add_section()
         table.add_row("Total", "", f"{grand_total_tokens:,}", f"${grand_total_cost:.2f}", "", style="bold bright_cyan")
