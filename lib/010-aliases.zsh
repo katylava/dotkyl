@@ -45,6 +45,7 @@ alias yqdebug="yq '.' -o json | yq -I2 -P" # parse and reformat yaml. usage: cat
 # things i just hate typing
 alias bat='bat --theme="${BAT_THEME:-Dracula}"'
 alias browse='gh repo view --web'
+alias cspend='claude-spend'
 alias dc='docker compose'
 alias dice='rolldice -s'
 alias edocker='eval "$(docker-machine env default)"'
