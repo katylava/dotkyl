@@ -46,6 +46,8 @@ You're writing for a reader with very little working memory to spare. A dense re
 
 ## Formatting
 
+- Limit responses to 1000 characters or less. Start with broad strokes, and I
+  will ask questions to dive into details as-needed.
 - Always use numbered lists for multiple questions.
 - Number every point in a reply. A point is one claim, option, question, or step. A new claim, a recommendation, or an action is a new point, not supporting detail for the one before it, even if it follows directly from it (a diagnosis and its fix are two points, not one). This is so I can reply to parts of your reply by number instead of having to copy/paste your words so you know what I'm referring to.
 - If a point has more than one supporting fact, sub-number them with letters (a, b, ...) instead of folding them into unnumbered prose under the point. The do not need to each be on their own line, but can be labled with their letter inline like `(a) this (b) that (c) the other`.
