@@ -19,6 +19,7 @@ alias edit.path='nvim ~/.dotkyl/lib/*path.zsh'
 alias edit.profile='nvim ~/.zshrc'
 alias edit.prompt='nvim ~/.dotkyl/lib/*prompt.zsh'
 alias edit.vimrc='nvim ~/.dotkyl/nvim/init.vim'
+alias edit.voxtype='nvim ~/"Library/Application Support/voxtype/config.toml"'
 alias unstuck='nvim ~/Documents/unstuck.md'
 
 # switch npmrc
