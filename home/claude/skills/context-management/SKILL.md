@@ -5,13 +5,6 @@ description: Guidance on when to use subagents to keep the main conversation con
 
 # Context Management: When to Use Subagents
 
-The main conversation's context window is a finite, precious resource. Every file you read, every
-command you run, every tool result — it all accumulates. When context fills up, performance
-degrades: you start forgetting earlier instructions, losing track of decisions, and making mistakes.
-
-Subagents run in their own context window. They can read dozens of files, explore broadly, and
-then report back a concise summary. The main conversation only sees the summary.
-
 ## When to suggest a subagent
 
 Before starting research that will touch many files, pause and consider whether a subagent would

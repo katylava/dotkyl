@@ -72,18 +72,17 @@ correct `/pull/` URLs — do not construct your own).
 Do NOT use `#number` format (e.g. `#42`) — terminals auto-link it to the
 current repo's issues. Use `repo PR number` instead (e.g. `my-service PR 42`).
 
-IMPORTANT — sections MUST appear in exactly this order. Do not rearrange:
+Sections appear in this order:
 1. Action needed
 2. Ready to merge
 3. Waiting
 4. Keyword matches
 5. Team review requested (short summaries only — 1 sentence)
-Omit empty sections but never change the relative order.
+Omit empty sections and keep the relative order of the rest.
 
-Every PR in every section MUST include:
+Every PR in every section includes:
 - The last updated date (from the script output) in the first line
 - Its full URL on the line after the summary
-No exceptions.
 
 Summaries for sections 1-4 should be 2-4 sentences — enough to know
 what's going on and decide whether to click through, but not a full recap
