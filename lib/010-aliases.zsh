@@ -64,3 +64,6 @@ alias t='todolist'
 alias tabview='tabview --width max'
 alias tree='tree -I "*.pyc|node_modules|__pycache__"'
 alias year='gcal $(date +%Y)'
+
+# debugging
+alias claude-clean='CLAUDE_CONFIG_DIR=/Users/kyl/.claude-clean claude'
